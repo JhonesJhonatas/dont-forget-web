@@ -22,7 +22,11 @@ export const Title = styled.span`
   font-weight: bold;
 `
 
-export const LogOut = styled.div`
+export const OptionsWithIcons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
   svg {
     width: 1.75rem;
     height: 1.75rem;

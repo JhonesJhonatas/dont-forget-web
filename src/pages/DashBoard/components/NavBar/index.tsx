@@ -1,5 +1,5 @@
-import { SignOut } from '@phosphor-icons/react'
-import { Container, LogOut, ProfilePic, Title } from './styles'
+import { Gear, SignOut } from '@phosphor-icons/react'
+import { Container, OptionsWithIcons, ProfilePic, Title } from './styles'
 
 export function NavBar() {
   return (
@@ -10,9 +10,10 @@ export function NavBar() {
 
       <Title>Dont Forget</Title>
 
-      <LogOut>
+      <OptionsWithIcons>
+        <Gear />
         <SignOut />
-      </LogOut>
+      </OptionsWithIcons>
     </Container>
   )
 }

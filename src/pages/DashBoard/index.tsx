@@ -20,6 +20,8 @@ import {
   Pagination,
   TasksArea,
 } from './styles'
+import * as Dialog from '@radix-ui/react-dialog'
+import { NewTaskModal } from './components/NewTaskModal'
 
 export function DashBoard() {
   return (
@@ -35,10 +37,15 @@ export function DashBoard() {
               <span>00/00/0000</span>
             </div>
           </DateOptions>
-          <NewTaskButton>
-            Nova Task
-            <PlusCircle />
-          </NewTaskButton>
+          <Dialog.Root>
+            <Dialog.Trigger asChild>
+              <NewTaskButton>
+                Novo Lembrete
+                <PlusCircle />
+              </NewTaskButton>
+            </Dialog.Trigger>
+            <NewTaskModal />
+          </Dialog.Root>
         </OptionsContainer>
 
         <FiltersContainer>
