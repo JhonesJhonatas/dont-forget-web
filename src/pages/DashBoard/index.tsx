@@ -15,6 +15,7 @@ import {
   HandleOptions,
   InputText,
   LabelWithSelectInput,
+  MainContainer,
   NewTaskButton,
   OptionsContainer,
   Pagination,
@@ -22,65 +23,72 @@ import {
 } from './styles'
 import * as Dialog from '@radix-ui/react-dialog'
 import { NewTaskModal } from './components/NewTaskModal'
+import { useGetTasks } from '../../hooks/useGetTasks'
 
 export function DashBoard() {
+  const { allTasks } = useGetTasks()
+
   return (
     <Container>
-      <NavBar />
+      <MainContainer>
+        <NavBar />
 
-      <HandleOptions>
-        <OptionsContainer>
-          <DateOptions>
-            <Calendar />
-            <div>
-              <span>Domingo</span>
-              <span>00/00/0000</span>
-            </div>
-          </DateOptions>
-          <Dialog.Root>
-            <Dialog.Trigger asChild>
-              <NewTaskButton>
-                Novo Lembrete
-                <PlusCircle />
-              </NewTaskButton>
-            </Dialog.Trigger>
-            <NewTaskModal />
-          </Dialog.Root>
-        </OptionsContainer>
+        <HandleOptions>
+          <OptionsContainer>
+            <DateOptions>
+              <Calendar />
+              <div>
+                <span>Domingo</span>
+                <span>00/00/0000</span>
+              </div>
+            </DateOptions>
+            <Dialog.Root>
+              <Dialog.Trigger asChild>
+                <NewTaskButton>
+                  Novo Lembrete
+                  <PlusCircle />
+                </NewTaskButton>
+              </Dialog.Trigger>
+              <NewTaskModal />
+            </Dialog.Root>
+          </OptionsContainer>
 
-        <FiltersContainer>
-          <FiltersArea>
-            <div>
-              <FadersHorizontal />
-              <span>Filtros:</span>
-            </div>
-            <div>
-              <LabelWithSelectInput>
-                Prioridade
-                <select>
-                  <option>Todas</option>
-                  <option>Normal</option>
-                  <option>Importante</option>
-                  <option>Urgente</option>
-                </select>
-              </LabelWithSelectInput>
-            </div>
-          </FiltersArea>
-          <InputText type="text" placeholder="Pesquisar" />
-        </FiltersContainer>
-      </HandleOptions>
+          <FiltersContainer>
+            <FiltersArea>
+              <div>
+                <FadersHorizontal />
+                <span>Filtros:</span>
+              </div>
+              <div>
+                <LabelWithSelectInput>
+                  Prioridade
+                  <select>
+                    <option>Todas</option>
+                    <option>Normal</option>
+                    <option>Importante</option>
+                    <option>Urgente</option>
+                  </select>
+                </LabelWithSelectInput>
+              </div>
+            </FiltersArea>
+            <InputText type="text" placeholder="Pesquisar" />
+          </FiltersContainer>
+        </HandleOptions>
 
-      <TasksArea>
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-      </TasksArea>
+        <TasksArea>
+          {allTasks.map((task) => {
+            return (
+              <TaskCard
+                key={task.id}
+                maturity={task.maturity}
+                priority={task.priority}
+                status={task.status}
+                title={task.title}
+              />
+            )
+          })}
+        </TasksArea>
+      </MainContainer>
 
       <Pagination>
         <button>

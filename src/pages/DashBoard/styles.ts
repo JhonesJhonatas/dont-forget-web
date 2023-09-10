@@ -3,7 +3,17 @@ import styled from 'styled-components'
 export const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  height: 100vh;
 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-bottom: 2rem;
+`
+
+export const MainContainer = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -143,11 +153,11 @@ export const TasksArea = styled.section`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
+  height: 100%;
 `
 
 export const Pagination = styled.div`
   margin: 0 auto;
-
   display: flex;
   gap: 0.25rem;
 

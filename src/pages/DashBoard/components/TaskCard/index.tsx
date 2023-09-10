@@ -8,25 +8,35 @@ import {
   Priority,
   Status,
 } from './styles'
+import { format } from 'date-fns'
 
-export function TaskCard() {
+interface TaskCardProps {
+  title: string
+  status: string
+  priority: string
+  maturity: Date
+}
+
+export function TaskCard({ title, maturity, priority, status }: TaskCardProps) {
+  const formattedMaturity = format(new Date(maturity), 'dd/MM/yyyy')
+
   return (
     <Container>
       <CardHeader>
-        <CardTitle>Cancelar conta do Bradesco</CardTitle>
+        <CardTitle>{title}</CardTitle>
         <Status>
           <Circle weight="fill" />
-          <span>Em Aberto</span>
+          <span>{status}</span>
         </Status>
       </CardHeader>
       <CardElements>
         <Priority>
           <Flag weight="fill" />
-          <span>Prioridade</span>
+          <span>{priority}</span>
         </Priority>
         <Maturity>
           <Calendar />
-          <span>00/00/0000</span>
+          <span>{formattedMaturity}</span>
         </Maturity>
       </CardElements>
     </Container>
