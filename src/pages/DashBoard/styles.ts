@@ -152,6 +152,7 @@ export const InputText = styled.input`
 export const TasksArea = styled.section`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   gap: 1rem;
   height: 100%;
 `

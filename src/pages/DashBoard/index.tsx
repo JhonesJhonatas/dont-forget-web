@@ -45,7 +45,7 @@ export function DashBoard() {
             <Dialog.Root>
               <Dialog.Trigger asChild>
                 <NewTaskButton>
-                  Novo Lembrete
+                  Nova Task
                   <PlusCircle />
                 </NewTaskButton>
               </Dialog.Trigger>

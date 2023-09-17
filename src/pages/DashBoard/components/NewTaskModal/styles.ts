@@ -66,7 +66,7 @@ export const InputTitle = styled.label`
     border-radius: 6px;
     outline: 0;
     height: 1.8rem;
-    padding: 1rem 1rem;
+    padding: 1.5rem 1rem;
     background-color: ${(props) => props.theme.cardBgSecondary};
     border: 1px solid ${(props) => props.theme.borderCard};
     color: ${(props) => props.theme.textPrimary};
@@ -95,8 +95,9 @@ export const InputPriority = styled.label`
 
   select {
     border-radius: 6px;
-    height: 2.25rem;
+    height: 3rem;
     width: 100%;
+    padding: 0.75rem;
     background-color: ${(props) => props.theme.cardBgSecondary};
     border: 1px solid ${(props) => props.theme.borderCard};
     outline: 0;
@@ -115,8 +116,8 @@ export const InputDate = styled.label`
 
   input {
     border-radius: 6px;
-    height: 2.25rem;
-    padding: 0.5rem;
+    height: 3rem;
+    padding: 0.75rem;
     width: 100%;
     background-color: ${(props) => props.theme.cardBgSecondary};
     border: 1px solid ${(props) => props.theme.borderCard};
