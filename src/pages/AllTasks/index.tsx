@@ -19,9 +19,14 @@ import {
   TasksArea,
 } from './styles'
 import { useGetTasks } from '../../hooks/useGetTasks'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 export function AllTasks() {
   const { allTasks } = useGetTasks()
+
+  const dayOfWeek = format(new Date(), 'EEEE', { locale: ptBR })
+  const today = format(new Date(), 'dd/MM/yyyy', { locale: ptBR })
 
   return (
     <Container>
@@ -31,8 +36,8 @@ export function AllTasks() {
             <DateOptions>
               <Calendar />
               <div>
-                <span>Domingo</span>
-                <span>00/00/0000</span>
+                <span>{dayOfWeek}</span>
+                <span>{today}</span>
               </div>
             </DateOptions>
           </OptionsContainer>

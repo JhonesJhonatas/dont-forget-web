@@ -9,6 +9,7 @@ import {
   Status,
 } from './styles'
 import { format } from 'date-fns'
+import { useCallback } from 'react'
 
 interface TaskCardProps {
   title: string
@@ -20,13 +21,26 @@ interface TaskCardProps {
 export function TaskCard({ title, maturity, priority, status }: TaskCardProps) {
   const formattedMaturity = format(new Date(maturity), 'dd/MM/yyyy')
 
+  const formattedStatus = useCallback((status: string) => {
+    if (status === 'opened') {
+      return 'Em Aberto'
+    }
+    if (status === 'in_progress') {
+      return 'Em Aberto'
+    }
+
+    if (status === 'concluded') {
+      return 'Em Aberto'
+    }
+  }, [])
+
   return (
     <Container>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <Status>
           <Circle weight="fill" />
-          <span>{status}</span>
+          <span>{formattedStatus(status)}</span>
         </Status>
       </CardHeader>
       <CardElements>
