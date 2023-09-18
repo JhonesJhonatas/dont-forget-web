@@ -3,9 +3,7 @@ import {
   CaretLeft,
   CaretRight,
   FadersHorizontal,
-  PlusCircle,
 } from '@phosphor-icons/react'
-import { NavBar } from './components/NavBar'
 import { TaskCard } from './components/TaskCard'
 import {
   Container,
@@ -16,23 +14,18 @@ import {
   InputText,
   LabelWithSelectInput,
   MainContainer,
-  NewTaskButton,
   OptionsContainer,
   Pagination,
   TasksArea,
 } from './styles'
-import * as Dialog from '@radix-ui/react-dialog'
-import { NewTaskModal } from './components/NewTaskModal'
 import { useGetTasks } from '../../hooks/useGetTasks'
 
-export function DashBoard() {
+export function AllTasks() {
   const { allTasks } = useGetTasks()
 
   return (
     <Container>
       <MainContainer>
-        <NavBar />
-
         <HandleOptions>
           <OptionsContainer>
             <DateOptions>
@@ -42,15 +35,6 @@ export function DashBoard() {
                 <span>00/00/0000</span>
               </div>
             </DateOptions>
-            <Dialog.Root>
-              <Dialog.Trigger asChild>
-                <NewTaskButton>
-                  Nova Task
-                  <PlusCircle />
-                </NewTaskButton>
-              </Dialog.Trigger>
-              <NewTaskModal />
-            </Dialog.Root>
           </OptionsContainer>
 
           <FiltersContainer>

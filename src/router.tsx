@@ -1,10 +1,13 @@
 import { Route, Routes } from 'react-router-dom'
-import { DashBoard } from './pages/DashBoard'
+import { AllTasks } from './pages/AllTasks'
+import { DefaulLayout } from './layouts/DefaultLayout'
 
 export function Router() {
   return (
     <Routes>
-      <Route path="/" element={<DashBoard />} />
+      <Route path="/" element={<DefaulLayout />}>
+        <Route path="/all-tasks" element={<AllTasks />} />
+      </Route>
     </Routes>
   )
 }

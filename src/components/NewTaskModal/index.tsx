@@ -18,20 +18,31 @@ import { X } from '@phosphor-icons/react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback } from 'react'
+import { useCreateTask } from '../../hooks/useCreateTask'
 
 const newTaskFieldsSchema = z.object({
   taskTitle: z.string(),
   taskPriority: z.string(),
-  taskMaturity: z.date(),
+  taskMaturity: z.string(),
   taskDescription: z.string(),
 })
 
 type typeFieldsSchema = z.infer<typeof newTaskFieldsSchema>
 
 export function NewTaskModal() {
-  const { register } = useForm<typeFieldsSchema>({
+  const { register, handleSubmit } = useForm<typeFieldsSchema>({
     resolver: zodResolver(newTaskFieldsSchema),
   })
+
+  const { createNewTaks } = useCreateTask()
+
+  const onSubmit = useCallback(
+    (data: typeFieldsSchema) => {
+      createNewTaks(data)
+    },
+    [createNewTaks],
+  )
 
   return (
     <Dialog.Portal>
@@ -43,7 +54,7 @@ export function NewTaskModal() {
             <X />
           </DialogCloese>
         </ModalHeader>
-        <NewTaskForm>
+        <NewTaskForm onSubmit={handleSubmit(onSubmit)}>
           <InputTitle>
             Título:
             <input
@@ -56,9 +67,9 @@ export function NewTaskModal() {
             <InputPriority>
               Prioridade:
               <select {...register('taskPriority')}>
-                <option value="">Normal</option>
-                <option value="">Alta</option>
-                <option value="">Urgente</option>
+                <option value="normal">Normal</option>
+                <option value="high">Alta</option>
+                <option value="urgent">Urgente</option>
               </select>
             </InputPriority>
             <InputDate>
