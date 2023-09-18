@@ -39,7 +39,11 @@ export function NewTaskModal() {
 
   const onSubmit = useCallback(
     (data: typeFieldsSchema) => {
-      createNewTaks(data)
+      try {
+        createNewTaks(data)
+      } catch (err) {
+        console.log(err)
+      }
     },
     [createNewTaks],
   )

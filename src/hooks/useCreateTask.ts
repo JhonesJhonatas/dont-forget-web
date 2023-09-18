@@ -16,7 +16,6 @@ export const useCreateTask = () => {
     const formattedData = {
       createdAt: formatISO(new Date()),
       maturity: formatISO(new Date(data.taskMaturity)),
-      completedAt: formatISO(new Date(data.taskMaturity)),
       title: data.taskTitle,
       status: 'opened',
       priority: data.taskPriority,

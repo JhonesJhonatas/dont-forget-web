@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
   width: 100%;
-  max-height: 10rem;
+  height: 100%;
   background-color: ${(props) => props.theme.cardBgSecondary};
   border: 1px solid ${(props) => props.theme.borderCard};
   border-radius: 6px;

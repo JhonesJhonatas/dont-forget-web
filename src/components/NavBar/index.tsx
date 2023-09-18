@@ -26,7 +26,7 @@ export function NavBar() {
       </CardHedaer>
       <NavItemsArea>
         <NavItem>
-          <NavLink to={'/settings'}>
+          <NavLink to={'/dashboard'}>
             <div>
               <SquaresFour />
               <span>DashBoard</span>
@@ -53,7 +53,7 @@ export function NavBar() {
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink to={'/settings'}>
+          <NavLink to={'/login'}>
             <div>
               <SignOut />
               <span>Sair</span>
