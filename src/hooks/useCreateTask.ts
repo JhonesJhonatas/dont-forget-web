@@ -20,7 +20,7 @@ export const useCreateTask = () => {
       status: 'opened',
       priority: data.taskPriority,
       description: data.taskDescription,
-      userId: 'a98dc6b7-e0b3-47a7-a080-b7108ac62e8a',
+      userId: '2cef48e8-9e64-4d48-859e-b774a0d88622',
     }
 
     api

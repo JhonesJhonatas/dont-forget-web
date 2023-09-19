@@ -10,7 +10,6 @@ export const Container = styled.div`
 `
 
 export const MainContainer = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -60,29 +59,6 @@ export const DateOptions = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
-  }
-`
-
-export const NewTaskButton = styled.button`
-  border: 0;
-  background-color: ${(props) => props.theme.enphasis};
-  color: ${(props) => props.theme.textPrimary};
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  svg {
-    height: 1rem;
-    width: 1rem;
-  }
-
-  &:hover {
-    background-color: ${(props) => props.theme.enphasisHover};
   }
 `
 
@@ -147,31 +123,9 @@ export const InputText = styled.input`
 `
 
 export const TasksArea = styled.section`
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   gap: 1rem;
-  height: 100%;
-`
-
-export const Pagination = styled.div`
-  margin: 0 auto;
-  display: flex;
-  gap: 0.25rem;
-
-  button {
-    border: none;
-    width: 2rem;
-    height: 2rem;
-    background-color: ${(props) => props.theme.cardBgPrimary};
-    color: ${(props) => props.theme.textPrimary};
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    line-height: 0;
-    border-radius: 6px;
-
-    &:hover {
-      background-color: ${(props) => props.theme.borderCard};
-    }
-  }
 `

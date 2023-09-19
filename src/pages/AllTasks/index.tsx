@@ -1,9 +1,4 @@
-import {
-  Calendar,
-  CaretLeft,
-  CaretRight,
-  FadersHorizontal,
-} from '@phosphor-icons/react'
+import { Calendar, FadersHorizontal } from '@phosphor-icons/react'
 import { TaskCard } from './components/TaskCard'
 import {
   Container,
@@ -15,15 +10,15 @@ import {
   LabelWithSelectInput,
   MainContainer,
   OptionsContainer,
-  Pagination,
   TasksArea,
 } from './styles'
 import { useGetTasks } from '../../hooks/useGetTasks'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { SkeletonLoading } from './components/SkeletonLoading'
 
 export function AllTasks() {
-  const { allTasks } = useGetTasks()
+  const { allTasks, tasksIsLoading } = useGetTasks()
 
   const dayOfWeek = format(new Date(), 'EEEE', { locale: ptBR })
   const today = format(new Date(), 'dd/MM/yyyy', { locale: ptBR })
@@ -64,33 +59,24 @@ export function AllTasks() {
           </FiltersContainer>
         </HandleOptions>
 
-        <TasksArea>
-          {allTasks.map((task) => {
-            return (
-              <TaskCard
-                key={task.id}
-                maturity={task.maturity}
-                priority={task.priority}
-                status={task.status}
-                title={task.title}
-              />
-            )
-          })}
-        </TasksArea>
+        {tasksIsLoading ? (
+          <SkeletonLoading />
+        ) : (
+          <TasksArea>
+            {allTasks.map((task) => {
+              return (
+                <TaskCard
+                  key={task.id}
+                  maturity={task.maturity}
+                  priority={task.priority}
+                  status={task.status}
+                  title={task.title}
+                />
+              )
+            })}
+          </TasksArea>
+        )}
       </MainContainer>
-
-      <Pagination>
-        <button>
-          <CaretLeft />
-        </button>
-        <button>1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>4</button>
-        <button>
-          <CaretRight />
-        </button>
-      </Pagination>
     </Container>
   )
 }

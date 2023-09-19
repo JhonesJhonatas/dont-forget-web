@@ -1,4 +1,8 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+
+interface PriorityProps {
+  level: 'normal' | 'high' | 'urgent'
+}
 
 export const Container = styled.div`
   width: 100%;
@@ -53,7 +57,7 @@ export const CardElements = styled.div`
   gap: 0.5rem;
 `
 
-export const Priority = styled.div`
+export const Priority = styled.div<PriorityProps>`
   background-color: ${(props) => props.theme.cardBgPrimary};
   width: fit-content;
   padding: 0.2rem 0.75rem;
@@ -64,12 +68,36 @@ export const Priority = styled.div`
   gap: 0.5rem;
 
   svg {
-    color: ${(props) => props.theme.error};
+    color: ${(props) => props.theme.textSecondary};
   }
 
   span {
     font-size: 0.8rem;
   }
+
+  ${(props) =>
+    props.level === 'normal' &&
+    css`
+      svg {
+        color: ${props.theme.enphasis};
+      }
+    `}
+
+  ${(props) =>
+    props.level === 'high' &&
+    css`
+      svg {
+        color: ${props.theme.danger};
+      }
+    `}
+
+    ${(props) =>
+    props.level === 'urgent' &&
+    css`
+      svg {
+        color: ${props.theme.error};
+      }
+    `}
 `
 
 export const Maturity = styled.div`

@@ -7,8 +7,8 @@ export interface TaskSchema {
   maturity: Date
   completedAt: Date
   title: string
-  status: string
-  priority: string
+  status: 'opened' | 'in_progress' | 'concluded'
+  priority: 'normal' | 'high' | 'urgent'
   description: string
   userId: string
 }
@@ -18,10 +18,10 @@ export const useGetTasks = () => {
   const [tasksIsLoading, setTasksIsLoading] = useState(false)
 
   const handleUpdateTasks = useCallback(() => {
+    setTasksIsLoading(true)
     api
       .get('/tasks/get-all-tasks')
       .then((res) => {
-        setTasksIsLoading(true)
         setAllTasks(res.data)
       })
       .finally(() => {

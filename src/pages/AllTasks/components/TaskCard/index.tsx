@@ -13,8 +13,8 @@ import { useCallback } from 'react'
 
 interface TaskCardProps {
   title: string
-  status: string
-  priority: string
+  status: 'opened' | 'in_progress' | 'concluded'
+  priority: 'normal' | 'high' | 'urgent'
   maturity: Date
 }
 
@@ -34,6 +34,18 @@ export function TaskCard({ title, maturity, priority, status }: TaskCardProps) {
     }
   }, [])
 
+  const formattedPriority = useCallback((priority: string) => {
+    if (priority === 'normal') {
+      return 'Normal'
+    }
+    if (priority === 'high') {
+      return 'Importante'
+    }
+    if (priority === 'urgent') {
+      return 'Urgente'
+    }
+  }, [])
+
   return (
     <Container>
       <CardHeader>
@@ -44,9 +56,9 @@ export function TaskCard({ title, maturity, priority, status }: TaskCardProps) {
         </Status>
       </CardHeader>
       <CardElements>
-        <Priority>
+        <Priority level={priority}>
           <Flag weight="fill" />
-          <span>{priority}</span>
+          <span>{formattedPriority(priority)}</span>
         </Priority>
         <Maturity>
           <Calendar />
