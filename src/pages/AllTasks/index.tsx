@@ -1,4 +1,8 @@
-import { Calendar, FadersHorizontal } from '@phosphor-icons/react'
+import {
+  ArrowsDownUp,
+  CalendarBlank,
+  FadersHorizontal,
+} from '@phosphor-icons/react'
 import { TaskCard } from './components/TaskCard'
 import {
   Container,
@@ -12,13 +16,14 @@ import {
   OptionsContainer,
   TasksArea,
 } from './styles'
-import { useGetTasks } from '../../hooks/useGetTasks'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { SkeletonLoading } from './components/SkeletonLoading'
+import { TaskContext } from '../../contexts/TasksContext'
+import { useContext } from 'react'
 
 export function AllTasks() {
-  const { allTasks, tasksIsLoading } = useGetTasks()
+  const { allTasksList, tasksIsLoading } = useContext(TaskContext)
 
   const dayOfWeek = format(new Date(), 'EEEE', { locale: ptBR })
   const today = format(new Date(), 'dd/MM/yyyy', { locale: ptBR })
@@ -29,7 +34,7 @@ export function AllTasks() {
         <HandleOptions>
           <OptionsContainer>
             <DateOptions>
-              <Calendar />
+              <CalendarBlank />
               <div>
                 <span>{dayOfWeek}</span>
                 <span>{today}</span>
@@ -39,21 +44,60 @@ export function AllTasks() {
 
           <FiltersContainer>
             <FiltersArea>
-              <div>
-                <FadersHorizontal />
-                <span>Filtros:</span>
-              </div>
-              <div>
-                <LabelWithSelectInput>
-                  Prioridade
-                  <select>
-                    <option>Todas</option>
-                    <option>Normal</option>
-                    <option>Importante</option>
-                    <option>Urgente</option>
-                  </select>
-                </LabelWithSelectInput>
-              </div>
+              <section>
+                <div>
+                  <FadersHorizontal />
+                  <span>Filtros:</span>
+                </div>
+                <div>
+                  <LabelWithSelectInput>
+                    Prioridade:
+                    <select>
+                      <option>Todas</option>
+                      <option>Normal</option>
+                      <option>Importante</option>
+                      <option>Urgente</option>
+                    </select>
+                  </LabelWithSelectInput>
+                  <p>|</p>
+                  <LabelWithSelectInput>
+                    Status:
+                    <select>
+                      <option>Todas</option>
+                      <option>Normal</option>
+                      <option>Importante</option>
+                      <option>Urgente</option>
+                    </select>
+                  </LabelWithSelectInput>
+                </div>
+              </section>
+              <section>
+                <div>
+                  <ArrowsDownUp />
+                  <span>Ordenar por:</span>
+                </div>
+                <div>
+                  <LabelWithSelectInput>
+                    Prioridade:
+                    <select>
+                      <option>Todas</option>
+                      <option>Normal</option>
+                      <option>Importante</option>
+                      <option>Urgente</option>
+                    </select>
+                  </LabelWithSelectInput>
+                  <p>|</p>
+                  <LabelWithSelectInput>
+                    Status:
+                    <select>
+                      <option>Todas</option>
+                      <option>Normal</option>
+                      <option>Importante</option>
+                      <option>Urgente</option>
+                    </select>
+                  </LabelWithSelectInput>
+                </div>
+              </section>
             </FiltersArea>
             <InputText type="text" placeholder="Pesquisar" />
           </FiltersContainer>
@@ -63,7 +107,7 @@ export function AllTasks() {
           <SkeletonLoading />
         ) : (
           <TasksArea>
-            {allTasks.map((task) => {
+            {allTasksList.map((task) => {
               return (
                 <TaskCard
                   key={task.id}

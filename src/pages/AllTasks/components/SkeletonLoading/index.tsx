@@ -8,21 +8,63 @@ export function SkeletonLoading() {
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
-        height={150}
+        height={170}
         width={480}
         borderRadius={6}
       />
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
-        height={150}
+        height={170}
         width={480}
         borderRadius={6}
       />
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
-        height={150}
+        height={170}
+        width={480}
+        borderRadius={6}
+      />
+      <Skeleton
+        baseColor="#3F3F46"
+        highlightColor="#71717A"
+        height={170}
+        width={480}
+        borderRadius={6}
+      />
+      <Skeleton
+        baseColor="#3F3F46"
+        highlightColor="#71717A"
+        height={170}
+        width={480}
+        borderRadius={6}
+      />
+      <Skeleton
+        baseColor="#3F3F46"
+        highlightColor="#71717A"
+        height={170}
+        width={480}
+        borderRadius={6}
+      />
+      <Skeleton
+        baseColor="#3F3F46"
+        highlightColor="#71717A"
+        height={170}
+        width={480}
+        borderRadius={6}
+      />
+      <Skeleton
+        baseColor="#3F3F46"
+        highlightColor="#71717A"
+        height={170}
+        width={480}
+        borderRadius={6}
+      />
+      <Skeleton
+        baseColor="#3F3F46"
+        highlightColor="#71717A"
+        height={170}
         width={480}
         borderRadius={6}
       />

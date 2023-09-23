@@ -1,3 +1,4 @@
+import { X } from '@phosphor-icons/react'
 import * as Dialog from '@radix-ui/react-dialog'
 import {
   CancelButton,
@@ -14,47 +15,63 @@ import {
   NewTaskForm,
   SaveButton,
 } from './styles'
-import { X } from '@phosphor-icons/react'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useCreateTask } from '../../hooks/useCreateTask'
 
-const newTaskFieldsSchema = z.object({
+const tasksFieldsSchema = z.object({
   taskTitle: z.string(),
   taskPriority: z.string(),
   taskMaturity: z.string(),
   taskDescription: z.string(),
 })
 
-type typeFieldsSchema = z.infer<typeof newTaskFieldsSchema>
+type typeFieldsSchema = z.infer<typeof tasksFieldsSchema>
 
-interface NewTaskModalProps {
-  handleCloseModal: () => void
+interface EditTaskModalProps {
+  task: {
+    taskTitle: string
+    taskPriority: string
+    taskMaturity: Date
+    taskDescription: string
+  }
 }
 
-export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
+export function EditTaskModal({ task }: EditTaskModalProps) {
   const {
     register,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<typeFieldsSchema>({
-    resolver: zodResolver(newTaskFieldsSchema),
+    resolver: zodResolver(tasksFieldsSchema),
   })
 
   const { createNewTaks } = useCreateTask()
+
+  useEffect(() => {
+    setValue('taskTitle', task.taskTitle)
+    setValue('taskPriority', task.taskPriority)
+    setValue('taskDescription', task.taskDescription)
+  }, [
+    setValue,
+    task.taskDescription,
+    task.taskMaturity,
+    task.taskPriority,
+    task.taskTitle,
+  ])
 
   const onSubmit = useCallback(
     async (data: typeFieldsSchema) => {
       try {
         createNewTaks(data)
-        handleCloseModal()
       } catch (err) {
         console.log(err)
       }
     },
-    [createNewTaks, handleCloseModal],
+    [createNewTaks],
   )
 
   return (
@@ -62,7 +79,7 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
       <DialogOverlay />
       <DialogContent>
         <ModalHeader>
-          <Dialog.Title>📝 • Criar nova task</Dialog.Title>
+          <Dialog.Title>📝 • Editar task</Dialog.Title>
           <DialogCloese>
             <X />
           </DialogCloese>

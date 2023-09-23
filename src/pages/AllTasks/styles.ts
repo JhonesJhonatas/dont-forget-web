@@ -77,10 +77,19 @@ export const FiltersArea = styled.div`
   align-items: center;
   gap: 1.5rem;
 
-  div {
+  section {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
+    border: 1px solid ${(props) => props.theme.textSecondary};
+    padding: 0.5rem;
+    border-radius: 6px;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
   }
 
   span {
@@ -124,8 +133,11 @@ export const InputText = styled.input`
 
 export const TasksArea = styled.section`
   width: 100%;
+  height: 71vh;
   display: grid;
+  padding-right: 0.5rem;
+  padding-bottom: 0.5rem;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
   gap: 1rem;
+  overflow: auto;
 `

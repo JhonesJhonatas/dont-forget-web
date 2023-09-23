@@ -6,21 +6,22 @@ interface PriorityProps {
 
 export const Container = styled.div`
   width: 100%;
-  height: 100%;
+  min-height: 12rem;
+  max-height: 12rem;
   background-color: ${(props) => props.theme.cardBgSecondary};
   border: 1px solid ${(props) => props.theme.borderCard};
   border-radius: 6px;
   padding: 1.5rem;
   cursor: pointer;
-  transition: all 0.1s ease-in-out;
+  transition: all 0.2s ease-in-out;
 
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 1rem;
 
   &:hover {
-    transform: scale(1.02);
-    border: 1px solid ${(props) => props.theme.textSecondary};
+    background-color: ${(props) => props.theme.borderCard};
   }
 `
 

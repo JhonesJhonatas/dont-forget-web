@@ -16,8 +16,15 @@ import {
 import { NavLink } from 'react-router-dom'
 import * as Dialog from '@radix-ui/react-dialog'
 import { NewTaskModal } from '../NewTaskModal'
+import { useCallback, useState } from 'react'
 
 export function NavBar() {
+  const [open, setOpen] = useState(false)
+
+  const handleCloseModal = useCallback(() => {
+    setOpen(false)
+  }, [])
+
   return (
     <Container>
       <CardHedaer>
@@ -62,14 +69,14 @@ export function NavBar() {
           </NavLink>
         </NavItem>
       </NavItemsArea>
-      <Dialog.Root>
+      <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Trigger asChild>
           <NewTaskButton>
             Nova Task
             <PlusCircle />
           </NewTaskButton>
         </Dialog.Trigger>
-        <NewTaskModal />
+        <NewTaskModal handleCloseModal={handleCloseModal} />
       </Dialog.Root>
     </Container>
   )
