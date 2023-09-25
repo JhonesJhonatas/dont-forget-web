@@ -16,7 +16,7 @@ import { EditTaskModal } from '../../../../components/EditTaskModal'
 interface TaskCardProps {
   id: string
   title: string
-  status: 'opened' | 'in_progress' | 'concluded'
+  status: 'opened' | 'in_progress' | 'approval' | 'concluded'
   priority: 'normal' | 'high' | 'urgent'
   maturity: Date
   description: string
@@ -38,11 +38,13 @@ export function TaskCard({
       return 'Em Aberto'
     }
     if (status === 'in_progress') {
-      return 'Em Aberto'
+      return 'Em Desenvolvimento'
     }
-
+    if (status === 'approval') {
+      return 'Aprovação'
+    }
     if (status === 'concluded') {
-      return 'Em Aberto'
+      return 'Concluída'
     }
   }, [])
 
@@ -68,6 +70,7 @@ export function TaskCard({
     taskMaturity: maturity.toString(),
     taskPriority: priority,
     taskTitle: title,
+    taskStatus: status,
   }
 
   return (

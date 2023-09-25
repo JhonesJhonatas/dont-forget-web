@@ -78,6 +78,27 @@ export const InputTitle = styled.label`
   }
 `
 
+export const InputStatus = styled.label`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  select {
+    border-radius: 6px;
+    height: 3rem;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: ${(props) => props.theme.cardBgSecondary};
+    border: 1px solid ${(props) => props.theme.borderCard};
+    outline: 0;
+    color: ${(props) => props.theme.textPrimary};
+
+    &:focus {
+      outline: 2px solid ${(props) => props.theme.enphasis};
+    }
+  }
+`
+
 export const FlexArea = styled.div`
   display: flex;
   gap: 2rem;
