@@ -15,6 +15,7 @@ export const DialogContent = styled(Dialog.Content)`
     hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
     hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
   position: fixed;
+  z-index: 1;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -156,14 +157,38 @@ export const FormFooter = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
-  justify-content: end;
+  justify-content: space-between;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+`
+
+export const DeleteButton = styled.button`
+  border: none;
+  background-color: ${(props) => props.theme.error};
+  color: ${(props) => props.theme.textPrimary};
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover {
+    background-color: ${(props) => props.theme.errorHover};
+  }
 `
 
 export const CancelButton = styled.button`
   border: none;
   background-color: transparent;
   color: ${(props) => props.theme.textPrimary};
-  cursor: pointer;
 `
 
 export const SaveButton = styled.button`

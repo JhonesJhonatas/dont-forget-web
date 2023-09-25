@@ -138,6 +138,7 @@ export const TasksArea = styled.section`
   padding-right: 0.5rem;
   padding-bottom: 0.5rem;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   gap: 1rem;
   overflow: auto;
 `

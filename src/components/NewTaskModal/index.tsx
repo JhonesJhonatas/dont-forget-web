@@ -38,6 +38,7 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = useForm<typeFieldsSchema>({
     resolver: zodResolver(newTaskFieldsSchema),
@@ -50,11 +51,12 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
       try {
         createNewTaks(data)
         handleCloseModal()
+        reset()
       } catch (err) {
         console.log(err)
       }
     },
-    [createNewTaks, handleCloseModal],
+    [createNewTaks, handleCloseModal, reset],
   )
 
   return (

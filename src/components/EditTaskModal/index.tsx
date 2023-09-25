@@ -1,7 +1,8 @@
-import { X } from '@phosphor-icons/react'
+import { Trash, X } from '@phosphor-icons/react'
 import * as Dialog from '@radix-ui/react-dialog'
 import {
   CancelButton,
+  DeleteButton,
   DialogCloese,
   DialogContent,
   DialogOverlay,
@@ -20,8 +21,10 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useCallback, useEffect } from 'react'
 import { useCreateTask } from '../../hooks/useCreateTask'
+import { useDeleteTask } from '../../hooks/useDeleteTask'
 
 const tasksFieldsSchema = z.object({
+  taskId: z.string(),
   taskTitle: z.string(),
   taskPriority: z.string(),
   taskMaturity: z.string(),
@@ -31,15 +34,11 @@ const tasksFieldsSchema = z.object({
 type typeFieldsSchema = z.infer<typeof tasksFieldsSchema>
 
 interface EditTaskModalProps {
-  task: {
-    taskTitle: string
-    taskPriority: string
-    taskMaturity: Date
-    taskDescription: string
-  }
+  task: typeFieldsSchema
+  handleTogleModal: () => void
 }
 
-export function EditTaskModal({ task }: EditTaskModalProps) {
+export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
   const {
     register,
     setValue,
@@ -50,6 +49,7 @@ export function EditTaskModal({ task }: EditTaskModalProps) {
   })
 
   const { createNewTaks } = useCreateTask()
+  const { deleteTaskById } = useDeleteTask()
 
   useEffect(() => {
     setValue('taskTitle', task.taskTitle)
@@ -72,6 +72,14 @@ export function EditTaskModal({ task }: EditTaskModalProps) {
       }
     },
     [createNewTaks],
+  )
+
+  const handleDeleteTask = useCallback(
+    async (taskId: string) => {
+      await deleteTaskById(taskId)
+      handleTogleModal()
+    },
+    [deleteTaskById, handleTogleModal],
   )
 
   return (
@@ -112,10 +120,20 @@ export function EditTaskModal({ task }: EditTaskModalProps) {
             <textarea {...register('taskDescription')} />
           </InputTextArea>
           <FormFooter>
-            <Dialog.Close asChild>
-              <CancelButton>Cancelar</CancelButton>
-            </Dialog.Close>
-            <SaveButton disabled={isSubmitting}>Criar</SaveButton>
+            <DeleteButton
+              onClick={() => {
+                handleDeleteTask(task.taskId)
+              }}
+            >
+              <Trash />
+              Excluir Task
+            </DeleteButton>
+            <div>
+              <Dialog.Close asChild>
+                <CancelButton>Cancelar</CancelButton>
+              </Dialog.Close>
+              <SaveButton disabled={isSubmitting}>Salvar</SaveButton>
+            </div>
           </FormFooter>
         </NewTaskForm>
       </DialogContent>

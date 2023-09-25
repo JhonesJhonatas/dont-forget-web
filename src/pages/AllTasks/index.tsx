@@ -111,10 +111,12 @@ export function AllTasks() {
               return (
                 <TaskCard
                   key={task.id}
+                  id={task.id}
                   maturity={task.maturity}
                   priority={task.priority}
                   status={task.status}
                   title={task.title}
+                  description={task.description}
                 />
               )
             })}

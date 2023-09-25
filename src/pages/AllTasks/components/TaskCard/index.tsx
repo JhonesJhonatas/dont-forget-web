@@ -9,18 +9,28 @@ import {
   Status,
 } from './styles'
 import { format } from 'date-fns'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { EditTaskModal } from '../../../../components/EditTaskModal'
 
 interface TaskCardProps {
+  id: string
   title: string
   status: 'opened' | 'in_progress' | 'concluded'
   priority: 'normal' | 'high' | 'urgent'
   maturity: Date
+  description: string
 }
 
-export function TaskCard({ title, maturity, priority, status }: TaskCardProps) {
+export function TaskCard({
+  id,
+  title,
+  maturity,
+  priority,
+  status,
+  description,
+}: TaskCardProps) {
+  const [togleModalEdit, setTogleModalEdit] = useState(false)
   const formattedMaturity = format(new Date(maturity), 'dd/MM/yyyy')
 
   const formattedStatus = useCallback((status: string) => {
@@ -48,8 +58,20 @@ export function TaskCard({ title, maturity, priority, status }: TaskCardProps) {
     }
   }, [])
 
+  const handleTogleModal = useCallback(() => {
+    setTogleModalEdit(false)
+  }, [])
+
+  const formattedTaskData = {
+    taskId: id,
+    taskDescription: description,
+    taskMaturity: maturity.toString(),
+    taskPriority: priority,
+    taskTitle: title,
+  }
+
   return (
-    <Dialog.Root>
+    <Dialog.Root open={togleModalEdit} onOpenChange={setTogleModalEdit}>
       <Dialog.Trigger asChild>
         <Container>
           <CardHeader>
@@ -72,12 +94,8 @@ export function TaskCard({ title, maturity, priority, status }: TaskCardProps) {
         </Container>
       </Dialog.Trigger>
       <EditTaskModal
-        task={{
-          taskDescription: '',
-          taskMaturity: maturity,
-          taskPriority: priority,
-          taskTitle: title,
-        }}
+        task={formattedTaskData}
+        handleTogleModal={handleTogleModal}
       />
     </Dialog.Root>
   )
