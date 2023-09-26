@@ -9,63 +9,84 @@ export function SkeletonLoading() {
         baseColor="#3F3F46"
         highlightColor="#71717A"
         height={170}
-        width={480}
+        width={350}
         borderRadius={6}
       />
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
         height={170}
-        width={480}
+        width={350}
         borderRadius={6}
       />
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
         height={170}
-        width={480}
+        width={350}
         borderRadius={6}
       />
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
         height={170}
-        width={480}
+        width={350}
         borderRadius={6}
       />
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
         height={170}
-        width={480}
+        width={350}
         borderRadius={6}
       />
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
         height={170}
-        width={480}
+        width={350}
         borderRadius={6}
       />
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
         height={170}
-        width={480}
+        width={350}
         borderRadius={6}
       />
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
         height={170}
-        width={480}
+        width={350}
         borderRadius={6}
       />
       <Skeleton
         baseColor="#3F3F46"
         highlightColor="#71717A"
         height={170}
-        width={480}
+        width={350}
+        borderRadius={6}
+      />
+      <Skeleton
+        baseColor="#3F3F46"
+        highlightColor="#71717A"
+        height={170}
+        width={350}
+        borderRadius={6}
+      />
+      <Skeleton
+        baseColor="#3F3F46"
+        highlightColor="#71717A"
+        height={170}
+        width={350}
+        borderRadius={6}
+      />
+      <Skeleton
+        baseColor="#3F3F46"
+        highlightColor="#71717A"
+        height={170}
+        width={350}
         borderRadius={6}
       />
     </Container>
