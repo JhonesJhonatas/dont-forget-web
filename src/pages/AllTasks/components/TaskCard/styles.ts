@@ -5,13 +5,11 @@ interface PriorityProps {
 }
 
 export const Container = styled.div`
-  width: 100%;
-  min-height: 12rem;
-  max-height: 12rem;
+  width: 20rem;
   background-color: ${(props) => props.theme.cardBgSecondary};
   border: 1px solid ${(props) => props.theme.borderCard};
   border-radius: 6px;
-  padding: 1.5rem;
+  padding: 1rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 
@@ -33,8 +31,8 @@ export const CardHeader = styled.header`
 
 export const CardTitle = styled.span`
   font-size: 1rem;
-  font-weight: bold;
-  max-width: 65%;
+  font-weight: 300;
+  max-width: 60%;
 `
 
 export const Status = styled.div`

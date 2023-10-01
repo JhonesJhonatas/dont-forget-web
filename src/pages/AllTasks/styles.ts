@@ -1,4 +1,8 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+
+interface IconViewProps {
+  isCurrentView: boolean
+}
 
 export const Container = styled.div`
   width: 100%;
@@ -117,6 +121,37 @@ export const LabelWithSelectInput = styled.label`
   }
 `
 
+export const FlexArea = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`
+
+export const ViewOptions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+`
+
+export const IconView = styled.div<IconViewProps>`
+  svg {
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 6px;
+
+    ${(props) =>
+      props.isCurrentView
+        ? css`
+            background-color: ${props.theme.enphasis};
+          `
+        : css`
+            &:hover {
+              background-color: ${(props) => props.theme.cardBgSecondary};
+            }
+          `}
+  }
+`
+
 export const InputText = styled.input`
   border-radius: 6px;
   outline: 0;
@@ -132,13 +167,55 @@ export const InputText = styled.input`
 `
 
 export const TasksArea = styled.section`
-  width: 100%;
-  height: 71vh;
-  display: grid;
-  padding-right: 0.5rem;
-  padding-bottom: 0.5rem;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
-  gap: 1.5rem;
+  width: 76.5vw;
+  height: 70vh;
   overflow: auto;
 `
+
+export const TaskTable = styled.table`
+  border-collapse: separate;
+  border-spacing: 1rem;
+`
+
+export const TableHeader = styled.thead`
+  background-color: ${(props) => props.theme.cardBgPrimary};
+
+  tr {
+    th {
+      padding: 0.5rem;
+      border-radius: 6px 6px 0 0;
+      border-top: 3px solid green;
+    }
+  }
+`
+
+export const TableBody = styled.tbody`
+  tr {
+    td {
+      min-width: 20rem;
+    }
+  }
+`
+
+export const CardsArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
+
+export const ListViewTable = styled.table`
+  width: 99%;
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+`
+
+export const ListViewTableHeader = styled.thead`
+  tr {
+    th {
+      font-weight: 300;
+      text-align: start;
+    }
+  }
+`
+
+export const ListViewTableBody = styled.tbody``

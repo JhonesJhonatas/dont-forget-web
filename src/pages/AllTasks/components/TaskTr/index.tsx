@@ -1,26 +1,24 @@
-import { Calendar, Circle, Flag } from '@phosphor-icons/react'
-import {
-  CardElements,
-  CardHeader,
-  CardTitle,
-  Container,
-  Maturity,
-  Priority,
-  Status,
-} from './styles'
+import { Calendar, Flag, Folder } from '@phosphor-icons/react'
+import { TaskSchema } from '../../../../hooks/useGetTasks'
 import { format } from 'date-fns'
+import {
+  MaturityContainer,
+  PriorityContainer,
+  StatusContainer,
+  TableTr,
+} from './style'
 import { useCallback, useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { EditTaskModal } from '../../../../components/EditTaskModal'
-import { TaskSchema } from '../../../../hooks/useGetTasks'
 
-interface TaskCardProps {
+interface TaskTrProps {
   task: TaskSchema
 }
 
-export function TaskCard({ task }: TaskCardProps) {
+export function TaskTr({ task }: TaskTrProps) {
   const [togleModalEdit, setTogleModalEdit] = useState(false)
-  const formattedMaturity = format(new Date(task.maturity), 'dd/MM/yyyy')
+
+  const formattedDate = format(new Date(task.maturity), 'dd/MM/yyyy')
 
   const formattedStatus = useMemo(() => {
     if (task.status === 'opened') {
@@ -56,25 +54,32 @@ export function TaskCard({ task }: TaskCardProps) {
   return (
     <Dialog.Root open={togleModalEdit} onOpenChange={setTogleModalEdit}>
       <Dialog.Trigger asChild>
-        <Container>
-          <CardHeader>
-            <CardTitle>{task.title}</CardTitle>
-            <Status>
-              <Circle weight="fill" />
-              <span>{formattedStatus}</span>
-            </Status>
-          </CardHeader>
-          <CardElements>
-            <Priority level={task.priority}>
-              <Flag weight="fill" />
-              <span>{formattedPriority}</span>
-            </Priority>
-            <Maturity>
+        <TableTr key={task.id}>
+          <td>
+            <div>
+              <Folder />
+              {task.title}
+            </div>
+          </td>
+          <td>
+            <StatusContainer status={task.status}>
+              <div></div>
+              {formattedStatus}
+            </StatusContainer>{' '}
+          </td>
+          <td>
+            <MaturityContainer>
               <Calendar />
-              <span>{formattedMaturity}</span>
-            </Maturity>
-          </CardElements>
-        </Container>
+              {formattedDate}
+            </MaturityContainer>
+          </td>
+          <td>
+            <PriorityContainer priority={task.priority}>
+              <Flag weight="fill" />
+              {formattedPriority}
+            </PriorityContainer>
+          </td>
+        </TableTr>
       </Dialog.Trigger>
       <EditTaskModal task={task} handleTogleModal={handleTogleModal} />
     </Dialog.Root>
