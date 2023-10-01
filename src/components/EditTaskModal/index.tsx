@@ -23,6 +23,7 @@ import { z } from 'zod'
 import { useCallback, useEffect } from 'react'
 import { useDeleteTask } from '../../hooks/useDeleteTask'
 import { format } from 'date-fns'
+import { TaskSchema } from '../../hooks/useGetTasks'
 
 const tasksFieldsSchema = z.object({
   taskTitle: z.string(),
@@ -34,17 +35,8 @@ const tasksFieldsSchema = z.object({
 
 type typeFieldsSchema = z.infer<typeof tasksFieldsSchema>
 
-interface TaskFieldsReceived {
-  taskId: string
-  taskTitle: string
-  taskStatus: 'opened' | 'in_progress' | 'approval' | 'concluded'
-  taskPriority: string
-  taskMaturity: string
-  taskDescription: string
-}
-
 interface EditTaskModalProps {
-  task: TaskFieldsReceived
+  task: TaskSchema
   handleTogleModal: () => void
 }
 
@@ -60,21 +52,21 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
 
   const { deleteTaskById } = useDeleteTask()
 
-  const formattedMaturity = format(new Date(task.taskMaturity), 'yyyy-MM-dd')
+  const formattedMaturity = format(new Date(task.maturity), 'yyyy-MM-dd')
 
   useEffect(() => {
-    setValue('taskTitle', task.taskTitle)
-    setValue('taskStatus', task.taskStatus)
-    setValue('taskPriority', task.taskPriority)
+    setValue('taskTitle', task.title)
+    setValue('taskStatus', task.status)
+    setValue('taskPriority', task.priority)
     setValue('taskMaturity', formattedMaturity)
-    setValue('taskDescription', task.taskDescription)
+    setValue('taskDescription', task.description)
   }, [
     formattedMaturity,
     setValue,
-    task.taskDescription,
-    task.taskPriority,
-    task.taskTitle,
-    task.taskStatus,
+    task.description,
+    task.priority,
+    task.status,
+    task.title,
   ])
 
   const onSubmit = useCallback(async (data: typeFieldsSchema) => {
@@ -138,7 +130,7 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
           <FormFooter>
             <DeleteButton
               onClick={() => {
-                handleDeleteTask(task.taskId)
+                handleDeleteTask(task.id)
               }}
             >
               Excluir Task

@@ -192,8 +192,15 @@ export const TableHeader = styled.thead`
 export const TableBody = styled.tbody`
   tr {
     td {
+      min-width: 20rem;
     }
   }
+`
+
+export const CardsArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `
 
 export const ListViewTable = styled.table`
@@ -211,21 +218,4 @@ export const ListViewTableHeader = styled.thead`
   }
 `
 
-export const ListViewTableBody = styled.tbody`
-  tr {
-    background-color: ${(props) => props.theme.cardBgSecondary};
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      background-color: ${(props) => props.theme.cardBgPrimary};
-    }
-
-    td:first-child {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem;
-    }
-  }
-`
+export const ListViewTableBody = styled.tbody``

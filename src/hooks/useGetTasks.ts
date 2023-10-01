@@ -7,7 +7,13 @@ export interface TaskSchema {
   maturity: Date
   completedAt: Date
   title: string
-  status: 'opened' | 'in_progress' | 'concluded'
+  status:
+    | 'opened'
+    | 'stand_by'
+    | 'in_progress'
+    | 'approval'
+    | 'payment'
+    | 'concluded'
   priority: 'normal' | 'high' | 'urgent'
   description: string
   userId: string

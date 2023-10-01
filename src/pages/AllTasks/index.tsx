@@ -2,12 +2,12 @@ import {
   ArrowsDownUp,
   CalendarBlank,
   FadersHorizontal,
-  File,
   Kanban,
   List,
 } from '@phosphor-icons/react'
-import { TaskCard } from './components/TaskCard'
+
 import {
+  CardsArea,
   Container,
   DateOptions,
   FiltersArea,
@@ -32,12 +32,22 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { TaskContext } from '../../contexts/TasksContext'
 import { useCallback, useContext, useState } from 'react'
+import { TaskTr } from './components/TaskTr'
+import { useGetTasksByStatus } from '../../hooks/useGetTasksByStatus'
+import { TaskCard } from './components/TaskCard'
 
 type TogleTaksViewSchema = 'list' | 'kanban'
 
 export function AllTasks() {
   const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('list')
   const { allTasksList } = useContext(TaskContext)
+
+  const openedTasks = useGetTasksByStatus('opened')
+  const standByTasks = useGetTasksByStatus('stand_by')
+  const inProgressTasks = useGetTasksByStatus('in_progress')
+  const approvalTasks = useGetTasksByStatus('approval')
+  const paymentTasks = useGetTasksByStatus('payment')
+  const concludedTasks = useGetTasksByStatus('concluded')
 
   const dayOfWeek = format(new Date(), 'EEEE', { locale: ptBR })
   const today = format(new Date(), 'dd/MM/yyyy', { locale: ptBR })
@@ -151,64 +161,46 @@ export function AllTasks() {
               <TableBody>
                 <tr>
                   <td>
-                    <TaskCard
-                      id="asdasd121"
-                      description="asdasd"
-                      maturity="2023-09-27T21:51:33.000Z"
-                      title="asdasdasd"
-                      priority="high"
-                      status="opened"
-                    />
+                    <CardsArea>
+                      {openedTasks.filteredTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                   <td>
-                    <TaskCard
-                      id="asdasd121"
-                      description="asdasd"
-                      maturity="2023-09-27T21:51:33.000Z"
-                      title="asdasdasd"
-                      priority="high"
-                      status="opened"
-                    />
+                    <CardsArea>
+                      {standByTasks.filteredTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                   <td>
-                    <TaskCard
-                      id="asdasd121"
-                      description="asdasd"
-                      maturity="2023-09-27T21:51:33.000Z"
-                      title="asdasdasd"
-                      priority="high"
-                      status="opened"
-                    />
+                    <CardsArea>
+                      {inProgressTasks.filteredTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                   <td>
-                    <TaskCard
-                      id="asdasd121"
-                      description="asdasd"
-                      maturity="2023-09-27T21:51:33.000Z"
-                      title="asdasdasd"
-                      priority="high"
-                      status="opened"
-                    />
+                    <CardsArea>
+                      {approvalTasks.filteredTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                   <td>
-                    <TaskCard
-                      id="asdasd121"
-                      description="asdasd"
-                      maturity="2023-09-27T21:51:33.000Z"
-                      title="asdasdasd"
-                      priority="high"
-                      status="opened"
-                    />
+                    <CardsArea>
+                      {paymentTasks.filteredTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                   <td>
-                    <TaskCard
-                      id="asdasd121"
-                      description="asdasd"
-                      maturity="2023-09-27T21:51:33.000Z"
-                      title="asdasdasd"
-                      priority="high"
-                      status="opened"
-                    />
+                    <CardsArea>
+                      {concludedTasks.filteredTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                 </tr>
               </TableBody>
@@ -229,17 +221,7 @@ export function AllTasks() {
               </ListViewTableHeader>
               <ListViewTableBody>
                 {allTasksList.map((task) => {
-                  return (
-                    <tr key={task.id}>
-                      <td>
-                        <File />
-                        {task.title}
-                      </td>
-                      <td>{task.status}</td>
-                      <td>{format(new Date(task.maturity), 'dd/MM/yyyy')}</td>
-                      <td>{task.priority}</td>
-                    </tr>
-                  )
+                  return <TaskTr key={task.id} task={task} />
                 })}
               </ListViewTableBody>
             </ListViewTable>

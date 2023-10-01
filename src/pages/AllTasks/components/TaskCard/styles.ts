@@ -31,8 +31,8 @@ export const CardHeader = styled.header`
 
 export const CardTitle = styled.span`
   font-size: 1rem;
-  font-weight: bold;
-  max-width: 65%;
+  font-weight: 300;
+  max-width: 60%;
 `
 
 export const Status = styled.div`
