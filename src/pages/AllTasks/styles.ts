@@ -4,10 +4,17 @@ interface IconViewProps {
   isCurrentView: boolean
 }
 
-export const Container = styled.div`
-  width: 100%;
-  height: 100%;
+interface StatusHeaderProps {
+  status:
+    | 'opened'
+    | 'stand_by'
+    | 'in_progress'
+    | 'approval'
+    | 'payment'
+    | 'concluded'
+}
 
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -16,7 +23,7 @@ export const Container = styled.div`
 export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0.8rem;
 `
 
 export const HandleOptions = styled.div`
@@ -168,7 +175,7 @@ export const InputText = styled.input`
 
 export const TasksArea = styled.section`
   width: 76.5vw;
-  height: 70vh;
+  height: fit-content;
   overflow: auto;
 `
 
@@ -179,14 +186,47 @@ export const TaskTable = styled.table`
 
 export const TableHeader = styled.thead`
   background-color: ${(props) => props.theme.cardBgPrimary};
+`
 
-  tr {
-    th {
-      padding: 0.5rem;
-      border-radius: 6px 6px 0 0;
-      border-top: 3px solid green;
-    }
-  }
+export const StatusHeader = styled.th<StatusHeaderProps>`
+  padding: 0.5rem;
+  border-radius: 6px;
+
+  ${(props) =>
+    props.status === 'opened' &&
+    css`
+      border-top: 3px solid ${props.theme.textSecondary};
+    `}
+
+  ${(props) =>
+    props.status === 'stand_by' &&
+    css`
+      border-top: 3px solid ${props.theme.borderCard};
+    `}
+
+    ${(props) =>
+    props.status === 'in_progress' &&
+    css`
+      border-top: 3px solid ${props.theme.enphasis};
+    `}
+
+    ${(props) =>
+    props.status === 'approval' &&
+    css`
+      border-top: 3px solid ${props.theme.danger};
+    `}
+
+    ${(props) =>
+    props.status === 'payment' &&
+    css`
+      border-top: 3px solid ${props.theme.error};
+    `}
+
+    ${(props) =>
+    props.status === 'concluded' &&
+    css`
+      border-top: 3px solid ${props.theme.sucess};
+    `}
 `
 
 export const TableBody = styled.tbody`
@@ -198,9 +238,15 @@ export const TableBody = styled.tbody`
 `
 
 export const CardsArea = styled.div`
+  height: 62vh;
+  padding-right: 0.5rem;
+  width: fit-content;
+  gap: 1rem;
+  overflow: auto;
+
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  justify-content: start;
 `
 
 export const ListViewTable = styled.table`
