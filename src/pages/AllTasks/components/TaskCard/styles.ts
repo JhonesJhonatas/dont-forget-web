@@ -4,6 +4,16 @@ interface PriorityProps {
   level: 'normal' | 'high' | 'urgent'
 }
 
+interface StatusProps {
+  status:
+    | 'opened'
+    | 'stand_by'
+    | 'in_progress'
+    | 'approval'
+    | 'payment'
+    | 'concluded'
+}
+
 export const Container = styled.div`
   width: 20rem;
   background-color: ${(props) => props.theme.cardBgSecondary};
@@ -35,7 +45,7 @@ export const CardTitle = styled.span`
   max-width: 60%;
 `
 
-export const Status = styled.div`
+export const Status = styled.div<StatusProps>`
   padding: 0.2rem 0.5rem;
   border-radius: 6px;
   background-color: ${(props) => props.theme.cardBgPrimary};
@@ -43,6 +53,54 @@ export const Status = styled.div`
   align-items: center;
   gap: 0.5rem;
   width: fit-content;
+
+  svg {
+    ${(props) =>
+      props.status === 'opened' &&
+      css`
+        color: ${props.theme.textSecondary};
+      `}
+  }
+
+  svg {
+    ${(props) =>
+      props.status === 'opened' &&
+      css`
+        color: ${props.theme.borderCard};
+      `}
+  }
+
+  svg {
+    ${(props) =>
+      props.status === 'in_progress' &&
+      css`
+        color: ${props.theme.enphasis};
+      `}
+  }
+
+  svg {
+    ${(props) =>
+      props.status === 'approval' &&
+      css`
+        color: ${props.theme.danger};
+      `}
+  }
+
+  svg {
+    ${(props) =>
+      props.status === 'payment' &&
+      css`
+        color: ${props.theme.error};
+      `}
+  }
+
+  svg {
+    ${(props) =>
+      props.status === 'concluded' &&
+      css`
+        color: ${props.theme.sucess};
+      `}
+  }
 
   span {
     color: ${(props) => props.theme.textPrimary};

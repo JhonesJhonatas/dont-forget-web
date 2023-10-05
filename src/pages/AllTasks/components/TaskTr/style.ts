@@ -62,6 +62,61 @@ export const StatusContainer = styled.div<StatusContainerProps>`
         background-color: ${(props) => props.theme.textSecondary};
       }
     `}
+
+  ${(props) =>
+    props.status === 'stand_by' &&
+    css`
+      div {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 60px;
+        background-color: ${(props) => props.theme.cardBgPrimary};
+      }
+    `}
+
+    ${(props) =>
+    props.status === 'in_progress' &&
+    css`
+      div {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 60px;
+        background-color: ${(props) => props.theme.enphasis};
+      }
+    `}
+
+    ${(props) =>
+    props.status === 'approval' &&
+    css`
+      div {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 60px;
+        background-color: ${(props) => props.theme.danger};
+      }
+    `}
+
+    ${(props) =>
+    props.status === 'payment' &&
+    css`
+      div {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 60px;
+        background-color: ${(props) => props.theme.error};
+      }
+    `}
+
+    ${(props) =>
+    props.status === 'concluded' &&
+    css`
+      div {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 60px;
+        background-color: ${(props) => props.theme.sucess};
+      }
+    `}
 `
 
 export const MaturityContainer = styled.div`

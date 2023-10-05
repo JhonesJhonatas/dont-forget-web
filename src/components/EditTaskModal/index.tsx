@@ -23,7 +23,8 @@ import { z } from 'zod'
 import { useCallback, useEffect } from 'react'
 import { useDeleteTask } from '../../hooks/useDeleteTask'
 import { format } from 'date-fns'
-import { TaskSchema } from '../../hooks/useGetTasks'
+import { useUpdateTask } from '../../hooks/useUpdateTask'
+import { TaskSchema } from '../../contexts/TasksContext'
 
 const tasksFieldsSchema = z.object({
   taskTitle: z.string(),
@@ -51,6 +52,7 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
   })
 
   const { deleteTaskById } = useDeleteTask()
+  const { updateTask } = useUpdateTask()
 
   const formattedMaturity = format(new Date(task.maturity), 'yyyy-MM-dd')
 
@@ -69,9 +71,21 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
     task.title,
   ])
 
-  const onSubmit = useCallback(async (data: typeFieldsSchema) => {
-    console.log(data)
-  }, [])
+  const onSubmit = useCallback(
+    async (data: typeFieldsSchema) => {
+      const formattedData = {
+        id: task.id,
+        description: data.taskDescription,
+        maturity: data.taskMaturity,
+        priority: data.taskPriority,
+        status: data.taskStatus,
+        title: data.taskTitle,
+      }
+
+      updateTask(formattedData)
+    },
+    [task.id, updateTask],
+  )
 
   const handleDeleteTask = useCallback(
     async (taskId: string) => {

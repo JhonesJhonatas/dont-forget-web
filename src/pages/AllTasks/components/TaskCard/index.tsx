@@ -27,7 +27,7 @@ export function TaskCard({ task }: TaskCardProps) {
       return 'Em Aberto'
     }
     if (task.status === 'in_progress') {
-      return 'Em Desenvolvimento'
+      return 'Em Andamento'
     }
     if (task.status === 'approval') {
       return 'Aprovação'
@@ -59,7 +59,7 @@ export function TaskCard({ task }: TaskCardProps) {
         <Container>
           <CardHeader>
             <CardTitle>{task.title}</CardTitle>
-            <Status>
+            <Status status={task.status}>
               <Circle weight="fill" />
               <span>{formattedStatus}</span>
             </Status>
