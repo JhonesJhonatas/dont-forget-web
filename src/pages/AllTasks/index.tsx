@@ -1,6 +1,5 @@
 import {
   ArrowsDownUp,
-  CalendarBlank,
   FadersHorizontal,
   Kanban,
   List,
@@ -9,7 +8,7 @@ import {
 import {
   CardsArea,
   Container,
-  DateOptions,
+  Divider,
   FiltersArea,
   FiltersContainer,
   FlexArea,
@@ -21,7 +20,6 @@ import {
   ListViewTableBody,
   ListViewTableHeader,
   MainContainer,
-  OptionsContainer,
   StatusHeader,
   TableBody,
   TableHeader,
@@ -29,8 +27,6 @@ import {
   TasksArea,
   ViewOptions,
 } from './styles'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import { TaskContext } from '../../contexts/TasksContext'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { TaskTr } from './components/TaskTr'
@@ -159,9 +155,6 @@ export function AllTasks() {
     }
   }, [concludedTasks, tasksIsLoading])
 
-  const dayOfWeek = format(new Date(), 'EEEE', { locale: ptBR })
-  const today = format(new Date(), 'dd/MM/yyyy', { locale: ptBR })
-
   const handleChangeView = useCallback((view: TogleTaksViewSchema) => {
     setCurrentView(view)
   }, [])
@@ -180,16 +173,6 @@ export function AllTasks() {
     <Container>
       <MainContainer>
         <HandleOptions>
-          <OptionsContainer>
-            <DateOptions>
-              <CalendarBlank />
-              <div>
-                <span>{dayOfWeek}</span>
-                <span>{today}</span>
-              </div>
-            </DateOptions>
-          </OptionsContainer>
-
           <FiltersContainer>
             <FiltersArea>
               <section>
@@ -219,6 +202,7 @@ export function AllTasks() {
                   </LabelWithSelectInput>
                 </div>
               </section>
+              <Divider></Divider>
               <section>
                 <div>
                   <ArrowsDownUp />

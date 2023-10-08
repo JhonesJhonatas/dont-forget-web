@@ -60,7 +60,7 @@ export function NavBar() {
           </NavLink>
         </NavItem>
         <NavItem>
-          <NavLink to={'/login'}>
+          <NavLink to={'/'}>
             <div>
               <SignOut />
               <span>Sair</span>

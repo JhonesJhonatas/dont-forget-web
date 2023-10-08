@@ -4,12 +4,15 @@ import { z } from 'zod'
 import { api } from '../lib/axios'
 import { TaskContext } from '../contexts/TasksContext'
 
+const userId = import.meta.env.VITE_USER_ID
+
 const createNewTaskProps = z.object({
   taskTitle: z.string(),
   taskPriority: z.string(),
   taskMaturity: z.string(),
   taskDescription: z.string(),
 })
+
 type CreateNewTaksSchema = z.infer<typeof createNewTaskProps>
 
 export const useCreateTask = () => {
@@ -24,7 +27,7 @@ export const useCreateTask = () => {
         status: 'opened',
         priority: data.taskPriority,
         description: data.taskDescription,
-        userId: '55779d10-8cb4-4392-a0de-7e35c4752a08',
+        userId,
       }
 
       api

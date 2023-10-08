@@ -92,7 +92,6 @@ export const FiltersArea = styled.div`
     display: flex;
     align-items: center;
     gap: 1rem;
-    border: 1px solid ${(props) => props.theme.textSecondary};
     padding: 0.5rem;
     border-radius: 6px;
 
@@ -106,6 +105,12 @@ export const FiltersArea = styled.div`
   span {
     font-weight: bold;
   }
+`
+
+export const Divider = styled.div`
+  width: 2px;
+  height: 44px;
+  background-color: ${(props) => props.theme.textSecondary};
 `
 
 export const LabelWithSelectInput = styled.label`
@@ -238,7 +243,7 @@ export const TableBody = styled.tbody`
 `
 
 export const CardsArea = styled.div`
-  height: 62vh;
+  height: calc(100vh - 16rem);
   padding-right: 0.5rem;
   width: fit-content;
   gap: 1rem;
