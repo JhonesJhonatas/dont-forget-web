@@ -45,7 +45,7 @@ export function NavBar() {
           <NavLink to={'/all-tasks'}>
             <div>
               <CheckSquare />
-              <span>Tasks</span>
+              <span>Tarefas</span>
             </div>
             <CaretRight />
           </NavLink>

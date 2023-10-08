@@ -26,11 +26,17 @@ export function TaskCard({ task }: TaskCardProps) {
     if (task.status === 'opened') {
       return 'Em Aberto'
     }
+    if (task.status === 'stand_by') {
+      return 'StandBy'
+    }
     if (task.status === 'in_progress') {
       return 'Em Andamento'
     }
     if (task.status === 'approval') {
       return 'Aprovação'
+    }
+    if (task.status === 'payment') {
+      return 'Pagamento'
     }
     if (task.status === 'concluded') {
       return 'Concluída'

@@ -118,8 +118,10 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
             Status:
             <select {...register('taskStatus')}>
               <option value="opened">Em Aberto</option>
-              <option value="in_progress">Em Desenvolvimento</option>
+              <option value="stand_by">StandBy</option>
+              <option value="in_progress">Em Andamento</option>
               <option value="approval">Aprovação</option>
+              <option value="payment">Aguardando Pagamento</option>
               <option value="concluded">Concluído</option>
             </select>
           </InputStatus>
