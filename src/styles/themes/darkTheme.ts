@@ -11,4 +11,10 @@ export const darkTheme = {
   danger: '#F97316',
   enphasis: '#3B82F6',
   enphasisHover: '#60a5fa',
+  opened: '#94a3b8',
+  stand_by: '#eab308',
+  in_progress: '#3b82f6',
+  approval: '#f97316',
+  payment: '#f43f5e',
+  concluded: '#84cc16',
 } as const

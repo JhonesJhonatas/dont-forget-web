@@ -58,15 +58,15 @@ export const Status = styled.div<StatusProps>`
     ${(props) =>
       props.status === 'opened' &&
       css`
-        color: ${props.theme.textSecondary};
+        color: ${props.theme.opened};
       `}
   }
 
   svg {
     ${(props) =>
-      props.status === 'opened' &&
+      props.status === 'stand_by' &&
       css`
-        color: ${props.theme.borderCard};
+        color: ${props.theme.stand_by};
       `}
   }
 
@@ -74,7 +74,7 @@ export const Status = styled.div<StatusProps>`
     ${(props) =>
       props.status === 'in_progress' &&
       css`
-        color: ${props.theme.enphasis};
+        color: ${props.theme.in_progress};
       `}
   }
 
@@ -82,7 +82,7 @@ export const Status = styled.div<StatusProps>`
     ${(props) =>
       props.status === 'approval' &&
       css`
-        color: ${props.theme.danger};
+        color: ${props.theme.approval};
       `}
   }
 
@@ -90,7 +90,7 @@ export const Status = styled.div<StatusProps>`
     ${(props) =>
       props.status === 'payment' &&
       css`
-        color: ${props.theme.error};
+        color: ${props.theme.payment};
       `}
   }
 
@@ -98,7 +98,7 @@ export const Status = styled.div<StatusProps>`
     ${(props) =>
       props.status === 'concluded' &&
       css`
-        color: ${props.theme.sucess};
+        color: ${props.theme.concluded};
       `}
   }
 
