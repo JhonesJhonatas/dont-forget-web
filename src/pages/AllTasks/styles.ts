@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import hexToRgba from 'hex-to-rgba'
 
 interface IconViewProps {
   isCurrentView: boolean
@@ -14,10 +15,31 @@ interface StatusHeaderProps {
     | 'concluded'
 }
 
+interface ListViewTableHeaderProps {
+  status:
+    | 'opened'
+    | 'stand_by'
+    | 'in_progress'
+    | 'approval'
+    | 'payment'
+    | 'concluded'
+}
+
+interface TaskListByStatusProps {
+  status:
+    | 'opened'
+    | 'stand_by'
+    | 'in_progress'
+    | 'approval'
+    | 'payment'
+    | 'concluded'
+}
+
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  height: 92vh;
 `
 
 export const MainContainer = styled.div`
@@ -30,6 +52,12 @@ export const HandleOptions = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+`
+
+export const TasksContainer = styled.div`
+  height: calc(92vh - 5rem);
+  padding-right: 1rem;
+  overflow: auto;
 `
 
 export const OptionsContainer = styled.section`
@@ -184,6 +212,116 @@ export const TasksArea = styled.section`
   overflow: auto;
 `
 
+export const TasksListArea = styled.section`
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`
+
+export const TaskListByStatus = styled.div<TaskListByStatusProps>`
+  padding: 0 1rem;
+  border-radius: 6px;
+
+  ${(props) =>
+    props.status === 'opened' &&
+    css`
+      background-color: ${(props) => hexToRgba(props.theme.opened, 0.05)};
+      border-left: 4px solid ${(props) => props.theme.opened};
+    `}
+
+  ${(props) =>
+    props.status === 'stand_by' &&
+    css`
+      background-color: ${(props) => hexToRgba(props.theme.stand_by, 0.2)};
+      border-left: 4px solid ${(props) => props.theme.stand_by};
+    `}
+
+    ${(props) =>
+    props.status === 'in_progress' &&
+    css`
+      background-color: ${(props) => hexToRgba(props.theme.in_progress, 0.02)};
+      border-left: 4px solid ${(props) => props.theme.in_progress};
+    `}
+
+    ${(props) =>
+    props.status === 'approval' &&
+    css`
+      background-color: ${(props) => hexToRgba(props.theme.approval, 0.2)};
+      border-left: 4px solid ${(props) => props.theme.approval};
+    `}
+
+    ${(props) =>
+    props.status === 'payment' &&
+    css`
+      background-color: ${(props) => hexToRgba(props.theme.payment, 0.2)};
+      border-left: 4px solid ${(props) => props.theme.payment};
+    `}
+
+    
+    ${(props) =>
+    props.status === 'concluded' &&
+    css`
+      background-color: ${(props) => hexToRgba(props.theme.concluded, 0.2)};
+      border-left: 4px solid ${(props) => props.theme.concluded};
+    `}
+`
+
+export const ListViewTableHeader = styled.div<ListViewTableHeaderProps>`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  div {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 60px;
+    ${(props) =>
+      props.status === 'opened' &&
+      css`
+        background-color: ${(props) => props.theme.opened};
+      `}
+    ${(props) =>
+      props.status === 'stand_by' &&
+      css`
+        background-color: ${(props) => props.theme.stand_by};
+      `}
+      ${(props) =>
+      props.status === 'in_progress' &&
+      css`
+        background-color: ${(props) => props.theme.in_progress};
+      `}
+      ${(props) =>
+      props.status === 'approval' &&
+      css`
+        background-color: ${(props) => props.theme.approval};
+      `}
+      ${(props) =>
+      props.status === 'payment' &&
+      css`
+        background-color: ${(props) => props.theme.payment};
+      `}
+      ${(props) =>
+      props.status === 'concluded' &&
+      css`
+        background-color: ${(props) => props.theme.concluded};
+      `}
+  }
+  span {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+`
+
+export const ListViewTable = styled.table`
+  width: 99%;
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+`
+
+export const ListViewTableBody = styled.tbody``
+
 export const TaskTable = styled.table`
   border-collapse: separate;
   border-spacing: 1rem;
@@ -200,37 +338,37 @@ export const StatusHeader = styled.th<StatusHeaderProps>`
   ${(props) =>
     props.status === 'opened' &&
     css`
-      border-top: 3px solid ${props.theme.textSecondary};
+      border-top: 3px solid ${props.theme.opened};
     `}
 
   ${(props) =>
     props.status === 'stand_by' &&
     css`
-      border-top: 3px solid ${props.theme.borderCard};
+      border-top: 3px solid ${props.theme.stand_by};
     `}
 
     ${(props) =>
     props.status === 'in_progress' &&
     css`
-      border-top: 3px solid ${props.theme.enphasis};
+      border-top: 3px solid ${props.theme.in_progress};
     `}
 
     ${(props) =>
     props.status === 'approval' &&
     css`
-      border-top: 3px solid ${props.theme.danger};
+      border-top: 3px solid ${props.theme.approval};
     `}
 
     ${(props) =>
     props.status === 'payment' &&
     css`
-      border-top: 3px solid ${props.theme.error};
+      border-top: 3px solid ${props.theme.payment};
     `}
 
     ${(props) =>
     props.status === 'concluded' &&
     css`
-      border-top: 3px solid ${props.theme.sucess};
+      border-top: 3px solid ${props.theme.concluded};
     `}
 `
 
@@ -253,20 +391,3 @@ export const CardsArea = styled.div`
   flex-direction: column;
   justify-content: start;
 `
-
-export const ListViewTable = styled.table`
-  width: 99%;
-  border-collapse: separate;
-  border-spacing: 0 1rem;
-`
-
-export const ListViewTableHeader = styled.thead`
-  tr {
-    th {
-      font-weight: 300;
-      text-align: start;
-    }
-  }
-`
-
-export const ListViewTableBody = styled.tbody``

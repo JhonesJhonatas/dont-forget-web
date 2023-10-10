@@ -23,151 +23,36 @@ import {
   StatusHeader,
   TableBody,
   TableHeader,
+  TaskListByStatus,
   TaskTable,
   TasksArea,
+  TasksContainer,
+  TasksListArea,
   ViewOptions,
 } from './styles'
 import { TaskContext } from '../../contexts/TasksContext'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { TaskTr } from './components/TaskTr'
+import { useSeparateTasksById } from './hooks/useSeparateTasksByStatus'
 import { TaskCard } from './components/TaskCard'
-import { TaskSchema } from '../../hooks/useGetTasks'
-import { SkeletonLoading } from './components/SkeletonLoading'
-import { ListLoading } from './components/ListLoading'
 
 type TogleTaksViewSchema = 'list' | 'kanban'
 
 export function AllTasks() {
   const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('list')
-  const [openedTasks, setOpenedTasks] = useState<TaskSchema[]>([])
-  const [inProgressTasks, setInProgressTasks] = useState<TaskSchema[]>([])
-  const [standByTasks, setStandByTasks] = useState<TaskSchema[]>([])
-  const [approvalTasks, setApprovalTasks] = useState<TaskSchema[]>([])
-  const [paymentTasks, setPaymentTasks] = useState<TaskSchema[]>([])
-  const [concludedTasks, setConcludedTasks] = useState<TaskSchema[]>([])
-  const { allTasksList, tasksIsLoading } = useContext(TaskContext)
-
-  useEffect(() => {
-    const filteredTasks = allTasksList.filter(
-      (task) => task.status === 'opened',
-    )
-
-    setOpenedTasks(filteredTasks)
-  }, [allTasksList])
-
-  const openedListOrLoading = useMemo(() => {
-    if (tasksIsLoading) {
-      return <SkeletonLoading />
-    } else {
-      return openedTasks.map((task) => {
-        return <TaskCard key={task.id} task={task} />
-      })
-    }
-  }, [openedTasks, tasksIsLoading])
-
-  useEffect(() => {
-    const filteredTasks = allTasksList.filter(
-      (task) => task.status === 'stand_by',
-    )
-
-    setStandByTasks(filteredTasks)
-  }, [allTasksList])
-
-  const standByListOrLoading = useMemo(() => {
-    if (tasksIsLoading) {
-      return <SkeletonLoading />
-    } else {
-      return standByTasks.map((task) => {
-        return <TaskCard key={task.id} task={task} />
-      })
-    }
-  }, [standByTasks, tasksIsLoading])
-
-  useEffect(() => {
-    const filteredTasks = allTasksList.filter(
-      (task) => task.status === 'in_progress',
-    )
-
-    setInProgressTasks(filteredTasks)
-  }, [allTasksList])
-
-  const inProgressListOrLoading = useMemo(() => {
-    if (tasksIsLoading) {
-      return <SkeletonLoading />
-    } else {
-      return inProgressTasks.map((task) => {
-        return <TaskCard key={task.id} task={task} />
-      })
-    }
-  }, [inProgressTasks, tasksIsLoading])
-
-  useEffect(() => {
-    const filteredTasks = allTasksList.filter(
-      (task) => task.status === 'approval',
-    )
-
-    setApprovalTasks(filteredTasks)
-  }, [allTasksList])
-
-  const approvalListOrLoading = useMemo(() => {
-    if (tasksIsLoading) {
-      return <SkeletonLoading />
-    } else {
-      return approvalTasks.map((task) => {
-        return <TaskCard key={task.id} task={task} />
-      })
-    }
-  }, [approvalTasks, tasksIsLoading])
-
-  useEffect(() => {
-    const filteredTasks = allTasksList.filter(
-      (task) => task.status === 'payment',
-    )
-
-    setPaymentTasks(filteredTasks)
-  }, [allTasksList])
-
-  const paymentListOrLoading = useMemo(() => {
-    if (tasksIsLoading) {
-      return <SkeletonLoading />
-    } else {
-      return paymentTasks.map((task) => {
-        return <TaskCard key={task.id} task={task} />
-      })
-    }
-  }, [paymentTasks, tasksIsLoading])
-
-  useEffect(() => {
-    const filteredTasks = allTasksList.filter(
-      (task) => task.status === 'concluded',
-    )
-
-    setConcludedTasks(filteredTasks)
-  }, [allTasksList])
-
-  const concludedListOrLoading = useMemo(() => {
-    if (tasksIsLoading) {
-      return <SkeletonLoading />
-    } else {
-      return concludedTasks.map((task) => {
-        return <TaskCard key={task.id} task={task} />
-      })
-    }
-  }, [concludedTasks, tasksIsLoading])
+  const { allTasksList } = useContext(TaskContext)
+  const {
+    openedTasks,
+    standByTasks,
+    inProgressTasks,
+    approvalTasks,
+    paymentTasks,
+    concludedTasks,
+  } = useSeparateTasksById({ tasks: allTasksList })
 
   const handleChangeView = useCallback((view: TogleTaksViewSchema) => {
     setCurrentView(view)
   }, [])
-
-  const taskListOrLoad = useMemo(() => {
-    if (tasksIsLoading) {
-      return <ListLoading />
-    } else {
-      return allTasksList.map((task) => {
-        return <TaskTr key={task.id} task={task} />
-      })
-    }
-  }, [allTasksList, tasksIsLoading])
 
   return (
     <Container>
@@ -248,6 +133,102 @@ export function AllTasks() {
           </FiltersContainer>
         </HandleOptions>
 
+        {currentView === 'list' && (
+          <TasksContainer>
+            <TasksListArea>
+              <TaskListByStatus status="opened">
+                <ListViewTable>
+                  <ListViewTableHeader status="opened">
+                    <div></div>
+                    <span>Em Aberto</span>
+                    <small>({openedTasks.length})</small>
+                  </ListViewTableHeader>
+                  <ListViewTableBody>
+                    {openedTasks.map((task) => {
+                      return <TaskTr key={task.id} task={task} />
+                    })}
+                  </ListViewTableBody>
+                </ListViewTable>
+              </TaskListByStatus>
+
+              <TaskListByStatus status="stand_by">
+                <ListViewTable>
+                  <ListViewTableHeader status="stand_by">
+                    <div></div>
+                    <span>StandyBy</span>
+                    <small>({standByTasks.length})</small>
+                  </ListViewTableHeader>
+                  <ListViewTableBody>
+                    {standByTasks.map((task) => {
+                      return <TaskTr key={task.id} task={task} />
+                    })}
+                  </ListViewTableBody>
+                </ListViewTable>
+              </TaskListByStatus>
+
+              <TaskListByStatus status="in_progress">
+                <ListViewTable>
+                  <ListViewTableHeader status="in_progress">
+                    <div></div>
+                    <span>Em Andamento</span>
+                    <small>({inProgressTasks.length})</small>
+                  </ListViewTableHeader>
+                  <ListViewTableBody>
+                    {inProgressTasks.map((task) => {
+                      return <TaskTr key={task.id} task={task} />
+                    })}
+                  </ListViewTableBody>
+                </ListViewTable>
+              </TaskListByStatus>
+
+              <TaskListByStatus status="approval">
+                <ListViewTable>
+                  <ListViewTableHeader status="approval">
+                    <div></div>
+                    <span>Aprovação</span>
+                    <small>({approvalTasks.length})</small>
+                  </ListViewTableHeader>
+                  <ListViewTableBody>
+                    {approvalTasks.map((task) => {
+                      return <TaskTr key={task.id} task={task} />
+                    })}
+                  </ListViewTableBody>
+                </ListViewTable>
+              </TaskListByStatus>
+
+              <TaskListByStatus status="payment">
+                <ListViewTable>
+                  <ListViewTableHeader status="payment">
+                    <div></div>
+                    <span>Pagamento</span>
+                    <small>({paymentTasks.length})</small>
+                  </ListViewTableHeader>
+                  <ListViewTableBody>
+                    {paymentTasks.map((task) => {
+                      return <TaskTr key={task.id} task={task} />
+                    })}
+                  </ListViewTableBody>
+                </ListViewTable>
+              </TaskListByStatus>
+
+              <TaskListByStatus status="concluded">
+                <ListViewTable>
+                  <ListViewTableHeader status="concluded">
+                    <div></div>
+                    <span>Concluídas</span>
+                    <small>({concludedTasks.length})</small>
+                  </ListViewTableHeader>
+                  <ListViewTableBody>
+                    {concludedTasks.map((task) => {
+                      return <TaskTr key={task.id} task={task} />
+                    })}
+                  </ListViewTableBody>
+                </ListViewTable>
+              </TaskListByStatus>
+            </TasksListArea>
+          </TasksContainer>
+        )}
+
         {currentView === 'kanban' && (
           <TasksArea>
             <TaskTable>
@@ -265,42 +246,50 @@ export function AllTasks() {
               <TableBody>
                 <tr>
                   <td>
-                    <CardsArea>{openedListOrLoading}</CardsArea>
+                    <CardsArea>
+                      {openedTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                   <td>
-                    <CardsArea>{standByListOrLoading}</CardsArea>
+                    <CardsArea>
+                      {standByTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                   <td>
-                    <CardsArea>{inProgressListOrLoading}</CardsArea>
+                    <CardsArea>
+                      {inProgressTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                   <td>
-                    <CardsArea>{approvalListOrLoading}</CardsArea>
+                    <CardsArea>
+                      {approvalTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                   <td>
-                    <CardsArea>{paymentListOrLoading}</CardsArea>
+                    <CardsArea>
+                      {paymentTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                   <td>
-                    <CardsArea>{concludedListOrLoading}</CardsArea>
+                    <CardsArea>
+                      {concludedTasks.map((task) => {
+                        return <TaskCard key={task.id} task={task} />
+                      })}
+                    </CardsArea>
                   </td>
                 </tr>
               </TableBody>
             </TaskTable>
-          </TasksArea>
-        )}
-
-        {currentView === 'list' && (
-          <TasksArea>
-            <ListViewTable>
-              <ListViewTableHeader>
-                <tr>
-                  <th>Título</th>
-                  <th>Status</th>
-                  <th>Deadline</th>
-                  <th>Prioridade</th>
-                </tr>
-              </ListViewTableHeader>
-              <ListViewTableBody>{taskListOrLoad}</ListViewTableBody>
-            </ListViewTable>
           </TasksArea>
         )}
       </MainContainer>
