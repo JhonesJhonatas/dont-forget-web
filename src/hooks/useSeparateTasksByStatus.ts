@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { TaskSchema } from '../../../hooks/useGetTasks'
+import { TaskSchema } from './useGetTasks'
 
 interface TasksByStatusProps {
   tasks: TaskSchema[]

@@ -1,3 +1,4 @@
+import hexToRgba from 'hex-to-rgba'
 import styled from 'styled-components'
 
 export const Container = styled.div`
@@ -56,8 +57,8 @@ export const TasksResume = styled.div`
 `
 
 export const TasksForToday = styled.div`
-  background-color: ${(props) => props.theme.cardBgSecondary};
-  border: 1px solid ${(props) => props.theme.borderCard};
+  background-color: ${(props) => hexToRgba(props.theme.opened, 0.02)};
+  border: 1px solid ${(props) => props.theme.cardBgPrimary};
   padding: 1rem;
   border-radius: 6px;
   height: 100%;
@@ -65,8 +66,8 @@ export const TasksForToday = styled.div`
 `
 
 export const TasksForTomorrow = styled.div`
-  background-color: ${(props) => props.theme.cardBgSecondary};
-  border: 1px solid ${(props) => props.theme.borderCard};
+  background-color: ${(props) => hexToRgba(props.theme.opened, 0.02)};
+  border: 1px solid ${(props) => props.theme.cardBgPrimary};
   padding: 1rem;
   border-radius: 6px;
   height: 100%;
@@ -75,7 +76,7 @@ export const TasksForTomorrow = styled.div`
 
 export const TitleOfBox = styled.div`
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid ${(props) => props.theme.textSecondary};
+  border-bottom: 1px solid ${(props) => props.theme.cardBgPrimary};
 
   span {
     font-size: 1rem;
@@ -101,8 +102,8 @@ export const ListViewTableHeader = styled.thead`
 export const ListViewTableBody = styled.tbody``
 
 export const Notifications = styled.div`
-  background-color: ${(props) => props.theme.cardBgSecondary};
-  border: 1px solid ${(props) => props.theme.borderCard};
+  background-color: ${(props) => hexToRgba(props.theme.opened, 0.02)};
+  border: 1px solid ${(props) => props.theme.cardBgPrimary};
   padding: 1rem;
   border-radius: 6px;
 `
