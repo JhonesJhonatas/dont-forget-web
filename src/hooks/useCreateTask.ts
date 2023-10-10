@@ -1,4 +1,4 @@
-import { formatISO } from 'date-fns'
+import { formatISO, parseISO } from 'date-fns'
 import { useCallback, useContext } from 'react'
 import { z } from 'zod'
 import { api } from '../lib/axios'
@@ -22,7 +22,7 @@ export const useCreateTask = () => {
     (data: CreateNewTaksSchema) => {
       const formattedData = {
         createdAt: formatISO(new Date()),
-        maturity: formatISO(new Date(data.taskMaturity)),
+        maturity: formatISO(parseISO(data.taskMaturity)),
         title: data.taskTitle,
         status: 'opened',
         priority: data.taskPriority,

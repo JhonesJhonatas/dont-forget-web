@@ -1,7 +1,7 @@
 import { useCallback, useContext } from 'react'
 import { api } from '../lib/axios'
 import { TaskContext } from '../contexts/TasksContext'
-import { formatISO } from 'date-fns'
+import { formatISO, parseISO } from 'date-fns'
 
 interface TaskToUpdateSchema {
   id: string
@@ -26,7 +26,7 @@ export const useUpdateTask = () => {
     }: TaskToUpdateSchema) => {
       const formattedData = {
         description,
-        maturity: formatISO(new Date(maturity)),
+        maturity: formatISO(parseISO(maturity)),
         priority,
         status,
         title,

@@ -82,9 +82,10 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
         title: data.taskTitle,
       }
 
-      updateTask(formattedData)
+      await updateTask(formattedData)
+      handleTogleModal()
     },
-    [task.id, updateTask],
+    [handleTogleModal, task.id, updateTask],
   )
 
   const handleDeleteTask = useCallback(
