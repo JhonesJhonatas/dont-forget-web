@@ -33,8 +33,8 @@ import {
 import { TaskContext } from '../../contexts/TasksContext'
 import { useCallback, useContext, useState } from 'react'
 import { TaskTr } from './components/TaskTr'
-import { useSeparateTasksById } from './hooks/useSeparateTasksByStatus'
 import { TaskCard } from './components/TaskCard'
+import { useSeparateTasksById } from '../../hooks/useSeparateTasksByStatus'
 
 type TogleTaksViewSchema = 'list' | 'kanban'
 

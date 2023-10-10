@@ -18,20 +18,43 @@ import {
   WelcomeIcon,
   WelcomePhrase,
 } from './styles'
-
-const fakeTask: TaskSchema = {
-  id: '9a92b59e-aea8-41c1-a83e-054c8f0311b0',
-  createdAt: new Date('2023-10-05T19:40:01.000Z'),
-  maturity: new Date('2023-10-05T19:40:01.000Z'),
-  completedAt: new Date('2023-10-05T19:40:01.000Z'),
-  title: 'Task 1',
-  status: 'opened',
-  priority: 'normal',
-  description: '',
-  userId: '4cfd03a1-addf-4941-a488-a5f1d2ca6fbe',
-}
+import { useContext, useEffect, useState } from 'react'
+import { TaskContext } from '../../contexts/TasksContext'
+import { useSeparateTasksById } from '../../hooks/useSeparateTasksByStatus'
+import { format, isToday, isTomorrow, parseISO } from 'date-fns'
 
 export function DashBoard() {
+  const [tasksForToday, setTasksForToday] = useState<TaskSchema[]>([])
+  const [tasksForTomorrow, setTasksForTomorrow] = useState<TaskSchema[]>([])
+
+  const { allTasksList } = useContext(TaskContext)
+  const {
+    openedTasks,
+    standByTasks,
+    inProgressTasks,
+    approvalTasks,
+    paymentTasks,
+    concludedTasks,
+  } = useSeparateTasksById({ tasks: allTasksList })
+
+  const todayDate = format(new Date(), 'dd/MM/yyyy')
+
+  useEffect(() => {
+    const todayTasks = allTasksList.filter((task) =>
+      isToday(parseISO(task.maturity.toString())),
+    )
+
+    setTasksForToday(todayTasks)
+  }, [allTasksList, todayDate])
+
+  useEffect(() => {
+    const tomorrowTasks = allTasksList.filter((task) =>
+      isTomorrow(parseISO(task.maturity.toString())),
+    )
+
+    setTasksForTomorrow(tomorrowTasks)
+  }, [allTasksList])
+
   return (
     <Container>
       <DashBoardHeader>
@@ -44,12 +67,12 @@ export function DashBoard() {
         </TextHeader>
       </DashBoardHeader>
       <CardsArea>
-        <ResumeCard amount={16} status="opened" />
-        <ResumeCard amount={23} status="stand_by" />
-        <ResumeCard amount={45} status="in_progress" />
-        <ResumeCard amount={13} status="approval" />
-        <ResumeCard amount={21} status="payment" />
-        <ResumeCard amount={51} status="concluded" />
+        <ResumeCard amount={openedTasks.length} status="opened" />
+        <ResumeCard amount={standByTasks.length} status="stand_by" />
+        <ResumeCard amount={inProgressTasks.length} status="in_progress" />
+        <ResumeCard amount={approvalTasks.length} status="approval" />
+        <ResumeCard amount={paymentTasks.length} status="payment" />
+        <ResumeCard amount={concludedTasks.length} status="concluded" />
       </CardsArea>
       <FlexArea>
         <TasksResume>
@@ -67,12 +90,9 @@ export function DashBoard() {
                 </tr>
               </ListViewTableHeader>
               <ListViewTableBody>
-                <TaskTr task={fakeTask} />
-                <TaskTr task={fakeTask} />
-                <TaskTr task={fakeTask} />
-                <TaskTr task={fakeTask} />
-                <TaskTr task={fakeTask} />
-                <TaskTr task={fakeTask} />
+                {tasksForToday.map((task) => {
+                  return <TaskTr key={task.id} task={task} />
+                })}
               </ListViewTableBody>
             </ListViewTable>
           </TasksForToday>
@@ -90,12 +110,9 @@ export function DashBoard() {
                 </tr>
               </ListViewTableHeader>
               <ListViewTableBody>
-                <TaskTr task={fakeTask} />
-                <TaskTr task={fakeTask} />
-                <TaskTr task={fakeTask} />
-                <TaskTr task={fakeTask} />
-                <TaskTr task={fakeTask} />
-                <TaskTr task={fakeTask} />
+                {tasksForTomorrow.map((task) => {
+                  return <TaskTr key={task.id} task={task} />
+                })}
               </ListViewTableBody>
             </ListViewTable>
           </TasksForTomorrow>

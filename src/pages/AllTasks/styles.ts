@@ -223,39 +223,35 @@ export const TasksListArea = styled.section`
 export const TaskListByStatus = styled.div<TaskListByStatusProps>`
   padding: 0 1rem;
   border-radius: 6px;
+  background-color: ${(props) => hexToRgba(props.theme.opened, 0.02)};
 
   ${(props) =>
     props.status === 'opened' &&
     css`
-      background-color: ${(props) => hexToRgba(props.theme.opened, 0.05)};
       border-left: 4px solid ${(props) => props.theme.opened};
     `}
 
   ${(props) =>
     props.status === 'stand_by' &&
     css`
-      background-color: ${(props) => hexToRgba(props.theme.stand_by, 0.2)};
       border-left: 4px solid ${(props) => props.theme.stand_by};
     `}
 
     ${(props) =>
     props.status === 'in_progress' &&
     css`
-      background-color: ${(props) => hexToRgba(props.theme.in_progress, 0.02)};
       border-left: 4px solid ${(props) => props.theme.in_progress};
     `}
 
     ${(props) =>
     props.status === 'approval' &&
     css`
-      background-color: ${(props) => hexToRgba(props.theme.approval, 0.2)};
       border-left: 4px solid ${(props) => props.theme.approval};
     `}
 
     ${(props) =>
     props.status === 'payment' &&
     css`
-      background-color: ${(props) => hexToRgba(props.theme.payment, 0.2)};
       border-left: 4px solid ${(props) => props.theme.payment};
     `}
 
@@ -263,7 +259,6 @@ export const TaskListByStatus = styled.div<TaskListByStatusProps>`
     ${(props) =>
     props.status === 'concluded' &&
     css`
-      background-color: ${(props) => hexToRgba(props.theme.concluded, 0.2)};
       border-left: 4px solid ${(props) => props.theme.concluded};
     `}
 `
