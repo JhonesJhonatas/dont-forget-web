@@ -1,55 +1,84 @@
 import styled from 'styled-components'
 
 export const Container = styled.nav`
-  height: fit-content;
+  height: 100%;
   background-color: ${(props) => props.theme.cardBgSecondary};
-  padding: 1rem;
-  border-radius: 6px;
-  border: 1px solid ${(props) => props.theme.borderCard};
+  padding: 2rem 1rem;
 
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  justify-content: space-between;
+  gap: 1rem;
 `
 
-export const CardHedaer = styled.header`
+export const Section = styled.section`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   gap: 1rem;
+`
+
+export const NavHeader = styled.div`
+  padding-bottom: 1rem;
+  border-bottom: 1px solid ${(props) => props.theme.cardBgPrimary};
+
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+
+  svg {
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: ${(props) => props.theme.enphasis};
+    }
+  }
+`
+
+export const UserInfos = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 
   img {
-    max-width: 8rem;
-    max-height: 8rem;
-    border-radius: 200px;
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 60px;
   }
 
-  span {
-    font-size: 1.25rem;
-    font-weight: bold;
+  div {
+    display: flex;
+    flex-direction: column;
   }
 `
 
-export const NavItemsArea = styled.div`
+export const UserName = styled.span`
+  font-size: 0.9rem;
+  font-weight: bold;
+`
+
+export const UserEmail = styled.span`
+  font-size: 0.7rem;
+  font-weight: 300;
+`
+
+export const NavContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 `
 
 export const NavItem = styled.div`
   a {
-    text-decoration: none;
-    color: ${(props) => props.theme.textPrimary};
-    background-color: ${(props) => props.theme.cardBgPrimary};
     padding: 0.5rem;
     border-radius: 6px;
-    transition: all 0.2s ease-in-out;
-
     display: flex;
     align-items: center;
-    gap: 0.5rem;
     justify-content: space-between;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    color: ${(props) => props.theme.textPrimary};
 
     div {
       display: flex;
@@ -58,35 +87,45 @@ export const NavItem = styled.div`
     }
 
     &:hover {
-      background-color: ${(props) => props.theme.borderCard};
+      background-color: ${(props) => props.theme.cardBgPrimary};
     }
 
     &.active {
-      background-color: ${(props) => props.theme.textSecondary};
+      background-color: ${(props) => props.theme.enphasis};
+    }
+  }
+`
+
+export const NavFooter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+
+  svg {
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: ${(props) => props.theme.enphasis};
     }
   }
 `
 
 export const NewTaskButton = styled.button`
+  width: 100%;
   border: 0;
-  border-radius: 6px;
   padding: 1rem;
+  border-radius: 6px;
   background-color: ${(props) => props.theme.enphasis};
+  font-weight: bold;
   color: ${(props) => props.theme.textPrimary};
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
 
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-
-  svg {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  &:hover {
-    background-color: ${(props) => props.theme.enphasisHover};
-  }
 `

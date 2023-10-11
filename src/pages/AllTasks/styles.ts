@@ -207,7 +207,7 @@ export const InputText = styled.input`
 `
 
 export const TasksArea = styled.section`
-  width: 76.5vw;
+  width: calc(100vw - 24rem);
   height: fit-content;
   overflow: auto;
 `
