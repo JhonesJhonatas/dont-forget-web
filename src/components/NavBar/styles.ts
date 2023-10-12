@@ -31,7 +31,7 @@ export const NavHeader = styled.div`
     transition: all 0.2s ease-in-out;
 
     &:hover {
-      background-color: ${(props) => props.theme.enphasis};
+      background-color: ${(props) => props.theme.borderCard};
     }
   }
 `

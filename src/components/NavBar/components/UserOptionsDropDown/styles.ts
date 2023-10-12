@@ -14,7 +14,23 @@ export const DropDownContent = styled(DropdownMenu.Content)`
 
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
 `
 
-export const DropDownItem = styled(DropdownMenu.Item)``
+export const DropDownItem = styled(DropdownMenu.Item)`
+  border: 0;
+  outline: 0;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 0.5rem;
+
+  &:hover {
+    background-color: ${(props) => props.theme.borderCard};
+  }
+`

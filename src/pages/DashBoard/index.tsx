@@ -21,11 +21,24 @@ import {
 import { useContext, useEffect, useState } from 'react'
 import { TaskContext } from '../../contexts/TasksContext'
 import { useSeparateTasksById } from '../../hooks/useSeparateTasksByStatus'
-import { format, isToday, isTomorrow, parseISO } from 'date-fns'
+import {
+  format,
+  isFriday,
+  isMonday,
+  isSaturday,
+  isSunday,
+  isThursday,
+  isToday,
+  isTomorrow,
+  isTuesday,
+  isWednesday,
+  parseISO,
+} from 'date-fns'
 
 export function DashBoard() {
   const [tasksForToday, setTasksForToday] = useState<TaskSchema[]>([])
   const [tasksForTomorrow, setTasksForTomorrow] = useState<TaskSchema[]>([])
+  const [messageForToday, setMessageForToday] = useState('')
 
   const { allTasksList } = useContext(TaskContext)
   const {
@@ -38,6 +51,38 @@ export function DashBoard() {
   } = useSeparateTasksById({ tasks: allTasksList })
 
   const todayDate = format(new Date(), 'dd/MM/yyyy')
+
+  useEffect(() => {
+    const today = new Date()
+
+    if (isSunday(today)) {
+      setMessageForToday('Aproveite o seu domingo!')
+    }
+
+    if (isMonday(today)) {
+      setMessageForToday('Aproveite a sua segunda-feira!')
+    }
+
+    if (isTuesday(today)) {
+      setMessageForToday('Aproveite a sua terça-feira!')
+    }
+
+    if (isWednesday(today)) {
+      setMessageForToday('Aproveite a sua quarta-feira!')
+    }
+
+    if (isThursday(today)) {
+      setMessageForToday('Aproveite a sua quinta-feira!')
+    }
+
+    if (isFriday(today)) {
+      setMessageForToday('Aproveite a sua sexta-feira!')
+    }
+
+    if (isSaturday(today)) {
+      setMessageForToday('Aproveite o seu sábado!')
+    }
+  }, [])
 
   useEffect(() => {
     const todayTasks = allTasksList.filter((task) =>
@@ -63,7 +108,7 @@ export function DashBoard() {
         </WelcomeIcon>
         <TextHeader>
           <WelcomePhrase>Olá, Jhones Jhonatas</WelcomePhrase>
-          <span>Aproveite a sua Segunda-Feira!</span>
+          <span>{messageForToday}</span>
         </TextHeader>
       </DashBoardHeader>
       <CardsArea>
