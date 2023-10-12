@@ -2,6 +2,8 @@
 
 ## Sobre a Aplicação
 
+⚠️Aplicação em desenvolvimento.
+
 <a href="https://dont-forget-web.vercel.app/" >💻 • Link da aplicação em Produção</a>
 
 ## Explorando a Aplicação
