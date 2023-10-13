@@ -8,7 +8,6 @@ import {
   FlexArea,
   ListViewTable,
   ListViewTableBody,
-  ListViewTableHeader,
   Notifications,
   TasksForToday,
   TasksForTomorrow,
@@ -23,8 +22,11 @@ import { TaskContext } from '../../contexts/TasksContext'
 import { useSeparateTasksById } from '../../hooks/useSeparateTasksByStatus'
 import {
   format,
+  getDate,
+  isBefore,
   isFriday,
   isMonday,
+  isPast,
   isSaturday,
   isSunday,
   isThursday,
@@ -34,13 +36,15 @@ import {
   isWednesday,
   parseISO,
 } from 'date-fns'
+import { TasksLoading } from './components/TasksLoading'
 
 export function DashBoard() {
   const [tasksForToday, setTasksForToday] = useState<TaskSchema[]>([])
   const [tasksForTomorrow, setTasksForTomorrow] = useState<TaskSchema[]>([])
+  const [lateTasks, setLateTasks] = useState<TaskSchema[]>([])
   const [messageForToday, setMessageForToday] = useState('')
 
-  const { allTasksList } = useContext(TaskContext)
+  const { allTasksList, tasksIsLoading } = useContext(TaskContext)
   const {
     openedTasks,
     standByTasks,
@@ -100,6 +104,17 @@ export function DashBoard() {
     setTasksForTomorrow(tomorrowTasks)
   }, [allTasksList])
 
+  useEffect(() => {
+    const lateTasks = allTasksList.filter((task) =>
+      isBefore(
+        getDate(parseISO(task.maturity.toString())),
+        getDate(new Date()),
+      ),
+    )
+
+    setLateTasks(lateTasks)
+  }, [allTasksList])
+
   return (
     <Container>
       <DashBoardHeader>
@@ -120,53 +135,56 @@ export function DashBoard() {
         <ResumeCard amount={concludedTasks.length} status="concluded" />
       </CardsArea>
       <FlexArea>
-        <TasksResume>
-          <TasksForToday>
-            <TitleOfBox>
-              <span>Tarefas para hoje:</span>
-            </TitleOfBox>
-            <ListViewTable>
-              <ListViewTableHeader>
-                <tr>
-                  <th>Título</th>
-                  <th>Status</th>
-                  <th>Deadline</th>
-                  <th>Prioridade</th>
-                </tr>
-              </ListViewTableHeader>
+        <Notifications>
+          <TitleOfBox>
+            <span>Tarefas para Hoje:</span>
+          </TitleOfBox>
+          <ListViewTable>
+            {tasksIsLoading ? (
+              <TasksLoading />
+            ) : (
               <ListViewTableBody>
                 {tasksForToday.map((task) => {
                   return <TaskTr key={task.id} task={task} />
                 })}
               </ListViewTableBody>
-            </ListViewTable>
-          </TasksForToday>
-          <TasksForTomorrow>
+            )}
+          </ListViewTable>
+        </Notifications>
+        <TasksResume>
+          <TasksForToday>
             <TitleOfBox>
               <span>Tarefas para amanhã:</span>
             </TitleOfBox>
             <ListViewTable>
-              <ListViewTableHeader>
-                <tr>
-                  <th>Título</th>
-                  <th>Status</th>
-                  <th>Deadline</th>
-                  <th>Prioridade</th>
-                </tr>
-              </ListViewTableHeader>
-              <ListViewTableBody>
-                {tasksForTomorrow.map((task) => {
-                  return <TaskTr key={task.id} task={task} />
-                })}
-              </ListViewTableBody>
+              {tasksIsLoading ? (
+                <TasksLoading />
+              ) : (
+                <ListViewTableBody>
+                  {tasksForTomorrow.map((task) => {
+                    return <TaskTr key={task.id} task={task} />
+                  })}
+                </ListViewTableBody>
+              )}
+            </ListViewTable>
+          </TasksForToday>
+          <TasksForTomorrow>
+            <TitleOfBox>
+              <span>Tarefas atrasadas:</span>
+            </TitleOfBox>
+            <ListViewTable>
+              {tasksIsLoading ? (
+                <TasksLoading />
+              ) : (
+                <ListViewTableBody>
+                  {lateTasks.map((task) => {
+                    return <TaskTr key={task.id} task={task} />
+                  })}
+                </ListViewTableBody>
+              )}
             </ListViewTable>
           </TasksForTomorrow>
         </TasksResume>
-        <Notifications>
-          <TitleOfBox>
-            <span>Notificações:</span>
-          </TitleOfBox>
-        </Notifications>
       </FlexArea>
     </Container>
   )

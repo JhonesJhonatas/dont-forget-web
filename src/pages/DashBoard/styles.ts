@@ -9,7 +9,7 @@ export const Container = styled.div`
 
 export const DashBoardHeader = styled.section`
   background-color: ${(props) => props.theme.cardBgSecondary};
-  padding: 1rem;
+  padding: 1em;
   border-radius: 6px;
 
   display: flex;
@@ -43,15 +43,15 @@ export const CardsArea = styled.section`
 
 export const FlexArea = styled.section`
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 1rem;
+  grid-template-columns: 4fr 4fr;
+  gap: 1.5rem;
   height: calc(100vh - 16rem);
 `
 
 export const TasksResume = styled.div`
   height: 100%;
   display: grid;
-  grid-template-rows: 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: 1.5rem;
   overflow: auto;
 `

@@ -35,12 +35,14 @@ import { useCallback, useContext, useState } from 'react'
 import { TaskTr } from './components/TaskTr'
 import { TaskCard } from './components/TaskCard'
 import { useSeparateTasksById } from '../../hooks/useSeparateTasksByStatus'
+import { ListLoading } from './components/ListLoading'
+import { SkeletonLoading } from './components/SkeletonLoading'
 
 type TogleTaksViewSchema = 'list' | 'kanban'
 
 export function AllTasks() {
   const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('list')
-  const { allTasksList } = useContext(TaskContext)
+  const { allTasksList, tasksIsLoading } = useContext(TaskContext)
   const {
     openedTasks,
     standByTasks,
@@ -143,11 +145,15 @@ export function AllTasks() {
                     <span>Em Aberto</span>
                     <small>({openedTasks.length})</small>
                   </ListViewTableHeader>
-                  <ListViewTableBody>
-                    {openedTasks.map((task) => {
-                      return <TaskTr key={task.id} task={task} />
-                    })}
-                  </ListViewTableBody>
+                  {tasksIsLoading ? (
+                    <ListLoading />
+                  ) : (
+                    <ListViewTableBody>
+                      {openedTasks.map((task) => {
+                        return <TaskTr key={task.id} task={task} />
+                      })}
+                    </ListViewTableBody>
+                  )}
                 </ListViewTable>
               </TaskListByStatus>
 
@@ -158,11 +164,15 @@ export function AllTasks() {
                     <span>StandyBy</span>
                     <small>({standByTasks.length})</small>
                   </ListViewTableHeader>
-                  <ListViewTableBody>
-                    {standByTasks.map((task) => {
-                      return <TaskTr key={task.id} task={task} />
-                    })}
-                  </ListViewTableBody>
+                  {tasksIsLoading ? (
+                    <ListLoading />
+                  ) : (
+                    <ListViewTableBody>
+                      {standByTasks.map((task) => {
+                        return <TaskTr key={task.id} task={task} />
+                      })}
+                    </ListViewTableBody>
+                  )}
                 </ListViewTable>
               </TaskListByStatus>
 
@@ -173,11 +183,15 @@ export function AllTasks() {
                     <span>Em Andamento</span>
                     <small>({inProgressTasks.length})</small>
                   </ListViewTableHeader>
-                  <ListViewTableBody>
-                    {inProgressTasks.map((task) => {
-                      return <TaskTr key={task.id} task={task} />
-                    })}
-                  </ListViewTableBody>
+                  {tasksIsLoading ? (
+                    <ListLoading />
+                  ) : (
+                    <ListViewTableBody>
+                      {inProgressTasks.map((task) => {
+                        return <TaskTr key={task.id} task={task} />
+                      })}
+                    </ListViewTableBody>
+                  )}
                 </ListViewTable>
               </TaskListByStatus>
 
@@ -188,11 +202,15 @@ export function AllTasks() {
                     <span>Aprovação</span>
                     <small>({approvalTasks.length})</small>
                   </ListViewTableHeader>
-                  <ListViewTableBody>
-                    {approvalTasks.map((task) => {
-                      return <TaskTr key={task.id} task={task} />
-                    })}
-                  </ListViewTableBody>
+                  {tasksIsLoading ? (
+                    <ListLoading />
+                  ) : (
+                    <ListViewTableBody>
+                      {approvalTasks.map((task) => {
+                        return <TaskTr key={task.id} task={task} />
+                      })}
+                    </ListViewTableBody>
+                  )}
                 </ListViewTable>
               </TaskListByStatus>
 
@@ -203,11 +221,15 @@ export function AllTasks() {
                     <span>Pagamento</span>
                     <small>({paymentTasks.length})</small>
                   </ListViewTableHeader>
-                  <ListViewTableBody>
-                    {paymentTasks.map((task) => {
-                      return <TaskTr key={task.id} task={task} />
-                    })}
-                  </ListViewTableBody>
+                  {tasksIsLoading ? (
+                    <ListLoading />
+                  ) : (
+                    <ListViewTableBody>
+                      {paymentTasks.map((task) => {
+                        return <TaskTr key={task.id} task={task} />
+                      })}
+                    </ListViewTableBody>
+                  )}
                 </ListViewTable>
               </TaskListByStatus>
 
@@ -218,11 +240,15 @@ export function AllTasks() {
                     <span>Concluídas</span>
                     <small>({concludedTasks.length})</small>
                   </ListViewTableHeader>
-                  <ListViewTableBody>
-                    {concludedTasks.map((task) => {
-                      return <TaskTr key={task.id} task={task} />
-                    })}
-                  </ListViewTableBody>
+                  {tasksIsLoading ? (
+                    <ListLoading />
+                  ) : (
+                    <ListViewTableBody>
+                      {concludedTasks.map((task) => {
+                        return <TaskTr key={task.id} task={task} />
+                      })}
+                    </ListViewTableBody>
+                  )}
                 </ListViewTable>
               </TaskListByStatus>
             </TasksListArea>
@@ -246,46 +272,70 @@ export function AllTasks() {
               <TableBody>
                 <tr>
                   <td>
-                    <CardsArea>
-                      {openedTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
+                    {tasksIsLoading ? (
+                      <SkeletonLoading />
+                    ) : (
+                      <CardsArea>
+                        {openedTasks.map((task) => {
+                          return <TaskCard key={task.id} task={task} />
+                        })}
+                      </CardsArea>
+                    )}
                   </td>
                   <td>
-                    <CardsArea>
-                      {standByTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
+                    {tasksIsLoading ? (
+                      <SkeletonLoading />
+                    ) : (
+                      <CardsArea>
+                        {standByTasks.map((task) => {
+                          return <TaskCard key={task.id} task={task} />
+                        })}
+                      </CardsArea>
+                    )}
                   </td>
                   <td>
-                    <CardsArea>
-                      {inProgressTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
+                    {tasksIsLoading ? (
+                      <SkeletonLoading />
+                    ) : (
+                      <CardsArea>
+                        {inProgressTasks.map((task) => {
+                          return <TaskCard key={task.id} task={task} />
+                        })}
+                      </CardsArea>
+                    )}
                   </td>
                   <td>
-                    <CardsArea>
-                      {approvalTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
+                    {tasksIsLoading ? (
+                      <SkeletonLoading />
+                    ) : (
+                      <CardsArea>
+                        {approvalTasks.map((task) => {
+                          return <TaskCard key={task.id} task={task} />
+                        })}
+                      </CardsArea>
+                    )}
                   </td>
                   <td>
-                    <CardsArea>
-                      {paymentTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
+                    {tasksIsLoading ? (
+                      <SkeletonLoading />
+                    ) : (
+                      <CardsArea>
+                        {paymentTasks.map((task) => {
+                          return <TaskCard key={task.id} task={task} />
+                        })}
+                      </CardsArea>
+                    )}
                   </td>
                   <td>
-                    <CardsArea>
-                      {concludedTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
+                    {tasksIsLoading ? (
+                      <SkeletonLoading />
+                    ) : (
+                      <CardsArea>
+                        {concludedTasks.map((task) => {
+                          return <TaskCard key={task.id} task={task} />
+                        })}
+                      </CardsArea>
+                    )}
                   </td>
                 </tr>
               </TableBody>
