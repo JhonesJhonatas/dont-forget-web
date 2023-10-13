@@ -26,7 +26,6 @@ import {
   isBefore,
   isFriday,
   isMonday,
-  isPast,
   isSaturday,
   isSunday,
   isThursday,
