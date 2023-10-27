@@ -11,15 +11,15 @@ import {
 import taskModel from '../../assets/imgs/taskModel.svg'
 import { CaretRight } from '@phosphor-icons/react'
 import { useForm } from 'react-hook-form'
-import { useCallback } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import dontForgetWhiteLogo from '../../assets/imgs/dontForget-white.svg'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useAuthenticate } from '../../hooks/useAuthenticate'
 import { useNotify } from '../../hooks/useNotify'
+import { AuthContext } from '../../contexts/AuthContext'
 
 const loginFormSchema = z.object({
   email: z.string().email(),
@@ -37,12 +37,18 @@ export function Login() {
     resolver: zodResolver(loginFormSchema),
   })
   const navigate = useNavigate()
-  const { authenticate } = useAuthenticate()
   const { notify } = useNotify()
+  const { handleLogIn, authenticated } = useContext(AuthContext)
+
+  useEffect(() => {
+    if (authenticated) {
+      navigate('/dashboard')
+    }
+  }, [authenticated, navigate])
 
   const onSubmit = useCallback(
     async ({ email, password }: LoginFormSchema) => {
-      const isAuthenticated = await authenticate({ email, password })
+      const isAuthenticated = await handleLogIn({ email, password })
 
       if (isAuthenticated) {
         navigate('/dashboard')
@@ -55,7 +61,7 @@ export function Login() {
         })
       }
     },
-    [authenticate, navigate, notify],
+    [handleLogIn, navigate, notify],
   )
 
   const handleNavigateToCreateUserPage = useCallback(() => {

@@ -4,16 +4,19 @@ import { GlobalStyle } from './styles/globalStyle'
 import { BrowserRouter } from 'react-router-dom'
 import { Router } from './router'
 import { TaskContextProvider } from './contexts/TasksContext'
+import { AuthProvider } from './contexts/AuthContext'
 
 export function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <GlobalStyle />
-      <BrowserRouter>
-        <TaskContextProvider>
-          <Router />
-        </TaskContextProvider>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <TaskContextProvider>
+            <Router />
+          </TaskContextProvider>
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   )
 }

@@ -36,8 +36,20 @@ import {
   parseISO,
 } from 'date-fns'
 import { TasksLoading } from './components/TasksLoading'
+import { AuthContext } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 export function DashBoard() {
+  const navigate = useNavigate()
+
+  const { authenticated } = useContext(AuthContext)
+
+  useEffect(() => {
+    if (!authenticated) {
+      navigate('/')
+    }
+  }, [authenticated, navigate])
+
   const [tasksForToday, setTasksForToday] = useState<TaskSchema[]>([])
   const [tasksForTomorrow, setTasksForTomorrow] = useState<TaskSchema[]>([])
   const [lateTasks, setLateTasks] = useState<TaskSchema[]>([])
@@ -121,7 +133,7 @@ export function DashBoard() {
           <span>👋</span>
         </WelcomeIcon>
         <TextHeader>
-          <WelcomePhrase>Olá, Jhones Jhonatas</WelcomePhrase>
+          <WelcomePhrase>Olá, {localStorage.getItem('name')}</WelcomePhrase>
           <span>{messageForToday}</span>
         </TextHeader>
       </DashBoardHeader>

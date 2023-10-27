@@ -37,8 +37,8 @@ export function NavBar() {
           <UserInfos>
             <img src="https://github.com/jhonesjhonatas.png" alt="UserPic" />
             <div>
-              <UserName>Jhones Jhonatas</UserName>
-              <UserEmail>jhones.jhonatas@gmail.com</UserEmail>
+              <UserName>{localStorage.getItem('name')}</UserName>
+              <UserEmail>{localStorage.getItem('email')}</UserEmail>
             </div>
           </UserInfos>
           <DropdownMenu.Root>
