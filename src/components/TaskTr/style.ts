@@ -2,16 +2,16 @@ import styled, { css } from 'styled-components'
 
 interface StatusContainerProps {
   status:
-    | 'opened'
-    | 'stand_by'
-    | 'in_progress'
+    | 'toDo'
+    | 'standby'
+    | 'inProgress'
     | 'approval'
     | 'payment'
     | 'concluded'
 }
 
 interface PriorityContainer {
-  priority: 'normal' | 'high' | 'urgent'
+  priority: 'low' | 'normal' | 'high' | 'urgent'
 }
 
 export const TableTr = styled.tr`
@@ -20,8 +20,11 @@ export const TableTr = styled.tr`
   transition: all 0.2s ease-in-out;
 
   td {
+    width: 14%;
+
     &:first-child {
       border-radius: 6px 0 0 6px;
+      width: 58%;
 
       div {
         display: flex;
@@ -53,7 +56,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
   gap: 0.5rem;
 
   ${(props) =>
-    props.status === 'opened' &&
+    props.status === 'toDo' &&
     css`
       div {
         width: 0.75rem;
@@ -64,7 +67,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
     `}
 
   ${(props) =>
-    props.status === 'stand_by' &&
+    props.status === 'standby' &&
     css`
       div {
         width: 0.75rem;
@@ -75,7 +78,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
     `}
 
     ${(props) =>
-    props.status === 'in_progress' &&
+    props.status === 'inProgress' &&
     css`
       div {
         width: 0.75rem;
@@ -151,6 +154,12 @@ export const PriorityContainer = styled.div<PriorityContainer>`
   svg {
     width: 1rem;
     height: 1rem;
+    ${(props) =>
+      props.priority === 'low' &&
+      css`
+        color: ${(props) => props.theme.sucess};
+      `}
+
     ${(props) =>
       props.priority === 'normal' &&
       css`

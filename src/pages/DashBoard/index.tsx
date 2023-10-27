@@ -1,5 +1,4 @@
 import { TaskSchema } from '../../hooks/useGetTasks'
-import { TaskTr } from '../AllTasks/components/TaskTr'
 import { ResumeCard } from './components/ResumeCard'
 import {
   CardsArea,
@@ -38,6 +37,7 @@ import { TasksLoading } from './components/TasksLoading'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { TaskContext } from '../../contexts/TasksContext'
+import { TaskTr } from '../../components/TaskTr'
 
 export function DashBoard() {
   const navigate = useNavigate()

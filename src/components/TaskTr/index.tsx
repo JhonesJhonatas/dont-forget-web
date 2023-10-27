@@ -8,8 +8,8 @@ import {
 } from './style'
 import { useCallback, useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { EditTaskModal } from '../../../../components/EditTaskModal'
-import { OpenedTask } from '../../../../hooks/tasks/useGetAllOpenedTasks'
+import { OpenedTask } from '../../hooks/tasks/useGetAllOpenedTasks'
+import { EditTaskModal } from '../EditTaskModal'
 
 interface TaskTrProps {
   task: OpenedTask

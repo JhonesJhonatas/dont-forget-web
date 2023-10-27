@@ -30,14 +30,14 @@ import {
   ViewOptions,
 } from './styles'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { TaskTr } from './components/TaskTr'
-import { TaskCard } from './components/TaskCard'
-import { ListLoading } from './components/ListLoading'
-import { SkeletonLoading } from './components/SkeletonLoading'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { useGetAllOpenedTasks } from '../../hooks/tasks/useGetAllOpenedTasks'
 import { useSeparateOpenedTasksByStatus } from '../../hooks/tasks/useSeparateOpenedTasksByStatus'
+import { ListViewLoading } from '../../components/ListViewLoading'
+import { TaskTr } from '../../components/TaskTr'
+import { TaskCard } from '../../components/TaskCard'
+import { CardViewLoading } from '../../components/CardViewLoading'
 
 type TogleTaksViewSchema = 'list' | 'kanban'
 
@@ -158,7 +158,7 @@ export function AllTasks() {
                     <small>({toDoTasks.length})</small>
                   </ListViewTableHeader>
                   {openedTasksIsLoading ? (
-                    <ListLoading />
+                    <ListViewLoading />
                   ) : (
                     <ListViewTableBody>
                       {toDoTasks.map((task) => {
@@ -177,7 +177,7 @@ export function AllTasks() {
                     <small>({standByTasks.length})</small>
                   </ListViewTableHeader>
                   {openedTasksIsLoading ? (
-                    <ListLoading />
+                    <ListViewLoading />
                   ) : (
                     <ListViewTableBody>
                       {standByTasks.map((task) => {
@@ -196,7 +196,7 @@ export function AllTasks() {
                     <small>({inProgressTasks.length})</small>
                   </ListViewTableHeader>
                   {openedTasksIsLoading ? (
-                    <ListLoading />
+                    <ListViewLoading />
                   ) : (
                     <ListViewTableBody>
                       {inProgressTasks.map((task) => {
@@ -215,7 +215,7 @@ export function AllTasks() {
                     <small>({approvalTasks.length})</small>
                   </ListViewTableHeader>
                   {openedTasksIsLoading ? (
-                    <ListLoading />
+                    <ListViewLoading />
                   ) : (
                     <ListViewTableBody>
                       {approvalTasks.map((task) => {
@@ -234,7 +234,7 @@ export function AllTasks() {
                     <small>({paymentTasks.length})</small>
                   </ListViewTableHeader>
                   {openedTasksIsLoading ? (
-                    <ListLoading />
+                    <ListViewLoading />
                   ) : (
                     <ListViewTableBody>
                       {paymentTasks.map((task) => {
@@ -253,7 +253,7 @@ export function AllTasks() {
                     <small>({concludedTasks.length})</small>
                   </ListViewTableHeader>
                   {openedTasksIsLoading ? (
-                    <ListLoading />
+                    <ListViewLoading />
                   ) : (
                     <ListViewTableBody>
                       {concludedTasks.map((task) => {
@@ -285,7 +285,7 @@ export function AllTasks() {
                 <tr>
                   <td>
                     {openedTasksIsLoading ? (
-                      <SkeletonLoading />
+                      <CardViewLoading />
                     ) : (
                       <CardsArea>
                         {toDoTasks.map((task) => {
@@ -296,7 +296,7 @@ export function AllTasks() {
                   </td>
                   <td>
                     {openedTasksIsLoading ? (
-                      <SkeletonLoading />
+                      <CardViewLoading />
                     ) : (
                       <CardsArea>
                         {standByTasks.map((task) => {
@@ -307,7 +307,7 @@ export function AllTasks() {
                   </td>
                   <td>
                     {openedTasksIsLoading ? (
-                      <SkeletonLoading />
+                      <CardViewLoading />
                     ) : (
                       <CardsArea>
                         {inProgressTasks.map((task) => {
@@ -318,7 +318,7 @@ export function AllTasks() {
                   </td>
                   <td>
                     {openedTasksIsLoading ? (
-                      <SkeletonLoading />
+                      <CardViewLoading />
                     ) : (
                       <CardsArea>
                         {approvalTasks.map((task) => {
@@ -329,7 +329,7 @@ export function AllTasks() {
                   </td>
                   <td>
                     {openedTasksIsLoading ? (
-                      <SkeletonLoading />
+                      <CardViewLoading />
                     ) : (
                       <CardsArea>
                         {paymentTasks.map((task) => {
@@ -340,7 +340,7 @@ export function AllTasks() {
                   </td>
                   <td>
                     {openedTasksIsLoading ? (
-                      <SkeletonLoading />
+                      <CardViewLoading />
                     ) : (
                       <CardsArea>
                         {concludedTasks.map((task) => {
