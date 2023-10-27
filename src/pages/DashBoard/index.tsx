@@ -18,7 +18,6 @@ import {
   WelcomePhrase,
 } from './styles'
 import { useContext, useEffect, useState } from 'react'
-import { TaskContext } from '../../contexts/TasksContext'
 import { useSeparateTasksById } from '../../hooks/useSeparateTasksByStatus'
 import {
   format,
@@ -38,6 +37,7 @@ import {
 import { TasksLoading } from './components/TasksLoading'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { TaskContext } from '../../contexts/TasksContext'
 
 export function DashBoard() {
   const navigate = useNavigate()
