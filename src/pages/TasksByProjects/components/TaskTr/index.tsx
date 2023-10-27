@@ -1,4 +1,5 @@
 import { Calendar, Flag, Folder } from '@phosphor-icons/react'
+import { TaskSchema } from '../../../../hooks/useGetTasks'
 import { format } from 'date-fns'
 import {
   MaturityContainer,
@@ -9,10 +10,9 @@ import {
 import { useCallback, useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { EditTaskModal } from '../../../../components/EditTaskModal'
-import { OpenedTask } from '../../../../hooks/tasks/useGetAllOpenedTasks'
 
 interface TaskTrProps {
-  task: OpenedTask
+  task: TaskSchema
 }
 
 export function TaskTr({ task }: TaskTrProps) {
@@ -21,13 +21,13 @@ export function TaskTr({ task }: TaskTrProps) {
   const formattedDate = format(new Date(task.maturity), 'dd/MM/yyyy')
 
   const formattedStatus = useMemo(() => {
-    if (task.status === 'toDo') {
+    if (task.status === 'opened') {
       return 'Em Aberto'
     }
-    if (task.status === 'standby') {
+    if (task.status === 'stand_by') {
       return 'StandBy'
     }
-    if (task.status === 'inProgress') {
+    if (task.status === 'in_progress') {
       return 'Em Andamento'
     }
     if (task.status === 'approval') {
@@ -42,9 +42,6 @@ export function TaskTr({ task }: TaskTrProps) {
   }, [task.status])
 
   const formattedPriority = useMemo(() => {
-    if (task.priority === 'low') {
-      return 'Baixa'
-    }
     if (task.priority === 'normal') {
       return 'Normal'
     }

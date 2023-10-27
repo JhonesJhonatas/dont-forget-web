@@ -5,6 +5,7 @@ import { DashBoard } from './pages/DashBoard'
 import { Settings } from './pages/Settings'
 import { Login } from './pages/Login'
 import { CreateUser } from './pages/CreateUser'
+import { TasksByProjects } from './pages/TasksByProjects'
 
 export function Router() {
   return (
@@ -14,7 +15,10 @@ export function Router() {
 
       <Route path="/" element={<DefaulLayout />}>
         <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/all-tasks" element={<AllTasks />} />
+        <Route path="/tasks">
+          <Route path="all" element={<AllTasks />} />
+          <Route path=":projectId" element={<TasksByProjects />} />
+        </Route>
         <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>

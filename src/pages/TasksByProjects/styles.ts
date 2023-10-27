@@ -7,9 +7,9 @@ interface IconViewProps {
 
 interface StatusHeaderProps {
   status:
-    | 'toDo'
-    | 'standby'
-    | 'inProgress'
+    | 'opened'
+    | 'stand_by'
+    | 'in_progress'
     | 'approval'
     | 'payment'
     | 'concluded'
@@ -17,9 +17,9 @@ interface StatusHeaderProps {
 
 interface ListViewTableHeaderProps {
   status:
-    | 'toDo'
-    | 'standby'
-    | 'inProgress'
+    | 'opened'
+    | 'stand_by'
+    | 'in_progress'
     | 'approval'
     | 'payment'
     | 'concluded'
@@ -27,9 +27,9 @@ interface ListViewTableHeaderProps {
 
 interface TaskListByStatusProps {
   status:
-    | 'toDo'
-    | 'standby'
-    | 'inProgress'
+    | 'opened'
+    | 'stand_by'
+    | 'in_progress'
     | 'approval'
     | 'payment'
     | 'concluded'
@@ -226,19 +226,19 @@ export const TaskListByStatus = styled.div<TaskListByStatusProps>`
   background-color: ${(props) => hexToRgba(props.theme.opened, 0.02)};
 
   ${(props) =>
-    props.status === 'toDo' &&
+    props.status === 'opened' &&
     css`
       border-left: 4px solid ${(props) => props.theme.opened};
     `}
 
   ${(props) =>
-    props.status === 'standby' &&
+    props.status === 'stand_by' &&
     css`
       border-left: 4px solid ${(props) => props.theme.stand_by};
     `}
 
     ${(props) =>
-    props.status === 'inProgress' &&
+    props.status === 'in_progress' &&
     css`
       border-left: 4px solid ${(props) => props.theme.in_progress};
     `}
@@ -273,17 +273,17 @@ export const ListViewTableHeader = styled.div<ListViewTableHeaderProps>`
     height: 0.75rem;
     border-radius: 60px;
     ${(props) =>
-      props.status === 'toDo' &&
+      props.status === 'opened' &&
       css`
         background-color: ${(props) => props.theme.opened};
       `}
     ${(props) =>
-      props.status === 'standby' &&
+      props.status === 'stand_by' &&
       css`
         background-color: ${(props) => props.theme.stand_by};
       `}
       ${(props) =>
-      props.status === 'inProgress' &&
+      props.status === 'in_progress' &&
       css`
         background-color: ${(props) => props.theme.in_progress};
       `}
@@ -331,19 +331,19 @@ export const StatusHeader = styled.th<StatusHeaderProps>`
   border-radius: 6px;
 
   ${(props) =>
-    props.status === 'toDo' &&
+    props.status === 'opened' &&
     css`
       border-top: 3px solid ${props.theme.opened};
     `}
 
   ${(props) =>
-    props.status === 'standby' &&
+    props.status === 'stand_by' &&
     css`
       border-top: 3px solid ${props.theme.stand_by};
     `}
 
     ${(props) =>
-    props.status === 'inProgress' &&
+    props.status === 'in_progress' &&
     css`
       border-top: 3px solid ${props.theme.in_progress};
     `}

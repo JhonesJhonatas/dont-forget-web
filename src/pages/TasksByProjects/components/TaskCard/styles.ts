@@ -1,14 +1,14 @@
 import styled, { css } from 'styled-components'
 
 interface PriorityProps {
-  level: 'low' | 'normal' | 'high' | 'urgent'
+  level: 'normal' | 'high' | 'urgent'
 }
 
 interface StatusProps {
   status:
-    | 'toDo'
-    | 'standby'
-    | 'inProgress'
+    | 'opened'
+    | 'stand_by'
+    | 'in_progress'
     | 'approval'
     | 'payment'
     | 'concluded'
@@ -56,7 +56,7 @@ export const Status = styled.div<StatusProps>`
 
   svg {
     ${(props) =>
-      props.status === 'toDo' &&
+      props.status === 'opened' &&
       css`
         color: ${props.theme.opened};
       `}
@@ -64,7 +64,7 @@ export const Status = styled.div<StatusProps>`
 
   svg {
     ${(props) =>
-      props.status === 'standby' &&
+      props.status === 'stand_by' &&
       css`
         color: ${props.theme.stand_by};
       `}
@@ -72,7 +72,7 @@ export const Status = styled.div<StatusProps>`
 
   svg {
     ${(props) =>
-      props.status === 'inProgress' &&
+      props.status === 'in_progress' &&
       css`
         color: ${props.theme.in_progress};
       `}
@@ -131,14 +131,6 @@ export const Priority = styled.div<PriorityProps>`
   span {
     font-size: 0.8rem;
   }
-
-  ${(props) =>
-    props.level === 'low' &&
-    css`
-      svg {
-        color: ${props.theme.sucess};
-      }
-    `}
 
   ${(props) =>
     props.level === 'normal' &&

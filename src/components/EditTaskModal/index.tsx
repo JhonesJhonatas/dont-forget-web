@@ -24,7 +24,7 @@ import { useCallback, useEffect } from 'react'
 import { useDeleteTask } from '../../hooks/useDeleteTask'
 import { format } from 'date-fns'
 import { useUpdateTask } from '../../hooks/useUpdateTask'
-import { TaskSchema } from '../../contexts/TasksContext'
+import { OpenedTask } from '../../hooks/tasks/useGetAllOpenedTasks'
 
 const tasksFieldsSchema = z.object({
   taskTitle: z.string(),
@@ -37,7 +37,7 @@ const tasksFieldsSchema = z.object({
 type typeFieldsSchema = z.infer<typeof tasksFieldsSchema>
 
 interface EditTaskModalProps {
-  task: TaskSchema
+  task: OpenedTask
   handleTogleModal: () => void
 }
 
@@ -118,9 +118,9 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
           <InputStatus>
             Status:
             <select {...register('taskStatus')}>
-              <option value="opened">Em Aberto</option>
-              <option value="stand_by">StandBy</option>
-              <option value="in_progress">Em Andamento</option>
+              <option value="toDo">Em Aberto</option>
+              <option value="standby">StandBy</option>
+              <option value="inProgress">Em Andamento</option>
               <option value="approval">Aprovação</option>
               <option value="payment">Aguardando Pagamento</option>
               <option value="concluded">Concluído</option>
@@ -130,6 +130,7 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
             <InputPriority>
               Prioridade:
               <select {...register('taskPriority')}>
+                <option value="low">Baixa</option>
                 <option value="normal">Normal</option>
                 <option value="high">Alta</option>
                 <option value="urgent">Urgente</option>

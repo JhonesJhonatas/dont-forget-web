@@ -2,16 +2,16 @@ import styled, { css } from 'styled-components'
 
 interface StatusContainerProps {
   status:
-    | 'toDo'
-    | 'standby'
-    | 'inProgress'
+    | 'opened'
+    | 'stand_by'
+    | 'in_progress'
     | 'approval'
     | 'payment'
     | 'concluded'
 }
 
 interface PriorityContainer {
-  priority: 'low' | 'normal' | 'high' | 'urgent'
+  priority: 'normal' | 'high' | 'urgent'
 }
 
 export const TableTr = styled.tr`
@@ -53,7 +53,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
   gap: 0.5rem;
 
   ${(props) =>
-    props.status === 'toDo' &&
+    props.status === 'opened' &&
     css`
       div {
         width: 0.75rem;
@@ -64,7 +64,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
     `}
 
   ${(props) =>
-    props.status === 'standby' &&
+    props.status === 'stand_by' &&
     css`
       div {
         width: 0.75rem;
@@ -75,7 +75,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
     `}
 
     ${(props) =>
-    props.status === 'inProgress' &&
+    props.status === 'in_progress' &&
     css`
       div {
         width: 0.75rem;
@@ -151,12 +151,6 @@ export const PriorityContainer = styled.div<PriorityContainer>`
   svg {
     width: 1rem;
     height: 1rem;
-    ${(props) =>
-      props.priority === 'low' &&
-      css`
-        color: ${(props) => props.theme.sucess};
-      `}
-
     ${(props) =>
       props.priority === 'normal' &&
       css`

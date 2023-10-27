@@ -71,7 +71,7 @@ export function NavBar() {
             </NavLink>
           </NavItem>
           <NavItem>
-            <NavLink to={'/all-tasks'}>
+            <NavLink to={'/tasks/all'}>
               <div>
                 <CheckSquare size={18} />
                 <span>Todas as Tarefas</span>
@@ -82,7 +82,7 @@ export function NavBar() {
           {allProjects.map((project) => {
             return (
               <ProjectItem key={project.id} projectColor={project.color}>
-                <NavLink to={'/all-tasks'}>
+                <NavLink to={`/tasks/${project.id}`}>
                   <div>
                     <Circle weight="fill" size={14} />
                     <span>{project.title}</span>

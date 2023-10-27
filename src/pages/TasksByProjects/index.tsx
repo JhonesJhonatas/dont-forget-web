@@ -4,6 +4,7 @@ import {
   Kanban,
   List,
 } from '@phosphor-icons/react'
+
 import {
   CardsArea,
   Container,
@@ -29,19 +30,19 @@ import {
   TasksListArea,
   ViewOptions,
 } from './styles'
+import { TaskContext } from '../../contexts/TasksContext'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { TaskTr } from './components/TaskTr'
 import { TaskCard } from './components/TaskCard'
+import { useSeparateTasksById } from '../../hooks/useSeparateTasksByStatus'
 import { ListLoading } from './components/ListLoading'
 import { SkeletonLoading } from './components/SkeletonLoading'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { useGetAllOpenedTasks } from '../../hooks/tasks/useGetAllOpenedTasks'
-import { useSeparateOpenedTasksByStatus } from '../../hooks/tasks/useSeparateOpenedTasksByStatus'
 
 type TogleTaksViewSchema = 'list' | 'kanban'
 
-export function AllTasks() {
+export function TasksByProjects() {
   const navigate = useNavigate()
 
   const { authenticated } = useContext(AuthContext)
@@ -53,16 +54,15 @@ export function AllTasks() {
   }, [authenticated, navigate])
 
   const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('list')
-
-  const { allOpenedTasks, openedTasksIsLoading } = useGetAllOpenedTasks()
+  const { allTasksList, tasksIsLoading } = useContext(TaskContext)
   const {
-    approvalTasks,
-    concludedTasks,
-    inProgressTasks,
-    paymentTasks,
+    openedTasks,
     standByTasks,
-    toDoTasks,
-  } = useSeparateOpenedTasksByStatus(allOpenedTasks)
+    inProgressTasks,
+    approvalTasks,
+    paymentTasks,
+    concludedTasks,
+  } = useSeparateTasksById({ tasks: allTasksList })
 
   const handleChangeView = useCallback((view: TogleTaksViewSchema) => {
     setCurrentView(view)
@@ -150,18 +150,18 @@ export function AllTasks() {
         {currentView === 'list' && (
           <TasksContainer>
             <TasksListArea>
-              <TaskListByStatus status="toDo">
+              <TaskListByStatus status="opened">
                 <ListViewTable>
-                  <ListViewTableHeader status="toDo">
+                  <ListViewTableHeader status="opened">
                     <div></div>
                     <span>Em Aberto</span>
-                    <small>({toDoTasks.length})</small>
+                    <small>({openedTasks.length})</small>
                   </ListViewTableHeader>
-                  {openedTasksIsLoading ? (
+                  {tasksIsLoading ? (
                     <ListLoading />
                   ) : (
                     <ListViewTableBody>
-                      {toDoTasks.map((task) => {
+                      {openedTasks.map((task) => {
                         return <TaskTr key={task.id} task={task} />
                       })}
                     </ListViewTableBody>
@@ -169,14 +169,14 @@ export function AllTasks() {
                 </ListViewTable>
               </TaskListByStatus>
 
-              <TaskListByStatus status="standby">
+              <TaskListByStatus status="stand_by">
                 <ListViewTable>
-                  <ListViewTableHeader status="standby">
+                  <ListViewTableHeader status="stand_by">
                     <div></div>
                     <span>StandyBy</span>
                     <small>({standByTasks.length})</small>
                   </ListViewTableHeader>
-                  {openedTasksIsLoading ? (
+                  {tasksIsLoading ? (
                     <ListLoading />
                   ) : (
                     <ListViewTableBody>
@@ -188,14 +188,14 @@ export function AllTasks() {
                 </ListViewTable>
               </TaskListByStatus>
 
-              <TaskListByStatus status="inProgress">
+              <TaskListByStatus status="in_progress">
                 <ListViewTable>
-                  <ListViewTableHeader status="inProgress">
+                  <ListViewTableHeader status="in_progress">
                     <div></div>
                     <span>Em Andamento</span>
                     <small>({inProgressTasks.length})</small>
                   </ListViewTableHeader>
-                  {openedTasksIsLoading ? (
+                  {tasksIsLoading ? (
                     <ListLoading />
                   ) : (
                     <ListViewTableBody>
@@ -214,7 +214,7 @@ export function AllTasks() {
                     <span>Aprovação</span>
                     <small>({approvalTasks.length})</small>
                   </ListViewTableHeader>
-                  {openedTasksIsLoading ? (
+                  {tasksIsLoading ? (
                     <ListLoading />
                   ) : (
                     <ListViewTableBody>
@@ -233,7 +233,7 @@ export function AllTasks() {
                     <span>Pagamento</span>
                     <small>({paymentTasks.length})</small>
                   </ListViewTableHeader>
-                  {openedTasksIsLoading ? (
+                  {tasksIsLoading ? (
                     <ListLoading />
                   ) : (
                     <ListViewTableBody>
@@ -252,7 +252,7 @@ export function AllTasks() {
                     <span>Concluídas</span>
                     <small>({concludedTasks.length})</small>
                   </ListViewTableHeader>
-                  {openedTasksIsLoading ? (
+                  {tasksIsLoading ? (
                     <ListLoading />
                   ) : (
                     <ListViewTableBody>
@@ -272,9 +272,9 @@ export function AllTasks() {
             <TaskTable>
               <TableHeader>
                 <tr>
-                  <StatusHeader status="toDo">Em Aberto</StatusHeader>
-                  <StatusHeader status="standby">StandBy</StatusHeader>
-                  <StatusHeader status="inProgress">Em Andamento</StatusHeader>
+                  <StatusHeader status="opened">Em Aberto</StatusHeader>
+                  <StatusHeader status="stand_by">StandBy</StatusHeader>
+                  <StatusHeader status="in_progress">Em Andamento</StatusHeader>
                   <StatusHeader status="approval">Aprovação/Pr</StatusHeader>
                   <StatusHeader status="payment">Pagamento</StatusHeader>
                   <StatusHeader status="concluded">Concluído</StatusHeader>
@@ -284,18 +284,18 @@ export function AllTasks() {
               <TableBody>
                 <tr>
                   <td>
-                    {openedTasksIsLoading ? (
+                    {tasksIsLoading ? (
                       <SkeletonLoading />
                     ) : (
                       <CardsArea>
-                        {toDoTasks.map((task) => {
+                        {openedTasks.map((task) => {
                           return <TaskCard key={task.id} task={task} />
                         })}
                       </CardsArea>
                     )}
                   </td>
                   <td>
-                    {openedTasksIsLoading ? (
+                    {tasksIsLoading ? (
                       <SkeletonLoading />
                     ) : (
                       <CardsArea>
@@ -306,7 +306,7 @@ export function AllTasks() {
                     )}
                   </td>
                   <td>
-                    {openedTasksIsLoading ? (
+                    {tasksIsLoading ? (
                       <SkeletonLoading />
                     ) : (
                       <CardsArea>
@@ -317,7 +317,7 @@ export function AllTasks() {
                     )}
                   </td>
                   <td>
-                    {openedTasksIsLoading ? (
+                    {tasksIsLoading ? (
                       <SkeletonLoading />
                     ) : (
                       <CardsArea>
@@ -328,7 +328,7 @@ export function AllTasks() {
                     )}
                   </td>
                   <td>
-                    {openedTasksIsLoading ? (
+                    {tasksIsLoading ? (
                       <SkeletonLoading />
                     ) : (
                       <CardsArea>
@@ -339,7 +339,7 @@ export function AllTasks() {
                     )}
                   </td>
                   <td>
-                    {openedTasksIsLoading ? (
+                    {tasksIsLoading ? (
                       <SkeletonLoading />
                     ) : (
                       <CardsArea>
