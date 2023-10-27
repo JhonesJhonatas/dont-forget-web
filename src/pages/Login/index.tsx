@@ -6,56 +6,107 @@ import {
   ImgArea,
   InputElement,
   SubmitButton,
-  TextLogo,
+  LogoArea,
 } from './styles'
 import taskModel from '../../assets/imgs/taskModel.svg'
 import { CaretRight } from '@phosphor-icons/react'
 import { useForm } from 'react-hook-form'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import dontForgetWhiteLogo from '../../assets/imgs/dontForget-white.svg'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useAuthenticate } from '../../hooks/useAuthenticate'
+import { useNotify } from '../../hooks/useNotify'
+
+const loginFormSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+})
+
+type LoginFormSchema = z.infer<typeof loginFormSchema>
 
 export function Login() {
-  const { handleSubmit } = useForm()
+  const {
+    handleSubmit,
+    register,
+    formState: { isSubmitting },
+  } = useForm<LoginFormSchema>({
+    resolver: zodResolver(loginFormSchema),
+  })
   const navigate = useNavigate()
+  const { authenticate } = useAuthenticate()
+  const { notify } = useNotify()
 
-  const onSubmit = useCallback(() => {
-    navigate('/dashboard')
+  const onSubmit = useCallback(
+    async ({ email, password }: LoginFormSchema) => {
+      const isAuthenticated = await authenticate({ email, password })
+
+      if (isAuthenticated) {
+        navigate('/dashboard')
+      }
+
+      if (!isAuthenticated) {
+        notify({
+          type: 'error',
+          message: 'Usuário ou senha incorretos',
+        })
+      }
+    },
+    [authenticate, navigate, notify],
+  )
+
+  const handleNavigateToCreateUserPage = useCallback(() => {
+    navigate('/create-user')
   }, [navigate])
 
   return (
-    <Container>
-      <HandleArea>
-        <TextLogo>
-          <span>
-            dont<strong>Forget</strong>
-          </span>
-        </TextLogo>
+    <>
+      <Container>
+        <HandleArea>
+          <LogoArea>
+            <img src={dontForgetWhiteLogo} alt="" />
+          </LogoArea>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <InputElement>
-            Email:
-            <input type="text" placeholder="seuemail@email.com" />
-          </InputElement>
-          <InputElement>
-            Senha:
-            <input type="password" placeholder="**********" />
-          </InputElement>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <InputElement>
+              Email:
+              <input
+                type="email"
+                placeholder="seuemail@email.com"
+                {...register('email')}
+                required
+              />
+            </InputElement>
+            <InputElement>
+              Senha:
+              <input
+                type="password"
+                placeholder="**********"
+                {...register('password')}
+                required
+              />
+            </InputElement>
 
-          <SubmitButton type="submit">
-            Entrar
-            <CaretRight />
-          </SubmitButton>
-        </form>
-        <FooterInputs>
-          <FooterLink>Criar Conta</FooterLink>
-          <span>|</span>
-          <FooterLink>Esqueci minha senha</FooterLink>
-        </FooterInputs>
-      </HandleArea>
-      <ImgArea>
-        <span>Você no controle das suas tarefas!</span>
-        <img src={taskModel} alt="tasksModel" />
-      </ImgArea>
-    </Container>
+            <SubmitButton type="submit" disabled={isSubmitting}>
+              Entrar
+              <CaretRight />
+            </SubmitButton>
+          </form>
+          <FooterInputs>
+            <FooterLink onClick={handleNavigateToCreateUserPage}>
+              Criar Conta
+            </FooterLink>
+          </FooterInputs>
+        </HandleArea>
+        <ImgArea>
+          <span>Você no controle das suas tarefas!</span>
+          <img src={taskModel} alt="tasksModel" />
+        </ImgArea>
+      </Container>
+      <ToastContainer />
+    </>
   )
 }
