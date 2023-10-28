@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { z } from 'zod'
-import { api } from '../lib/axios'
+import { api } from '../../lib/axios'
 
 const createUserFormSchema = z.object({
   name: z.string(),

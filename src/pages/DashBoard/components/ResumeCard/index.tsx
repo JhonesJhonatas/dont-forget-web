@@ -36,7 +36,7 @@ export function ResumeCard({ amount, status }: ResumeCardProps) {
 
   return (
     <Container>
-      <TaskCount status={status}>
+      <TaskCount $status={status}>
         <div></div>
         <span>{amount}</span>
       </TaskCount>

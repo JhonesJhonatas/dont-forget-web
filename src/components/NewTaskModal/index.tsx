@@ -19,16 +19,20 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
-import { useCreateTask } from '../../hooks/useCreateTask'
+import { useCreateTask } from '../../hooks/tasks/useCreateTask'
+import { useNavigate } from 'react-router-dom'
+import { useGetProjects } from '../../hooks/projects/useGetProjects'
+import { useNotify } from '../../hooks/useNotify'
 
-const newTaskFieldsSchema = z.object({
-  taskTitle: z.string(),
-  taskPriority: z.string(),
-  taskMaturity: z.string(),
-  taskDescription: z.string(),
+const newTaskFormSchema = z.object({
+  projectId: z.string(),
+  title: z.string(),
+  description: z.string(),
+  maturity: z.string(),
+  priority: z.string(),
 })
 
-type typeFieldsSchema = z.infer<typeof newTaskFieldsSchema>
+type NewTaskFormSchema = z.infer<typeof newTaskFormSchema>
 
 interface NewTaskModalProps {
   handleCloseModal: () => void
@@ -40,23 +44,39 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
     handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = useForm<typeFieldsSchema>({
-    resolver: zodResolver(newTaskFieldsSchema),
+  } = useForm<NewTaskFormSchema>({
+    resolver: zodResolver(newTaskFormSchema),
   })
 
-  const { createNewTaks } = useCreateTask()
+  const { createTask } = useCreateTask()
+  const navigate = useNavigate()
+  const { allProjects } = useGetProjects()
+  const { notify } = useNotify()
 
   const onSubmit = useCallback(
-    async (data: typeFieldsSchema) => {
-      try {
-        createNewTaks(data)
-        handleCloseModal()
+    async ({
+      description,
+      maturity,
+      priority,
+      projectId,
+      title,
+    }: NewTaskFormSchema) => {
+      const isTaskCreated = await createTask({
+        description,
+        maturity,
+        priority,
+        projectId,
+        title,
+      })
+
+      if (isTaskCreated) {
         reset()
-      } catch (err) {
-        console.log(err)
+        handleCloseModal()
+        notify({ type: 'sucess', message: 'Tarefa criada com sucesso' })
+        navigate('/tasks/all')
       }
     },
-    [createNewTaks, handleCloseModal, reset],
+    [createTask, handleCloseModal, navigate, notify, reset],
   )
 
   return (
@@ -72,16 +92,13 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
         <NewTaskForm onSubmit={handleSubmit(onSubmit)}>
           <InputTitle>
             Título:
-            <input
-              type="text"
-              placeholder="Título"
-              {...register('taskTitle')}
-            />
+            <input type="text" placeholder="Título" {...register('title')} />
           </InputTitle>
           <FlexArea>
             <InputPriority>
               Prioridade:
-              <select {...register('taskPriority')}>
+              <select {...register('priority')}>
+                <option value="low">Baixa</option>
                 <option value="normal">Normal</option>
                 <option value="high">Alta</option>
                 <option value="urgent">Urgente</option>
@@ -89,12 +106,24 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
             </InputPriority>
             <InputDate>
               DeadLine:
-              <input type="date" {...register('taskMaturity')} />
+              <input type="date" {...register('maturity')} />
             </InputDate>
           </FlexArea>
+          <InputPriority>
+            Projeto:
+            <select {...register('projectId')}>
+              {allProjects.map((project) => {
+                return (
+                  <option key={project.id} value={project.id}>
+                    {project.title}
+                  </option>
+                )
+              })}
+            </select>
+          </InputPriority>
           <InputTextArea>
             Descrição:
-            <textarea {...register('taskDescription')} />
+            <textarea {...register('description')} />
           </InputTextArea>
           <FormFooter>
             <Dialog.Close asChild>

@@ -16,11 +16,11 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
-import { useCreateUser } from '../../hooks/useCreateUser'
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useNotify } from '../../hooks/useNotify'
+import { useCreateUser } from '../../hooks/user/useCreateUser'
 
 const createUserFormSchema = z.object({
   name: z.string(),

@@ -34,8 +34,6 @@ export function NavBar() {
 
   const { allProjects } = useGetProjects()
 
-  console.log(allProjects)
-
   const handleCloseModal = useCallback(() => {
     setOpen(false)
   }, [])
@@ -81,7 +79,7 @@ export function NavBar() {
           </NavItem>
           {allProjects.map((project) => {
             return (
-              <ProjectItem key={project.id} projectColor={project.color}>
+              <ProjectItem key={project.id} $projectColor={project.color}>
                 <NavLink to={`/tasks/${project.id}`}>
                   <div>
                     <Circle weight="fill" size={14} />

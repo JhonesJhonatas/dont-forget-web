@@ -74,7 +74,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     localStorage.removeItem('token')
     localStorage.removeItem('email')
     localStorage.removeItem('name')
-    api.defaults.headers.Authorization = null
+    api.defaults.headers.Authorization = ''
   }, [])
 
   return (

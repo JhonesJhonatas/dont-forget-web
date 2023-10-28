@@ -3,7 +3,6 @@ import { darkTheme } from './styles/themes/darkTheme'
 import { GlobalStyle } from './styles/globalStyle'
 import { BrowserRouter } from 'react-router-dom'
 import { Router } from './router'
-import { TaskContextProvider } from './contexts/TasksContext'
 import { AuthProvider } from './contexts/AuthContext'
 
 export function App() {
@@ -12,9 +11,7 @@ export function App() {
       <GlobalStyle />
       <AuthProvider>
         <BrowserRouter>
-          <TaskContextProvider>
-            <Router />
-          </TaskContextProvider>
+          <Router />
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>

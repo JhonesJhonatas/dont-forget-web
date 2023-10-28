@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 interface ProjectItemProps {
-  projectColor: string
+  $projectColor: string
 }
 
 export const Container = styled.nav`
@@ -122,7 +122,7 @@ export const ProjectItem = styled.div<ProjectItemProps>`
       gap: 0.5rem;
 
       svg {
-        color: ${(props) => props.projectColor};
+        color: ${(props) => props.$projectColor};
       }
     }
 

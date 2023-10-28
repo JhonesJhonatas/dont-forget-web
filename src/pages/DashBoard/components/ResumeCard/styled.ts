@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 
 interface TaskCountProps {
-  status:
+  $status:
     | 'opened'
     | 'stand_by'
     | 'in_progress'
@@ -31,32 +31,32 @@ export const TaskCount = styled.div<TaskCountProps>`
     height: 0.75rem;
     border-radius: 60px;
     ${(props) =>
-      props.status === 'opened' &&
+      props.$status === 'opened' &&
       css`
         background-color: ${(props) => props.theme.borderCard};
       `}
     ${(props) =>
-      props.status === 'stand_by' &&
+      props.$status === 'stand_by' &&
       css`
         background-color: ${(props) => props.theme.textSecondary};
       `}
       ${(props) =>
-      props.status === 'in_progress' &&
+      props.$status === 'in_progress' &&
       css`
         background-color: ${(props) => props.theme.enphasis};
       `}
       ${(props) =>
-      props.status === 'approval' &&
+      props.$status === 'approval' &&
       css`
         background-color: ${(props) => props.theme.danger};
       `}
       ${(props) =>
-      props.status === 'payment' &&
+      props.$status === 'payment' &&
       css`
         background-color: ${(props) => props.theme.error};
       `}
       ${(props) =>
-      props.status === 'concluded' &&
+      props.$status === 'concluded' &&
       css`
         background-color: ${(props) => props.theme.sucess};
       `}

@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 
 interface StatusContainerProps {
-  status:
+  $status:
     | 'toDo'
     | 'standby'
     | 'inProgress'
@@ -11,7 +11,7 @@ interface StatusContainerProps {
 }
 
 interface PriorityContainer {
-  priority: 'low' | 'normal' | 'high' | 'urgent'
+  $priority: 'low' | 'normal' | 'high' | 'urgent'
 }
 
 export const TableTr = styled.tr`
@@ -20,11 +20,11 @@ export const TableTr = styled.tr`
   transition: all 0.2s ease-in-out;
 
   td {
-    width: 14%;
+    width: 18%;
 
     &:first-child {
       border-radius: 6px 0 0 6px;
-      width: 58%;
+      width: 50%;
 
       div {
         display: flex;
@@ -48,7 +48,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
   width: fit-content;
   padding: 0.5rem;
   border-radius: 6px;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   background-color: ${(props) => props.theme.cardBgPrimary};
 
   display: flex;
@@ -56,7 +56,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
   gap: 0.5rem;
 
   ${(props) =>
-    props.status === 'toDo' &&
+    props.$status === 'toDo' &&
     css`
       div {
         width: 0.75rem;
@@ -67,7 +67,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
     `}
 
   ${(props) =>
-    props.status === 'standby' &&
+    props.$status === 'standby' &&
     css`
       div {
         width: 0.75rem;
@@ -78,7 +78,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
     `}
 
     ${(props) =>
-    props.status === 'inProgress' &&
+    props.$status === 'inProgress' &&
     css`
       div {
         width: 0.75rem;
@@ -89,7 +89,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
     `}
 
     ${(props) =>
-    props.status === 'approval' &&
+    props.$status === 'approval' &&
     css`
       div {
         width: 0.75rem;
@@ -100,7 +100,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
     `}
 
     ${(props) =>
-    props.status === 'payment' &&
+    props.$status === 'payment' &&
     css`
       div {
         width: 0.75rem;
@@ -111,7 +111,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
     `}
 
     ${(props) =>
-    props.status === 'concluded' &&
+    props.$status === 'concluded' &&
     css`
       div {
         width: 0.75rem;
@@ -126,7 +126,7 @@ export const MaturityContainer = styled.div`
   width: fit-content;
   padding: 0.5rem;
   border-radius: 6px;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   background-color: ${(props) => props.theme.cardBgPrimary};
 
   display: flex;
@@ -144,7 +144,7 @@ export const PriorityContainer = styled.div<PriorityContainer>`
   width: fit-content;
   padding: 0.5rem;
   border-radius: 6px;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   background-color: ${(props) => props.theme.cardBgPrimary};
 
   display: flex;
@@ -155,25 +155,25 @@ export const PriorityContainer = styled.div<PriorityContainer>`
     width: 1rem;
     height: 1rem;
     ${(props) =>
-      props.priority === 'low' &&
+      props.$priority === 'low' &&
       css`
         color: ${(props) => props.theme.sucess};
       `}
 
     ${(props) =>
-      props.priority === 'normal' &&
+      props.$priority === 'normal' &&
       css`
         color: ${(props) => props.theme.enphasis};
       `}
 
     ${(props) =>
-      props.priority === 'high' &&
+      props.$priority === 'high' &&
       css`
         color: ${(props) => props.theme.danger};
       `}
 
       ${(props) =>
-      props.priority === 'urgent' &&
+      props.$priority === 'urgent' &&
       css`
         color: ${(props) => props.theme.error};
       `}

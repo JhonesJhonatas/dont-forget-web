@@ -71,7 +71,7 @@ export function TaskTr({ task }: TaskTrProps) {
             </div>
           </td>
           <td>
-            <StatusContainer status={task.status}>
+            <StatusContainer $status={task.status}>
               <div></div>
               {formattedStatus}
             </StatusContainer>{' '}
@@ -83,7 +83,7 @@ export function TaskTr({ task }: TaskTrProps) {
             </MaturityContainer>
           </td>
           <td>
-            <PriorityContainer priority={task.priority}>
+            <PriorityContainer $priority={task.priority}>
               <Flag weight="fill" />
               {formattedPriority}
             </PriorityContainer>
