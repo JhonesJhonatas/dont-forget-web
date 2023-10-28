@@ -35,13 +35,10 @@ import { TasksLoading } from './components/TasksLoading'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { TaskTr } from '../../components/TaskTr'
-import {
-  OpenedTask,
-  useGetAllOpenedTasks,
-} from '../../hooks/tasks/useGetAllOpenedTasks'
 import { useSeparateOpenedTasksByStatus } from '../../hooks/tasks/useSeparateOpenedTasksByStatus'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
+import { OpenedTask, TasksContext } from '../../contexts/TaskContext'
 
 export function DashBoard() {
   const navigate = useNavigate()
@@ -59,7 +56,8 @@ export function DashBoard() {
   const [lateTasks, setLateTasks] = useState<OpenedTask[]>([])
   const [messageForToday, setMessageForToday] = useState('')
 
-  const { allOpenedTasks, openedTasksIsLoading } = useGetAllOpenedTasks()
+  const { allOpenedTasks, openedTasksIsLoading } = useContext(TasksContext)
+
   const {
     approvalTasks,
     concludedTasks,
