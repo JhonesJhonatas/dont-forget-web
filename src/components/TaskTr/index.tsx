@@ -1,5 +1,4 @@
 import { Calendar, Flag, Folder } from '@phosphor-icons/react'
-import { TaskSchema } from '../../../../hooks/useGetTasks'
 import { format } from 'date-fns'
 import {
   MaturityContainer,
@@ -9,10 +8,11 @@ import {
 } from './style'
 import { useCallback, useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { EditTaskModal } from '../../../../components/EditTaskModal'
+import { OpenedTask } from '../../hooks/tasks/useGetAllOpenedTasks'
+import { EditTaskModal } from '../EditTaskModal'
 
 interface TaskTrProps {
-  task: TaskSchema
+  task: OpenedTask
 }
 
 export function TaskTr({ task }: TaskTrProps) {
@@ -21,13 +21,13 @@ export function TaskTr({ task }: TaskTrProps) {
   const formattedDate = format(new Date(task.maturity), 'dd/MM/yyyy')
 
   const formattedStatus = useMemo(() => {
-    if (task.status === 'opened') {
+    if (task.status === 'toDo') {
       return 'Em Aberto'
     }
-    if (task.status === 'stand_by') {
+    if (task.status === 'standby') {
       return 'StandBy'
     }
-    if (task.status === 'in_progress') {
+    if (task.status === 'inProgress') {
       return 'Em Andamento'
     }
     if (task.status === 'approval') {
@@ -42,6 +42,9 @@ export function TaskTr({ task }: TaskTrProps) {
   }, [task.status])
 
   const formattedPriority = useMemo(() => {
+    if (task.priority === 'low') {
+      return 'Baixa'
+    }
     if (task.priority === 'normal') {
       return 'Normal'
     }
@@ -68,7 +71,7 @@ export function TaskTr({ task }: TaskTrProps) {
             </div>
           </td>
           <td>
-            <StatusContainer status={task.status}>
+            <StatusContainer $status={task.status}>
               <div></div>
               {formattedStatus}
             </StatusContainer>{' '}
@@ -80,7 +83,7 @@ export function TaskTr({ task }: TaskTrProps) {
             </MaturityContainer>
           </td>
           <td>
-            <PriorityContainer priority={task.priority}>
+            <PriorityContainer $priority={task.priority}>
               <Flag weight="fill" />
               {formattedPriority}
             </PriorityContainer>

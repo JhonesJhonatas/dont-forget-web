@@ -11,11 +11,11 @@ import {
 import { format } from 'date-fns'
 import { useCallback, useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { EditTaskModal } from '../../../../components/EditTaskModal'
-import { TaskSchema } from '../../../../hooks/useGetTasks'
+import { OpenedTask } from '../../hooks/tasks/useGetAllOpenedTasks'
+import { EditTaskModal } from '../EditTaskModal'
 
 interface TaskCardProps {
-  task: TaskSchema
+  task: OpenedTask
 }
 
 export function TaskCard({ task }: TaskCardProps) {
@@ -23,13 +23,13 @@ export function TaskCard({ task }: TaskCardProps) {
   const formattedMaturity = format(new Date(task.maturity), 'dd/MM/yyyy')
 
   const formattedStatus = useMemo(() => {
-    if (task.status === 'opened') {
+    if (task.status === 'toDo') {
       return 'Em Aberto'
     }
-    if (task.status === 'stand_by') {
+    if (task.status === 'standby') {
       return 'StandBy'
     }
-    if (task.status === 'in_progress') {
+    if (task.status === 'inProgress') {
       return 'Em Andamento'
     }
     if (task.status === 'approval') {
@@ -44,6 +44,9 @@ export function TaskCard({ task }: TaskCardProps) {
   }, [task.status])
 
   const formattedPriority = useMemo(() => {
+    if (task.priority === 'low') {
+      return 'Baixa'
+    }
     if (task.priority === 'normal') {
       return 'Normal'
     }

@@ -1,5 +1,3 @@
-import { TaskSchema } from '../../hooks/useGetTasks'
-import { TaskTr } from '../AllTasks/components/TaskTr'
 import { ResumeCard } from './components/ResumeCard'
 import {
   CardsArea,
@@ -18,8 +16,6 @@ import {
   WelcomePhrase,
 } from './styles'
 import { useContext, useEffect, useState } from 'react'
-import { TaskContext } from '../../contexts/TasksContext'
-import { useSeparateTasksById } from '../../hooks/useSeparateTasksByStatus'
 import {
   format,
   getDate,
@@ -36,22 +32,42 @@ import {
   parseISO,
 } from 'date-fns'
 import { TasksLoading } from './components/TasksLoading'
+import { AuthContext } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import { TaskTr } from '../../components/TaskTr'
+import {
+  OpenedTask,
+  useGetAllOpenedTasks,
+} from '../../hooks/tasks/useGetAllOpenedTasks'
+import { useSeparateOpenedTasksByStatus } from '../../hooks/tasks/useSeparateOpenedTasksByStatus'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
 
 export function DashBoard() {
-  const [tasksForToday, setTasksForToday] = useState<TaskSchema[]>([])
-  const [tasksForTomorrow, setTasksForTomorrow] = useState<TaskSchema[]>([])
-  const [lateTasks, setLateTasks] = useState<TaskSchema[]>([])
+  const navigate = useNavigate()
+
+  const { authenticated } = useContext(AuthContext)
+
+  useEffect(() => {
+    if (!authenticated) {
+      navigate('/')
+    }
+  }, [authenticated, navigate])
+
+  const [tasksForToday, setTasksForToday] = useState<OpenedTask[]>([])
+  const [tasksForTomorrow, setTasksForTomorrow] = useState<OpenedTask[]>([])
+  const [lateTasks, setLateTasks] = useState<OpenedTask[]>([])
   const [messageForToday, setMessageForToday] = useState('')
 
-  const { allTasksList, tasksIsLoading } = useContext(TaskContext)
+  const { allOpenedTasks, openedTasksIsLoading } = useGetAllOpenedTasks()
   const {
-    openedTasks,
-    standByTasks,
-    inProgressTasks,
     approvalTasks,
-    paymentTasks,
     concludedTasks,
-  } = useSeparateTasksById({ tasks: allTasksList })
+    inProgressTasks,
+    paymentTasks,
+    standByTasks,
+    toDoTasks,
+  } = useSeparateOpenedTasksByStatus(allOpenedTasks)
 
   const todayDate = format(new Date(), 'dd/MM/yyyy')
 
@@ -88,23 +104,23 @@ export function DashBoard() {
   }, [])
 
   useEffect(() => {
-    const todayTasks = allTasksList.filter((task) =>
+    const todayTasks = allOpenedTasks.filter((task) =>
       isToday(parseISO(task.maturity.toString())),
     )
 
     setTasksForToday(todayTasks)
-  }, [allTasksList, todayDate])
+  }, [allOpenedTasks, todayDate])
 
   useEffect(() => {
-    const tomorrowTasks = allTasksList.filter((task) =>
+    const tomorrowTasks = allOpenedTasks.filter((task) =>
       isTomorrow(parseISO(task.maturity.toString())),
     )
 
     setTasksForTomorrow(tomorrowTasks)
-  }, [allTasksList])
+  }, [allOpenedTasks])
 
   useEffect(() => {
-    const lateTasks = allTasksList.filter((task) =>
+    const lateTasks = allOpenedTasks.filter((task) =>
       isBefore(
         getDate(parseISO(task.maturity.toString())),
         getDate(new Date()),
@@ -112,79 +128,82 @@ export function DashBoard() {
     )
 
     setLateTasks(lateTasks)
-  }, [allTasksList])
+  }, [allOpenedTasks])
 
   return (
-    <Container>
-      <DashBoardHeader>
-        <WelcomeIcon>
-          <span>👋</span>
-        </WelcomeIcon>
-        <TextHeader>
-          <WelcomePhrase>Olá, Jhones Jhonatas</WelcomePhrase>
-          <span>{messageForToday}</span>
-        </TextHeader>
-      </DashBoardHeader>
-      <CardsArea>
-        <ResumeCard amount={openedTasks.length} status="opened" />
-        <ResumeCard amount={standByTasks.length} status="stand_by" />
-        <ResumeCard amount={inProgressTasks.length} status="in_progress" />
-        <ResumeCard amount={approvalTasks.length} status="approval" />
-        <ResumeCard amount={paymentTasks.length} status="payment" />
-        <ResumeCard amount={concludedTasks.length} status="concluded" />
-      </CardsArea>
-      <FlexArea>
-        <Notifications>
-          <TitleOfBox>
-            <span>Tarefas para Hoje:</span>
-          </TitleOfBox>
-          <ListViewTable>
-            {tasksIsLoading ? (
-              <TasksLoading />
-            ) : (
-              <ListViewTableBody>
-                {tasksForToday.map((task) => {
-                  return <TaskTr key={task.id} task={task} />
-                })}
-              </ListViewTableBody>
-            )}
-          </ListViewTable>
-        </Notifications>
-        <TasksResume>
-          <TasksForToday>
+    <>
+      <Container>
+        <DashBoardHeader>
+          <WelcomeIcon>
+            <span>👋</span>
+          </WelcomeIcon>
+          <TextHeader>
+            <WelcomePhrase>Olá, {localStorage.getItem('name')}</WelcomePhrase>
+            <span>{messageForToday}</span>
+          </TextHeader>
+        </DashBoardHeader>
+        <CardsArea>
+          <ResumeCard amount={toDoTasks.length} status="opened" />
+          <ResumeCard amount={standByTasks.length} status="stand_by" />
+          <ResumeCard amount={inProgressTasks.length} status="in_progress" />
+          <ResumeCard amount={approvalTasks.length} status="approval" />
+          <ResumeCard amount={paymentTasks.length} status="payment" />
+          <ResumeCard amount={concludedTasks.length} status="concluded" />
+        </CardsArea>
+        <FlexArea>
+          <Notifications>
             <TitleOfBox>
-              <span>Tarefas para amanhã:</span>
+              <span>Tarefas para Hoje:</span>
             </TitleOfBox>
             <ListViewTable>
-              {tasksIsLoading ? (
+              {openedTasksIsLoading ? (
                 <TasksLoading />
               ) : (
                 <ListViewTableBody>
-                  {tasksForTomorrow.map((task) => {
+                  {tasksForToday.map((task) => {
                     return <TaskTr key={task.id} task={task} />
                   })}
                 </ListViewTableBody>
               )}
             </ListViewTable>
-          </TasksForToday>
-          <TasksForTomorrow>
-            <TitleOfBox>
-              <span>Tarefas atrasadas:</span>
-            </TitleOfBox>
-            <ListViewTable>
-              {tasksIsLoading ? (
-                <TasksLoading />
-              ) : (
-                <ListViewTableBody>
-                  {lateTasks.map((task) => {
-                    return <TaskTr key={task.id} task={task} />
-                  })}
-                </ListViewTableBody>
-              )}
-            </ListViewTable>
-          </TasksForTomorrow>
-        </TasksResume>
-      </FlexArea>
-    </Container>
+          </Notifications>
+          <TasksResume>
+            <TasksForToday>
+              <TitleOfBox>
+                <span>Tarefas para amanhã:</span>
+              </TitleOfBox>
+              <ListViewTable>
+                {openedTasksIsLoading ? (
+                  <TasksLoading />
+                ) : (
+                  <ListViewTableBody>
+                    {tasksForTomorrow.map((task) => {
+                      return <TaskTr key={task.id} task={task} />
+                    })}
+                  </ListViewTableBody>
+                )}
+              </ListViewTable>
+            </TasksForToday>
+            <TasksForTomorrow>
+              <TitleOfBox>
+                <span>Tarefas atrasadas:</span>
+              </TitleOfBox>
+              <ListViewTable>
+                {openedTasksIsLoading ? (
+                  <TasksLoading />
+                ) : (
+                  <ListViewTableBody>
+                    {lateTasks.map((task) => {
+                      return <TaskTr key={task.id} task={task} />
+                    })}
+                  </ListViewTableBody>
+                )}
+              </ListViewTable>
+            </TasksForTomorrow>
+          </TasksResume>
+        </FlexArea>
+      </Container>
+      <ToastContainer />
+    </>
   )
 }

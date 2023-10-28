@@ -2,7 +2,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import Skeleton from 'react-loading-skeleton'
 import { TrContainer } from './styles'
 
-export function ListLoading() {
+export function ListViewLoading() {
   return (
     <>
       <TrContainer>

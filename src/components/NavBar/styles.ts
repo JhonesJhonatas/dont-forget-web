@@ -1,5 +1,9 @@
 import styled from 'styled-components'
 
+interface ProjectItemProps {
+  $projectColor: string
+}
+
 export const Container = styled.nav`
   height: 100%;
   background-color: ${(props) => props.theme.cardBgSecondary};
@@ -66,10 +70,13 @@ export const UserEmail = styled.span`
 export const NavContent = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: end;
   gap: 0.5rem;
 `
 
 export const NavItem = styled.div`
+  width: 100%;
+
   a {
     padding: 0.5rem;
     border-radius: 6px;
@@ -93,6 +100,68 @@ export const NavItem = styled.div`
     &.active {
       background-color: ${(props) => props.theme.enphasis};
     }
+  }
+`
+
+export const ProjectItem = styled.div<ProjectItemProps>`
+  width: 100%;
+
+  a {
+    padding: 0.1rem 0.4rem;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    color: ${(props) => props.theme.textPrimary};
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      svg {
+        color: ${(props) => props.$projectColor};
+      }
+    }
+
+    &:hover {
+      background-color: ${(props) => props.theme.cardBgPrimary};
+    }
+
+    &.active {
+      background-color: ${(props) => props.theme.cardBgPrimary};
+    }
+  }
+`
+
+export const NewProject = styled.div`
+  width: 100%;
+  padding: 0.1rem 0.4rem;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  color: ${(props) => props.theme.textSecondary};
+  cursor: pointer;
+  border: 1px dashed ${(props) => props.theme.cardBgPrimary};
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &:hover {
+    background-color: ${(props) => props.theme.cardBgPrimary};
+    color: ${(props) => props.theme.textPrimary};
+  }
+
+  &.active {
+    background-color: ${(props) => props.theme.cardBgPrimary};
   }
 `
 

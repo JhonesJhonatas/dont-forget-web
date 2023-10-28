@@ -21,23 +21,25 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useCallback, useEffect } from 'react'
-import { useDeleteTask } from '../../hooks/useDeleteTask'
 import { format } from 'date-fns'
-import { useUpdateTask } from '../../hooks/useUpdateTask'
-import { TaskSchema } from '../../contexts/TasksContext'
+import { OpenedTask } from '../../hooks/tasks/useGetAllOpenedTasks'
+import { useDeleteOpenedTask } from '../../hooks/tasks/useDeleteOpenedTask'
+import { useNotify } from '../../hooks/useNotify'
 
-const tasksFieldsSchema = z.object({
-  taskTitle: z.string(),
-  taskStatus: z.string(),
-  taskPriority: z.string(),
-  taskMaturity: z.string(),
-  taskDescription: z.string(),
+const editTaskFormSchema = z.object({
+  id: z.string(),
+  projectId: z.string(),
+  title: z.string(),
+  status: z.string(),
+  priority: z.string(),
+  maturity: z.string(),
+  description: z.string(),
 })
 
-type typeFieldsSchema = z.infer<typeof tasksFieldsSchema>
+type EditTaskFormSchema = z.infer<typeof editTaskFormSchema>
 
 interface EditTaskModalProps {
-  task: TaskSchema
+  task: OpenedTask
   handleTogleModal: () => void
 }
 
@@ -47,53 +49,55 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<typeFieldsSchema>({
-    resolver: zodResolver(tasksFieldsSchema),
+  } = useForm<EditTaskFormSchema>({
+    resolver: zodResolver(editTaskFormSchema),
   })
-
-  const { deleteTaskById } = useDeleteTask()
-  const { updateTask } = useUpdateTask()
+  const { deleteOpenedTask } = useDeleteOpenedTask()
+  const { notify } = useNotify()
 
   const formattedMaturity = format(new Date(task.maturity), 'yyyy-MM-dd')
 
   useEffect(() => {
-    setValue('taskTitle', task.title)
-    setValue('taskStatus', task.status)
-    setValue('taskPriority', task.priority)
-    setValue('taskMaturity', formattedMaturity)
-    setValue('taskDescription', task.description)
+    setValue('id', task.id)
+    setValue('projectId', task.projectId)
+    setValue('title', task.title)
+    setValue('status', task.status)
+    setValue('priority', task.priority)
+    setValue('maturity', formattedMaturity)
+    setValue('description', task.description)
   }, [
-    formattedMaturity,
     setValue,
     task.description,
+    task.id,
+    formattedMaturity,
     task.priority,
+    task.projectId,
     task.status,
     task.title,
   ])
 
   const onSubmit = useCallback(
-    async (data: typeFieldsSchema) => {
-      const formattedData = {
-        id: task.id,
-        description: data.taskDescription,
-        maturity: data.taskMaturity,
-        priority: data.taskPriority,
-        status: data.taskStatus,
-        title: data.taskTitle,
-      }
-
-      await updateTask(formattedData)
-      handleTogleModal()
+    async ({
+      description,
+      id,
+      maturity,
+      priority,
+      projectId,
+      status,
+      title,
+    }: EditTaskFormSchema) => {
+      console.log(description, id, maturity, priority, projectId, status, title)
     },
-    [handleTogleModal, task.id, updateTask],
+    [],
   )
 
   const handleDeleteTask = useCallback(
-    async (taskId: string) => {
-      await deleteTaskById(taskId)
+    async (id: string) => {
+      deleteOpenedTask(id)
       handleTogleModal()
+      notify({ type: 'sucess', message: 'Tarefa excluída' })
     },
-    [deleteTaskById, handleTogleModal],
+    [deleteOpenedTask, handleTogleModal, notify],
   )
 
   return (
@@ -109,18 +113,14 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
         <NewTaskForm onSubmit={handleSubmit(onSubmit)}>
           <InputTitle>
             Título:
-            <input
-              type="text"
-              placeholder="Título"
-              {...register('taskTitle')}
-            />
+            <input type="text" placeholder="Título" {...register('title')} />
           </InputTitle>
           <InputStatus>
             Status:
-            <select {...register('taskStatus')}>
-              <option value="opened">Em Aberto</option>
-              <option value="stand_by">StandBy</option>
-              <option value="in_progress">Em Andamento</option>
+            <select {...register('status')}>
+              <option value="toDo">Em Aberto</option>
+              <option value="standby">StandBy</option>
+              <option value="inProgress">Em Andamento</option>
               <option value="approval">Aprovação</option>
               <option value="payment">Aguardando Pagamento</option>
               <option value="concluded">Concluído</option>
@@ -129,7 +129,8 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
           <FlexArea>
             <InputPriority>
               Prioridade:
-              <select {...register('taskPriority')}>
+              <select {...register('priority')}>
+                <option value="low">Baixa</option>
                 <option value="normal">Normal</option>
                 <option value="high">Alta</option>
                 <option value="urgent">Urgente</option>
@@ -137,12 +138,12 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
             </InputPriority>
             <InputDate>
               DeadLine:
-              <input type="date" {...register('taskMaturity')} />
+              <input type="date" {...register('maturity')} />
             </InputDate>
           </FlexArea>
           <InputTextArea>
             Descrição:
-            <textarea {...register('taskDescription')} />
+            <textarea {...register('description')} />
           </InputTextArea>
           <FormFooter>
             <DeleteButton
