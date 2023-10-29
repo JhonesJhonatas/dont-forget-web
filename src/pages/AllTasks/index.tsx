@@ -32,7 +32,6 @@ import {
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import { useGetAllOpenedTasks } from '../../hooks/tasks/useGetAllOpenedTasks'
 import { useSeparateOpenedTasksByStatus } from '../../hooks/tasks/useSeparateOpenedTasksByStatus'
 import { ListViewLoading } from '../../components/ListViewLoading'
 import { TaskTr } from '../../components/TaskTr'
@@ -40,6 +39,7 @@ import { TaskCard } from '../../components/TaskCard'
 import { CardViewLoading } from '../../components/CardViewLoading'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
+import { TasksContext } from '../../contexts/TaskContext'
 
 type TogleTaksViewSchema = 'list' | 'kanban'
 
@@ -56,7 +56,8 @@ export function AllTasks() {
 
   const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('list')
 
-  const { allOpenedTasks, openedTasksIsLoading } = useGetAllOpenedTasks()
+  const { allOpenedTasks, openedTasksIsLoading } = useContext(TasksContext)
+
   const {
     approvalTasks,
     concludedTasks,

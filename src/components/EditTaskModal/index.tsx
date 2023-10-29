@@ -20,11 +20,12 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import { format } from 'date-fns'
-import { OpenedTask } from '../../hooks/tasks/useGetAllOpenedTasks'
 import { useDeleteOpenedTask } from '../../hooks/tasks/useDeleteOpenedTask'
 import { useNotify } from '../../hooks/useNotify'
+import { OpenedTask, TasksContext } from '../../contexts/TaskContext'
+import { useUpdateOpenedTask } from '../../hooks/tasks/useUpdateOpenedTask'
 
 const editTaskFormSchema = z.object({
   id: z.string(),
@@ -54,6 +55,8 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
   })
   const { deleteOpenedTask } = useDeleteOpenedTask()
   const { notify } = useNotify()
+  const { handleUpdateOpenedTasks } = useContext(TasksContext)
+  const { updateOpenedTask } = useUpdateOpenedTask()
 
   const formattedMaturity = format(new Date(task.maturity), 'yyyy-MM-dd')
 
@@ -86,18 +89,31 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
       status,
       title,
     }: EditTaskFormSchema) => {
-      console.log(description, id, maturity, priority, projectId, status, title)
+      const updatedTask = await updateOpenedTask({
+        description,
+        id,
+        maturity,
+        priority,
+        projectId,
+        status,
+        title,
+      })
+
+      if (updatedTask) {
+        handleTogleModal()
+        handleUpdateOpenedTasks()
+      }
     },
-    [],
+    [handleTogleModal, handleUpdateOpenedTasks, updateOpenedTask],
   )
 
   const handleDeleteTask = useCallback(
     async (id: string) => {
-      deleteOpenedTask(id)
+      deleteOpenedTask({ id, handleUpdateOpenedTasks })
       handleTogleModal()
       notify({ type: 'sucess', message: 'Tarefa excluída' })
     },
-    [deleteOpenedTask, handleTogleModal, notify],
+    [deleteOpenedTask, handleTogleModal, handleUpdateOpenedTasks, notify],
   )
 
   return (

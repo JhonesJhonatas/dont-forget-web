@@ -18,11 +18,11 @@ import { X } from '@phosphor-icons/react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 import { useCreateTask } from '../../hooks/tasks/useCreateTask'
-import { useNavigate } from 'react-router-dom'
 import { useGetProjects } from '../../hooks/projects/useGetProjects'
 import { useNotify } from '../../hooks/useNotify'
+import { TasksContext } from '../../contexts/TaskContext'
 
 const newTaskFormSchema = z.object({
   projectId: z.string(),
@@ -49,9 +49,9 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
   })
 
   const { createTask } = useCreateTask()
-  const navigate = useNavigate()
   const { allProjects } = useGetProjects()
   const { notify } = useNotify()
+  const { handleUpdateOpenedTasks } = useContext(TasksContext)
 
   const onSubmit = useCallback(
     async ({
@@ -72,11 +72,11 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
       if (isTaskCreated) {
         reset()
         handleCloseModal()
+        handleUpdateOpenedTasks()
         notify({ type: 'sucess', message: 'Tarefa criada com sucesso' })
-        navigate('/tasks/all')
       }
     },
-    [createTask, handleCloseModal, navigate, notify, reset],
+    [createTask, handleCloseModal, handleUpdateOpenedTasks, notify, reset],
   )
 
   return (
