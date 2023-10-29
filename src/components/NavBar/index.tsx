@@ -28,6 +28,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { NewTaskModal } from '../NewTaskModal'
 import { UserOptionsDropDown } from './components/UserOptionsDropDown'
 import { useGetProjects } from '../../hooks/projects/useGetProjects'
+import { NewProjectModal } from '../NewProjectModal'
 
 export function NavBar() {
   const [open, setOpen] = useState(false)
@@ -90,13 +91,18 @@ export function NavBar() {
               </ProjectItem>
             )
           })}
-          <NewProject>
-            <div>
-              <CircleDashed size={14} />
-              <span>Novo Projeto</span>
-            </div>
-            <PlusCircle />
-          </NewProject>
+          <Dialog.Root>
+            <Dialog.Trigger asChild>
+              <NewProject>
+                <div>
+                  <CircleDashed size={14} />
+                  <span>Novo Projeto</span>
+                </div>
+                <PlusCircle />
+              </NewProject>
+            </Dialog.Trigger>
+            <NewProjectModal />
+          </Dialog.Root>
         </NavContent>
       </Section>
       <Dialog.Root open={open} onOpenChange={setOpen}>
