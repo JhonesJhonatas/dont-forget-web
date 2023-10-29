@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { OpenedTask } from './useGetAllOpenedTasks'
+import { OpenedTask } from '../../contexts/TaskContext'
 
 export const useSeparateOpenedTasksByStatus = (tasks: OpenedTask[]) => {
   const [toDoTasks, setToDoTasks] = useState<OpenedTask[]>([])
