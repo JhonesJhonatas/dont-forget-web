@@ -20,9 +20,9 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useContext } from 'react'
 import { useCreateTask } from '../../hooks/tasks/useCreateTask'
-import { useGetProjects } from '../../hooks/projects/useGetProjects'
 import { useNotify } from '../../hooks/useNotify'
 import { TasksContext } from '../../contexts/TaskContext'
+import { useNavigate } from 'react-router-dom'
 
 const newTaskFormSchema = z.object({
   projectId: z.string(),
@@ -49,9 +49,10 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
   })
 
   const { createTask } = useCreateTask()
-  const { allProjects } = useGetProjects()
+  const { allProjects } = useContext(TasksContext)
   const { notify } = useNotify()
   const { handleUpdateOpenedTasks } = useContext(TasksContext)
+  const navigate = useNavigate()
 
   const onSubmit = useCallback(
     async ({
@@ -73,10 +74,18 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
         reset()
         handleCloseModal()
         handleUpdateOpenedTasks()
+        navigate('/tasks/all')
         notify({ type: 'sucess', message: 'Tarefa criada com sucesso' })
       }
     },
-    [createTask, handleCloseModal, handleUpdateOpenedTasks, notify, reset],
+    [
+      createTask,
+      handleCloseModal,
+      handleUpdateOpenedTasks,
+      navigate,
+      notify,
+      reset,
+    ],
   )
 
   return (

@@ -22,7 +22,7 @@ import { useCallback, useContext, useState } from 'react'
 import { useCreateProject } from '../../hooks/projects/useCreateProject'
 import { TasksContext } from '../../contexts/TaskContext'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { ChoseColorDropDown } from './ChoseColorDropDown'
+import { ChoseColorDropDown } from './components/ChoseColorDropDown'
 
 const newProjectFormSchema = z.object({
   title: z.string(),
@@ -48,7 +48,7 @@ export function NewProjectModal({
     resolver: zodResolver(newProjectFormSchema),
   })
   const { createNewProject } = useCreateProject()
-  const { handleUpdateOpenedTasks } = useContext(TasksContext)
+  const { handleUpdateProjects } = useContext(TasksContext)
 
   const onSubmit = useCallback(
     async ({ description, title }: NewProjectFormSchema) => {
@@ -61,7 +61,7 @@ export function NewProjectModal({
       const createdProject = await createNewProject(formattedData)
 
       if (createdProject) {
-        handleUpdateOpenedTasks()
+        handleUpdateProjects()
         handleCloseNewProjectModal()
       }
     },
@@ -69,7 +69,7 @@ export function NewProjectModal({
       chosenColor,
       createNewProject,
       handleCloseNewProjectModal,
-      handleUpdateOpenedTasks,
+      handleUpdateProjects,
     ],
   )
 

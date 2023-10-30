@@ -22,19 +22,19 @@ import {
   UserName,
 } from './styles'
 import { NavLink } from 'react-router-dom'
-import { useCallback, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { NewTaskModal } from '../NewTaskModal'
-import { UserOptionsDropDown } from './components/UserOptionsDropDown'
-import { useGetProjects } from '../../hooks/projects/useGetProjects'
 import { NewProjectModal } from '../NewProjectModal'
+import { TasksContext } from '../../contexts/TaskContext'
+import { UserOptionsDropDown } from './components/UserOptionsDropDown'
 
 export function NavBar() {
   const [open, setOpen] = useState(false)
   const [newProjectModalOpen, setNewProjectModalOpen] = useState(false)
 
-  const { allProjects } = useGetProjects()
+  const { allProjects } = useContext(TasksContext)
 
   const handleCloseModal = useCallback(() => {
     setOpen(false)
