@@ -58,7 +58,6 @@ export function AllTasks() {
 
   const { allOpenedTasks, openedTasksIsLoading } = useContext(TasksContext)
   const { allConcludedTasks } = useContext(TasksContext)
-  console.log(allConcludedTasks)
 
   const {
     approvalTasks,
