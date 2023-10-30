@@ -7,6 +7,7 @@ import {
   DotsThree,
   PlusCircle,
   SquaresFour,
+  UserCircle,
 } from '@phosphor-icons/react'
 import {
   Container,
@@ -49,7 +50,7 @@ export function NavBar() {
       <Section>
         <NavHeader>
           <UserInfos>
-            <img src="https://github.com/jhonesjhonatas.png" alt="UserPic" />
+            <UserCircle size={38} />
             <div>
               <UserName>{localStorage.getItem('name')}</UserName>
               <UserEmail>{localStorage.getItem('email')}</UserEmail>

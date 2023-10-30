@@ -26,6 +26,7 @@ import { useDeleteOpenedTask } from '../../hooks/tasks/useDeleteOpenedTask'
 import { useNotify } from '../../hooks/useNotify'
 import { OpenedTask, TasksContext } from '../../contexts/TaskContext'
 import { useUpdateOpenedTask } from '../../hooks/tasks/useUpdateOpenedTask'
+import { useNavigate } from 'react-router-dom'
 
 const editTaskFormSchema = z.object({
   id: z.string(),
@@ -57,6 +58,7 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
   const { notify } = useNotify()
   const { handleUpdateOpenedTasks } = useContext(TasksContext)
   const { updateOpenedTask } = useUpdateOpenedTask()
+  const navigate = useNavigate()
 
   const formattedMaturity = format(new Date(task.maturity), 'yyyy-MM-dd')
 
@@ -102,9 +104,10 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
       if (updatedTask) {
         handleTogleModal()
         handleUpdateOpenedTasks()
+        navigate('/tasks/all')
       }
     },
-    [handleTogleModal, handleUpdateOpenedTasks, updateOpenedTask],
+    [handleTogleModal, handleUpdateOpenedTasks, navigate, updateOpenedTask],
   )
 
   const handleDeleteTask = useCallback(
@@ -112,8 +115,15 @@ export function EditTaskModal({ task, handleTogleModal }: EditTaskModalProps) {
       deleteOpenedTask({ id, handleUpdateOpenedTasks })
       handleTogleModal()
       notify({ type: 'sucess', message: 'Tarefa excluída' })
+      navigate('/tasks/all')
     },
-    [deleteOpenedTask, handleTogleModal, handleUpdateOpenedTasks, notify],
+    [
+      deleteOpenedTask,
+      handleTogleModal,
+      handleUpdateOpenedTasks,
+      navigate,
+      notify,
+    ],
   )
 
   return (
