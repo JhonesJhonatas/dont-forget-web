@@ -22,20 +22,26 @@ import {
   UserName,
 } from './styles'
 import { NavLink } from 'react-router-dom'
-import { useCallback, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { NewTaskModal } from '../NewTaskModal'
+import { NewProjectModal } from '../NewProjectModal'
+import { TasksContext } from '../../contexts/TaskContext'
 import { UserOptionsDropDown } from './components/UserOptionsDropDown'
-import { useGetProjects } from '../../hooks/projects/useGetProjects'
 
 export function NavBar() {
   const [open, setOpen] = useState(false)
+  const [newProjectModalOpen, setNewProjectModalOpen] = useState(false)
 
-  const { allProjects } = useGetProjects()
+  const { allProjects } = useContext(TasksContext)
 
   const handleCloseModal = useCallback(() => {
     setOpen(false)
+  }, [])
+
+  const handleCloseNewProjectModal = useCallback(() => {
+    setNewProjectModalOpen(false)
   }, [])
 
   return (
@@ -90,13 +96,23 @@ export function NavBar() {
               </ProjectItem>
             )
           })}
-          <NewProject>
-            <div>
-              <CircleDashed size={14} />
-              <span>Novo Projeto</span>
-            </div>
-            <PlusCircle />
-          </NewProject>
+          <Dialog.Root
+            open={newProjectModalOpen}
+            onOpenChange={setNewProjectModalOpen}
+          >
+            <Dialog.Trigger asChild>
+              <NewProject>
+                <div>
+                  <CircleDashed size={14} />
+                  <span>Novo Projeto</span>
+                </div>
+                <PlusCircle />
+              </NewProject>
+            </Dialog.Trigger>
+            <NewProjectModal
+              handleCloseNewProjectModal={handleCloseNewProjectModal}
+            />
+          </Dialog.Root>
         </NavContent>
       </Section>
       <Dialog.Root open={open} onOpenChange={setOpen}>
