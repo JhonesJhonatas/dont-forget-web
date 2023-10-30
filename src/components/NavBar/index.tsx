@@ -1,5 +1,4 @@
 import {
-  CaretDown,
   CaretRight,
   CheckSquare,
   Circle,
@@ -81,7 +80,7 @@ export function NavBar() {
                 <CheckSquare size={18} />
                 <span>Todas as Tarefas</span>
               </div>
-              <CaretDown />
+              <CaretRight />
             </NavLink>
           </NavItem>
           {allProjects.map((project) => {

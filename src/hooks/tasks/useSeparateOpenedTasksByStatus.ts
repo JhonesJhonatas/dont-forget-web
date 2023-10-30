@@ -7,7 +7,6 @@ export const useSeparateOpenedTasksByStatus = (tasks: OpenedTask[]) => {
   const [inProgressTasks, setInProgressTasks] = useState<OpenedTask[]>([])
   const [approvalTasks, setApprovalTasks] = useState<OpenedTask[]>([])
   const [paymentTasks, setPaymentTasks] = useState<OpenedTask[]>([])
-  const [concludedTasks, setConcludedTasks] = useState<OpenedTask[]>([])
 
   useEffect(() => {
     const filteredTasks = tasks.filter((task) => task.status === 'toDo')
@@ -39,18 +38,11 @@ export const useSeparateOpenedTasksByStatus = (tasks: OpenedTask[]) => {
     setPaymentTasks(filteredTasks)
   }, [tasks])
 
-  useEffect(() => {
-    const filteredTasks = tasks.filter((task) => task.status === 'concluded')
-
-    setConcludedTasks(filteredTasks)
-  }, [tasks])
-
   return {
     toDoTasks,
     standByTasks,
     inProgressTasks,
     approvalTasks,
     paymentTasks,
-    concludedTasks,
   }
 }

@@ -1,17 +1,11 @@
 import styled, { css } from 'styled-components'
 
 interface StatusContainerProps {
-  $status:
-    | 'toDo'
-    | 'standby'
-    | 'inProgress'
-    | 'approval'
-    | 'payment'
-    | 'concluded'
+  $status: string
 }
 
 interface PriorityContainer {
-  $priority: 'low' | 'normal' | 'high' | 'urgent'
+  $priority: string
 }
 
 export const TableTr = styled.tr`

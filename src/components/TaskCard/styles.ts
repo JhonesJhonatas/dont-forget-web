@@ -1,17 +1,11 @@
 import styled, { css } from 'styled-components'
 
 interface PriorityProps {
-  level: 'low' | 'normal' | 'high' | 'urgent'
+  level: string
 }
 
 interface StatusProps {
-  status:
-    | 'toDo'
-    | 'standby'
-    | 'inProgress'
-    | 'approval'
-    | 'payment'
-    | 'concluded'
+  status: string
 }
 
 export const Container = styled.div`
