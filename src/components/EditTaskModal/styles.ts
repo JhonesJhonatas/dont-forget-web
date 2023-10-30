@@ -206,6 +206,25 @@ export const DeleteButton = styled.button`
   }
 `
 
+export const ConcludeButton = styled.button`
+  border: none;
+  background-color: ${(props) => props.theme.sucess};
+  color: ${(props) => props.theme.textPrimary};
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover {
+    background-color: ${(props) => props.theme.concluded};
+  }
+`
+
 export const CancelButton = styled.button`
   border: none;
   background-color: transparent;

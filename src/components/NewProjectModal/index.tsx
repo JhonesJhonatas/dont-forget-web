@@ -43,6 +43,7 @@ export function NewProjectModal({
   const {
     register,
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = useForm<NewProjectFormSchema>({
     resolver: zodResolver(newProjectFormSchema),
@@ -63,6 +64,7 @@ export function NewProjectModal({
       if (createdProject) {
         handleUpdateProjects()
         handleCloseNewProjectModal()
+        reset()
       }
     },
     [
@@ -70,6 +72,7 @@ export function NewProjectModal({
       createNewProject,
       handleCloseNewProjectModal,
       handleUpdateProjects,
+      reset,
     ],
   )
 

@@ -54,13 +54,14 @@ export function AllTasks() {
     }
   }, [authenticated, navigate])
 
-  const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('list')
+  const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('kanban')
 
   const { allOpenedTasks, openedTasksIsLoading } = useContext(TasksContext)
+  const { allConcludedTasks } = useContext(TasksContext)
+  console.log(allConcludedTasks)
 
   const {
     approvalTasks,
-    concludedTasks,
     inProgressTasks,
     paymentTasks,
     standByTasks,
@@ -254,13 +255,13 @@ export function AllTasks() {
                     <ListViewTableHeader status="concluded">
                       <div></div>
                       <span>Concluídas</span>
-                      <small>({concludedTasks.length})</small>
+                      <small>({allConcludedTasks.length})</small>
                     </ListViewTableHeader>
                     {openedTasksIsLoading ? (
                       <ListViewLoading />
                     ) : (
                       <ListViewTableBody>
-                        {concludedTasks.map((task) => {
+                        {allConcludedTasks.map((task) => {
                           return <TaskTr key={task.id} task={task} />
                         })}
                       </ListViewTableBody>
@@ -349,7 +350,7 @@ export function AllTasks() {
                         <CardViewLoading />
                       ) : (
                         <CardsArea>
-                          {concludedTasks.map((task) => {
+                          {allConcludedTasks.map((task) => {
                             return <TaskCard key={task.id} task={task} />
                           })}
                         </CardsArea>

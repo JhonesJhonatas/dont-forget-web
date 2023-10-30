@@ -56,11 +56,11 @@ export function DashBoard() {
   const [lateTasks, setLateTasks] = useState<OpenedTask[]>([])
   const [messageForToday, setMessageForToday] = useState('')
 
-  const { allOpenedTasks, openedTasksIsLoading } = useContext(TasksContext)
+  const { allOpenedTasks, openedTasksIsLoading, allConcludedTasks } =
+    useContext(TasksContext)
 
   const {
     approvalTasks,
-    concludedTasks,
     inProgressTasks,
     paymentTasks,
     standByTasks,
@@ -146,7 +146,7 @@ export function DashBoard() {
           <ResumeCard amount={inProgressTasks.length} status="in_progress" />
           <ResumeCard amount={approvalTasks.length} status="approval" />
           <ResumeCard amount={paymentTasks.length} status="payment" />
-          <ResumeCard amount={concludedTasks.length} status="concluded" />
+          <ResumeCard amount={allConcludedTasks.length} status="concluded" />
         </CardsArea>
         <FlexArea>
           <Notifications>

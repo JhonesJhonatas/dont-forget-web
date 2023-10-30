@@ -36,6 +36,19 @@ export interface OpenedTask {
   userId: string
 }
 
+export interface ConcludedTask {
+  id: string
+  title: string
+  description: string
+  priority: string
+  status: string
+  maturity: string
+  createdAt: string
+  completedAt: string
+  projectId: string
+  userId: string
+}
+
 interface TasksContextSchema {
   openedTasksIsLoading: boolean
   allOpenedTasks: OpenedTask[]
@@ -43,6 +56,8 @@ interface TasksContextSchema {
   projectsIsLoading: boolean
   allProjects: Project[]
   handleUpdateProjects: () => void
+  concludedTasksIsLoading: boolean
+  allConcludedTasks: ConcludedTask[]
 }
 
 interface TaskProviderProps {
@@ -54,9 +69,22 @@ const TasksContext = createContext({} as TasksContextSchema)
 function TasksProvider({ children }: TaskProviderProps) {
   const [projectsIsLoading, setProjectsIsLoading] = useState(true)
   const [allProjects, setAllProjects] = useState<Project[]>([])
+  const [concludedTasksIsLoading, setConcludedTasksIsLoading] = useState(true)
+  const [allConcludedTasks, setAllConcludedTasks] = useState<ConcludedTask[]>(
+    [],
+  )
   const [openedTasksIsLoading, setOpenedTasksIsLoading] = useState(true)
   const [allOpenedTasks, setAllOpenedTasks] = useState<OpenedTask[]>([])
+
   const { authenticated } = useContext(AuthContext)
+
+  const handleUpdateProjects = useCallback(() => {
+    setProjectsIsLoading(true)
+    api
+      .get('/projects/list-projects')
+      .then((res) => setAllProjects(res.data))
+      .finally(() => setProjectsIsLoading(false))
+  }, [])
 
   const handleUpdateOpenedTasks = useCallback(() => {
     setOpenedTasksIsLoading(true)
@@ -66,12 +94,12 @@ function TasksProvider({ children }: TaskProviderProps) {
       .finally(() => setOpenedTasksIsLoading(false))
   }, [])
 
-  const handleUpdateProjects = useCallback(() => {
-    setProjectsIsLoading(true)
+  const handleUpdateCompletedTasks = useCallback(() => {
+    setConcludedTasksIsLoading(true)
     api
-      .get('/projects/list-projects')
-      .then((res) => setAllProjects(res.data))
-      .finally(() => setProjectsIsLoading(false))
+      .get('/tasks/list-all-concluded-tasks-by-user-id')
+      .then((res) => setAllConcludedTasks(res.data))
+      .finally(() => setConcludedTasksIsLoading(false))
   }, [])
 
   useEffect(() => {
@@ -83,8 +111,9 @@ function TasksProvider({ children }: TaskProviderProps) {
   useEffect(() => {
     if (authenticated) {
       handleUpdateOpenedTasks()
+      handleUpdateCompletedTasks()
     }
-  }, [authenticated, handleUpdateOpenedTasks])
+  }, [authenticated, handleUpdateCompletedTasks, handleUpdateOpenedTasks])
 
   return (
     <TasksContext.Provider
@@ -95,6 +124,8 @@ function TasksProvider({ children }: TaskProviderProps) {
         allProjects,
         handleUpdateProjects,
         projectsIsLoading,
+        allConcludedTasks,
+        concludedTasksIsLoading,
       }}
     >
       {children}

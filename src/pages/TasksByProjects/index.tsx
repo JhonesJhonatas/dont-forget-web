@@ -38,6 +38,7 @@ import { TaskTr } from '../../components/TaskTr'
 import { TaskCard } from '../../components/TaskCard'
 import { CardViewLoading } from '../../components/CardViewLoading'
 import { useGetAllOpenedTasksByProject } from '../../hooks/tasks/useGetAllOpenedTasksByProject'
+import { useGetAllConcludedTasksByProjectId } from '../../hooks/tasks/useGetAllConcludedTasksByProjectId'
 
 type TogleTaksViewSchema = 'list' | 'kanban'
 
@@ -56,7 +57,7 @@ export function TasksByProjects() {
     }
   }, [authenticated, navigate])
 
-  const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('list')
+  const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('kanban')
 
   const { projectId } = useParams<RouterParams>()
 
@@ -64,10 +65,12 @@ export function TasksByProjects() {
 
   const { allOpenedTasks, openedTasksIsLoading } =
     useGetAllOpenedTasksByProject({ projectId: capturedProjectId })
+  const { allConcludedTasks } = useGetAllConcludedTasksByProjectId({
+    projectId: capturedProjectId,
+  })
 
   const {
     approvalTasks,
-    concludedTasks,
     inProgressTasks,
     paymentTasks,
     standByTasks,
@@ -260,13 +263,13 @@ export function TasksByProjects() {
                   <ListViewTableHeader status="concluded">
                     <div></div>
                     <span>Concluídas</span>
-                    <small>({concludedTasks.length})</small>
+                    <small>({allConcludedTasks.length})</small>
                   </ListViewTableHeader>
                   {openedTasksIsLoading ? (
                     <ListViewLoading />
                   ) : (
                     <ListViewTableBody>
-                      {concludedTasks.map((task) => {
+                      {allConcludedTasks.map((task) => {
                         return <TaskTr key={task.id} task={task} />
                       })}
                     </ListViewTableBody>
@@ -353,7 +356,7 @@ export function TasksByProjects() {
                       <CardViewLoading />
                     ) : (
                       <CardsArea>
-                        {concludedTasks.map((task) => {
+                        {allConcludedTasks.map((task) => {
                           return <TaskCard key={task.id} task={task} />
                         })}
                       </CardsArea>
