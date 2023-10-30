@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 import * as Dialog from '@radix-ui/react-dialog'
 
+interface ColorDemonstrationProps {
+  $chosenColor: string
+}
+
 export const DialogOverlay = styled(Dialog.Overlay)`
   background-color: rgba(0 0 0 / 0.75);
   position: fixed;
@@ -98,7 +102,7 @@ export const InputColor = styled.label`
   gap: 0.25rem;
 `
 
-export const ColorDemonstration = styled.div`
+export const ColorDemonstration = styled.div<ColorDemonstrationProps>`
   background-color: ${(props) => props.theme.borderCard};
   padding: 0.75rem;
   border-radius: 6px;
@@ -109,6 +113,7 @@ export const ColorDemonstration = styled.div`
 
   svg {
     line-height: none;
+    color: ${(props) => props.$chosenColor};
   }
 `
 

@@ -32,11 +32,16 @@ import { NewProjectModal } from '../NewProjectModal'
 
 export function NavBar() {
   const [open, setOpen] = useState(false)
+  const [newProjectModalOpen, setNewProjectModalOpen] = useState(false)
 
   const { allProjects } = useGetProjects()
 
   const handleCloseModal = useCallback(() => {
     setOpen(false)
+  }, [])
+
+  const handleCloseNewProjectModal = useCallback(() => {
+    setNewProjectModalOpen(false)
   }, [])
 
   return (
@@ -91,7 +96,10 @@ export function NavBar() {
               </ProjectItem>
             )
           })}
-          <Dialog.Root>
+          <Dialog.Root
+            open={newProjectModalOpen}
+            onOpenChange={setNewProjectModalOpen}
+          >
             <Dialog.Trigger asChild>
               <NewProject>
                 <div>
@@ -101,7 +109,9 @@ export function NavBar() {
                 <PlusCircle />
               </NewProject>
             </Dialog.Trigger>
-            <NewProjectModal />
+            <NewProjectModal
+              handleCloseNewProjectModal={handleCloseNewProjectModal}
+            />
           </Dialog.Root>
         </NavContent>
       </Section>
