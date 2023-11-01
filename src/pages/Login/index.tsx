@@ -32,6 +32,7 @@ export function Login() {
   const {
     handleSubmit,
     register,
+    setValue,
     formState: { isSubmitting },
   } = useForm<LoginFormSchema>({
     resolver: zodResolver(loginFormSchema),
@@ -45,6 +46,15 @@ export function Login() {
       navigate('/dashboard')
     }
   }, [authenticated, navigate])
+
+  useEffect(() => {
+    const emailToLogin = localStorage.getItem('emailToLogin')
+
+    if (emailToLogin) {
+      setValue('email', emailToLogin)
+      localStorage.removeItem('email')
+    }
+  }, [setValue])
 
   const onSubmit = useCallback(
     async ({ email, password }: LoginFormSchema) => {
@@ -97,7 +107,7 @@ export function Login() {
             </InputElement>
 
             <SubmitButton type="submit" disabled={isSubmitting}>
-              Entrar
+              {isSubmitting ? 'Entrando...' : 'Entrar'}
               <CaretRight />
             </SubmitButton>
           </form>

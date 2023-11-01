@@ -87,6 +87,10 @@ export const InputElement = styled.label`
       outline: 2px solid ${(props) => props.theme.enphasis};
     }
   }
+
+  small {
+    color: ${(props) => props.theme.error};
+  }
 `
 
 export const FlexArea = styled.div`

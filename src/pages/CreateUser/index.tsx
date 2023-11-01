@@ -24,7 +24,9 @@ import { useCreateUser } from '../../hooks/user/useCreateUser'
 
 const createUserFormSchema = z.object({
   name: z.string(),
-  email: z.string().email(),
+  email: z
+    .string()
+    .email({ message: 'Este campo precisa ser um email válido.' }),
   role: z.string(),
   password: z.string(),
   passwordConfirmation: z.string(),
@@ -36,7 +38,7 @@ export function CreateUser() {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<CreateUserFormSchema>({
     resolver: zodResolver(createUserFormSchema),
   })
@@ -66,7 +68,8 @@ export function CreateUser() {
 
         if (userCreated) {
           notify({ type: 'sucess', message: 'Usuário Cadastrado com sucesso' })
-          setTimeout(() => navigate('/'), 4000)
+          localStorage.setItem('emailToLogin', email)
+          navigate('/')
         } else {
           notify({ type: 'error', message: 'Email já cadastrado' })
         }
@@ -102,7 +105,7 @@ export function CreateUser() {
                   Nome:
                   <input
                     type="text"
-                    placeholder="Fulano de Tal"
+                    placeholder="Seu nome"
                     {...register('name')}
                     required
                   />
@@ -115,6 +118,9 @@ export function CreateUser() {
                     {...register('email')}
                     required
                   />
+                  {errors.email && (
+                    <small>Este campo precisa ser um email válido</small>
+                  )}
                 </InputElement>
                 <InputElement>
                   Profissão:
@@ -146,7 +152,7 @@ export function CreateUser() {
                   </InputElement>
                 </FlexArea>
                 <SubmitButton type="submit" disabled={isSubmitting}>
-                  Entrar
+                  {isSubmitting ? 'Cadastrando...' : 'Cadastrar'}
                   <CaretRight />
                 </SubmitButton>
               </form>
