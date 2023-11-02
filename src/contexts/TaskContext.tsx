@@ -58,6 +58,7 @@ interface TasksContextSchema {
   handleUpdateProjects: () => void
   concludedTasksIsLoading: boolean
   allConcludedTasks: ConcludedTask[]
+  handleUpdateCompletedTasks: () => void
 }
 
 interface TaskProviderProps {
@@ -126,6 +127,7 @@ function TasksProvider({ children }: TaskProviderProps) {
         projectsIsLoading,
         allConcludedTasks,
         concludedTasksIsLoading,
+        handleUpdateCompletedTasks,
       }}
     >
       {children}

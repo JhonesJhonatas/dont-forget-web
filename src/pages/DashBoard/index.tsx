@@ -18,7 +18,9 @@ import {
 import { useContext, useEffect, useState } from 'react'
 import {
   format,
-  getDate,
+  getDay,
+  getMonth,
+  getYear,
   isBefore,
   isFriday,
   isMonday,
@@ -120,11 +122,14 @@ export function DashBoard() {
   useEffect(() => {
     const lateTasks = allOpenedTasks.filter((task) =>
       isBefore(
-        getDate(parseISO(task.maturity.toString())),
-        getDate(new Date()),
+        new Date(
+          getYear(new Date(task.maturity)),
+          getMonth(new Date(task.maturity)),
+          getDay(new Date(task.maturity)),
+        ),
+        new Date(getYear(new Date()), getMonth(new Date()), getDay(new Date())),
       ),
     )
-
     setLateTasks(lateTasks)
   }, [allOpenedTasks])
 

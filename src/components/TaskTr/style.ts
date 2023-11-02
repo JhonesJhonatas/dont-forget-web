@@ -56,7 +56,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
         width: 0.75rem;
         height: 0.75rem;
         border-radius: 60px;
-        background-color: ${(props) => props.theme.textSecondary};
+        background-color: ${(props) => props.theme.opened};
       }
     `}
 
@@ -67,7 +67,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
         width: 0.75rem;
         height: 0.75rem;
         border-radius: 60px;
-        background-color: ${(props) => props.theme.cardBgPrimary};
+        background-color: ${(props) => props.theme.stand_by};
       }
     `}
 
@@ -78,7 +78,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
         width: 0.75rem;
         height: 0.75rem;
         border-radius: 60px;
-        background-color: ${(props) => props.theme.enphasis};
+        background-color: ${(props) => props.theme.in_progress};
       }
     `}
 
@@ -89,7 +89,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
         width: 0.75rem;
         height: 0.75rem;
         border-radius: 60px;
-        background-color: ${(props) => props.theme.danger};
+        background-color: ${(props) => props.theme.approval};
       }
     `}
 
@@ -100,7 +100,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
         width: 0.75rem;
         height: 0.75rem;
         border-radius: 60px;
-        background-color: ${(props) => props.theme.error};
+        background-color: ${(props) => props.theme.payment};
       }
     `}
 
@@ -111,7 +111,7 @@ export const StatusContainer = styled.div<StatusContainerProps>`
         width: 0.75rem;
         height: 0.75rem;
         border-radius: 60px;
-        background-color: ${(props) => props.theme.sucess};
+        background-color: ${(props) => props.theme.concluded};
       }
     `}
 `

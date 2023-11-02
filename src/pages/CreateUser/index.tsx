@@ -28,7 +28,7 @@ const createUserFormSchema = z.object({
     .string()
     .email({ message: 'Este campo precisa ser um email válido.' }),
   role: z.string(),
-  password: z.string(),
+  password: z.string().min(6, 'A senha precisa ter no mínimo 6 caracteres.'),
   passwordConfirmation: z.string(),
 })
 
@@ -140,6 +140,9 @@ export function CreateUser() {
                       {...register('password')}
                       required
                     />
+                    {errors.password && (
+                      <small>{errors.password.message}</small>
+                    )}
                   </InputElement>
                   <InputElement>
                     Confirmação de Senha:
@@ -149,6 +152,9 @@ export function CreateUser() {
                       {...register('passwordConfirmation')}
                       required
                     />
+                    {errors.password && (
+                      <small>A Senha precisa ter no mínimo 6 dígitos</small>
+                    )}
                   </InputElement>
                 </FlexArea>
                 <SubmitButton type="submit" disabled={isSubmitting}>
