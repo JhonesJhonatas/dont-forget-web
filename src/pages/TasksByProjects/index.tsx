@@ -186,7 +186,7 @@ export function TasksByProjects() {
                 <ListViewTable>
                   <ListViewTableHeader status="standby">
                     <div></div>
-                    <span>StandyBy</span>
+                    <span>StandBy</span>
                     <small>({standByTasks.length})</small>
                   </ListViewTableHeader>
                   {openedTasksIsLoading ? (

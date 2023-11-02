@@ -27,7 +27,6 @@ import { useDeleteOpenedTask } from '../../hooks/tasks/useDeleteOpenedTask'
 import { useNotify } from '../../hooks/useNotify'
 import { TasksContext } from '../../contexts/TaskContext'
 import { useUpdateOpenedTask } from '../../hooks/tasks/useUpdateOpenedTask'
-import { useNavigate } from 'react-router-dom'
 import { useConcludeTask } from '../../hooks/tasks/useConcludeTask'
 
 const editTaskFormSchema = z.object({
@@ -77,10 +76,10 @@ export function EditTaskModal({
   })
   const { deleteOpenedTask } = useDeleteOpenedTask()
   const { notify } = useNotify()
-  const { handleUpdateOpenedTasks } = useContext(TasksContext)
+  const { handleUpdateOpenedTasks, handleUpdateCompletedTasks } =
+    useContext(TasksContext)
   const { concludeTask } = useConcludeTask()
   const { updateOpenedTask } = useUpdateOpenedTask()
-  const navigate = useNavigate()
 
   const formattedMaturity = format(new Date(task.maturity), 'yyyy-MM-dd')
 
@@ -126,10 +125,10 @@ export function EditTaskModal({
       if (updatedTask) {
         handleTogleModal()
         handleUpdateOpenedTasks()
-        navigate('/tasks/all')
+        notify({ type: 'sucess', message: 'Tarefa editada com sucesso' })
       }
     },
-    [handleTogleModal, handleUpdateOpenedTasks, navigate, updateOpenedTask],
+    [handleTogleModal, handleUpdateOpenedTasks, notify, updateOpenedTask],
   )
 
   const handleDeleteTask = useCallback(
@@ -138,15 +137,8 @@ export function EditTaskModal({
       handleTogleModal()
       notify({ type: 'sucess', message: 'Tarefa excluída' })
       handleUpdateOpenedTasks()
-      navigate('/tasks/all')
     },
-    [
-      deleteOpenedTask,
-      handleTogleModal,
-      handleUpdateOpenedTasks,
-      navigate,
-      notify,
-    ],
+    [deleteOpenedTask, handleTogleModal, handleUpdateOpenedTasks, notify],
   )
 
   const handleConcludeTask = useCallback(async () => {
@@ -166,7 +158,7 @@ export function EditTaskModal({
     if (taskHasConcluded) {
       handleTogleModal()
       handleUpdateOpenedTasks()
-      navigate('/tasks/all')
+      handleUpdateCompletedTasks()
       notify({ type: 'sucess', message: 'Task Concluída com sucesso' })
     } else {
       notify({ type: 'error', message: 'Houve algum erro ao concluir' })
@@ -175,8 +167,8 @@ export function EditTaskModal({
     concludeTask,
     getValues,
     handleTogleModal,
+    handleUpdateCompletedTasks,
     handleUpdateOpenedTasks,
-    navigate,
     notify,
     task.createdAt,
     task.id,
