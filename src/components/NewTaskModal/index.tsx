@@ -1,136 +1,47 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import {
   CancelButton,
-  DialogCloese,
+  CreateTaskButton,
+  DialogClose,
   DialogContent,
   DialogOverlay,
-  FlexArea,
-  FormFooter,
-  InputDate,
-  InputPriority,
-  InputTextArea,
-  InputTitle,
+  ModalContent,
+  ModalFooter,
   ModalHeader,
-  NewTaskForm,
-  SaveButton,
+  TaskIformations,
+  TaskTitleInput,
 } from './styles'
 import { X } from '@phosphor-icons/react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useContext } from 'react'
-import { useCreateTask } from '../../hooks/tasks/useCreateTask'
-import { useNotify } from '../../hooks/useNotify'
-import { TasksContext } from '../../contexts/TaskContext'
+import { StatusPicker } from '../StatusPicker'
+import { PriorityPicker } from '../PriorityPicker'
+import { MaturityPicker } from '../MaturityPicker'
+import { ProjectPicker } from '../ProjectPicker'
+import { TipTapEditor } from '../TipTapEditor'
 
-const newTaskFormSchema = z.object({
-  projectId: z.string(),
-  title: z.string(),
-  description: z.string(),
-  maturity: z.string(),
-  priority: z.string(),
-})
-
-type NewTaskFormSchema = z.infer<typeof newTaskFormSchema>
-
-interface NewTaskModalProps {
-  handleCloseModal: () => void
-}
-
-export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { isSubmitting },
-  } = useForm<NewTaskFormSchema>({
-    resolver: zodResolver(newTaskFormSchema),
-  })
-
-  const { createTask } = useCreateTask()
-  const { allProjects } = useContext(TasksContext)
-  const { notify } = useNotify()
-  const { handleUpdateOpenedTasks } = useContext(TasksContext)
-
-  const onSubmit = useCallback(
-    async ({
-      description,
-      maturity,
-      priority,
-      projectId,
-      title,
-    }: NewTaskFormSchema) => {
-      const isTaskCreated = await createTask({
-        description,
-        maturity,
-        priority,
-        projectId,
-        title,
-      })
-
-      if (isTaskCreated) {
-        reset()
-        handleCloseModal()
-        handleUpdateOpenedTasks()
-        notify({ type: 'sucess', message: 'Tarefa criada com sucesso' })
-      }
-    },
-    [createTask, handleCloseModal, handleUpdateOpenedTasks, notify, reset],
-  )
-
+export function NewTaskModal() {
   return (
     <Dialog.Portal>
       <DialogOverlay />
       <DialogContent>
         <ModalHeader>
-          <Dialog.Title>📝 • Criar nova task</Dialog.Title>
-          <DialogCloese>
-            <X />
-          </DialogCloese>
+          <TaskIformations>
+            <ProjectPicker />
+            <StatusPicker />
+            <PriorityPicker />
+            <MaturityPicker />
+          </TaskIformations>
+          <DialogClose>
+            <X size={20} />
+          </DialogClose>
         </ModalHeader>
-        <NewTaskForm onSubmit={handleSubmit(onSubmit)}>
-          <InputTitle>
-            Título:
-            <input type="text" placeholder="Título" {...register('title')} />
-          </InputTitle>
-          <FlexArea>
-            <InputPriority>
-              Prioridade:
-              <select {...register('priority')}>
-                <option value="low">Baixa</option>
-                <option value="normal">Normal</option>
-                <option value="high">Alta</option>
-                <option value="urgent">Urgente</option>
-              </select>
-            </InputPriority>
-            <InputDate>
-              DeadLine:
-              <input type="date" {...register('maturity')} />
-            </InputDate>
-          </FlexArea>
-          <InputPriority>
-            Projeto:
-            <select {...register('projectId')}>
-              {allProjects.map((project) => {
-                return (
-                  <option key={project.id} value={project.id}>
-                    {project.title}
-                  </option>
-                )
-              })}
-            </select>
-          </InputPriority>
-          <InputTextArea>
-            Descrição:
-            <textarea {...register('description')} />
-          </InputTextArea>
-          <FormFooter>
-            <Dialog.Close asChild>
-              <CancelButton>Cancelar</CancelButton>
-            </Dialog.Close>
-            <SaveButton disabled={isSubmitting}>Criar</SaveButton>
-          </FormFooter>
-        </NewTaskForm>
+        <ModalContent>
+          <TaskTitleInput type="text" defaultValue="Título da Tarefa" />
+          <TipTapEditor />
+        </ModalContent>
+        <ModalFooter>
+          <CancelButton>Cancelar</CancelButton>
+          <CreateTaskButton>Criar Tarefa</CreateTaskButton>
+        </ModalFooter>
       </DialogContent>
     </Dialog.Portal>
   )

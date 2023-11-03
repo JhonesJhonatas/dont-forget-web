@@ -9,7 +9,7 @@ import {
 import { AuthContext } from './AuthContext'
 import { api } from '../lib/axios'
 
-interface Project {
+export interface Project {
   id: string
   title: string
   description: string

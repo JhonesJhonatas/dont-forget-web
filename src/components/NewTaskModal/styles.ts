@@ -9,7 +9,10 @@ export const DialogOverlay = styled(Dialog.Overlay)`
 `
 
 export const DialogContent = styled(Dialog.Content)`
-  background-color: ${(props) => props.theme.cardBgPrimary};
+  width: 60vw;
+  min-height: 70vh;
+  padding: 2rem;
+  background-color: ${(props) => props.theme.cardBgSecondary};
   border-radius: 6px;
   box-shadow:
     hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
@@ -19,8 +22,6 @@ export const DialogContent = styled(Dialog.Content)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 40rem;
-  padding: 2rem;
   animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 
   display: flex;
@@ -30,130 +31,40 @@ export const DialogContent = styled(Dialog.Content)`
 
 export const ModalHeader = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 `
 
-export const DialogCloese = styled(Dialog.Close)`
-  border: 0;
+export const TaskIformations = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`
+
+export const DialogClose = styled(Dialog.Close)`
+  border: none;
+  outline: none;
   background-color: transparent;
   color: ${(props) => props.theme.textPrimary};
-  transition: all 0.2s ease-in-out;
-
-  svg {
-    width: 1rem;
-    height: 1rem;
-    cursor: pointer;
-    line-height: 0;
-  }
-
-  &:hover {
-    transform: scale(1.2);
-  }
 `
 
-export const NewTaskForm = styled.form`
+export const ModalContent = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 `
 
-export const InputTitle = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-
-  input {
-    border-radius: 6px;
-    outline: 0;
-    height: 1.8rem;
-    padding: 1.5rem 1rem;
-    background-color: ${(props) => props.theme.cardBgSecondary};
-    border: 1px solid ${(props) => props.theme.borderCard};
-    color: ${(props) => props.theme.textPrimary};
-
-    &:focus {
-      outline: 2px solid ${(props) => props.theme.enphasis};
-    }
-  }
+export const TaskTitleInput = styled.input`
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: ${(props) => props.theme.textPrimary};
+  font-size: 2rem;
+  font-weight: bold;
 `
 
-export const FlexArea = styled.div`
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  justify-content: space-between;
-
-  label {
-    flex: 1;
-  }
-`
-
-export const InputPriority = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-
-  select {
-    border-radius: 6px;
-    height: 3rem;
-    width: 100%;
-    padding: 0.75rem;
-    background-color: ${(props) => props.theme.cardBgSecondary};
-    border: 1px solid ${(props) => props.theme.borderCard};
-    outline: 0;
-    color: ${(props) => props.theme.textPrimary};
-
-    &:focus {
-      outline: 2px solid ${(props) => props.theme.enphasis};
-    }
-  }
-`
-
-export const InputDate = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-
-  input {
-    border-radius: 6px;
-    height: 3rem;
-    padding: 0.75rem;
-    width: 100%;
-    background-color: ${(props) => props.theme.cardBgSecondary};
-    border: 1px solid ${(props) => props.theme.borderCard};
-    outline: 0;
-    color: ${(props) => props.theme.textPrimary};
-
-    &:focus {
-      outline: 2px solid ${(props) => props.theme.enphasis};
-    }
-  }
-`
-
-export const InputTextArea = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-
-  textarea {
-    border-radius: 6px;
-    height: 10rem;
-    resize: none;
-    padding: 1rem;
-    width: 100%;
-    background-color: ${(props) => props.theme.cardBgSecondary};
-    border: 1px solid ${(props) => props.theme.borderCard};
-    outline: 0;
-    color: ${(props) => props.theme.textPrimary};
-
-    &:focus {
-      outline: 2px solid ${(props) => props.theme.enphasis};
-    }
-  }
-`
-
-export const FormFooter = styled.div`
+export const ModalFooter = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -164,10 +75,11 @@ export const CancelButton = styled.button`
   border: none;
   background-color: transparent;
   color: ${(props) => props.theme.textPrimary};
+
   cursor: pointer;
 `
 
-export const SaveButton = styled.button`
+export const CreateTaskButton = styled.button`
   border: 0;
   background-color: ${(props) => props.theme.enphasis};
   color: ${(props) => props.theme.textPrimary};
