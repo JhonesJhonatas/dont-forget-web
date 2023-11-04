@@ -64,6 +64,17 @@ export const TaskTitleInput = styled.input`
   font-weight: bold;
 `
 
+export const TaskDescriptionInput = styled.textarea`
+  height: 100%;
+  resize: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: ${(props) => props.theme.textPrimary};
+  font-size: 1rem;
+  font-weight: regular;
+`
+
 export const ModalFooter = styled.div`
   display: flex;
   align-items: center;

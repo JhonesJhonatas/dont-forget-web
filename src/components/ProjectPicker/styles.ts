@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-
 interface ContainerProps {
   $projectColor?: string
 }

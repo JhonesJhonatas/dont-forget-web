@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  TaskDescriptionInput,
   TaskIformations,
   TaskTitleInput,
 } from './styles'
@@ -16,9 +17,12 @@ import { StatusPicker } from '../StatusPicker'
 import { PriorityPicker } from '../PriorityPicker'
 import { MaturityPicker } from '../MaturityPicker'
 import { ProjectPicker } from '../ProjectPicker'
-import { TipTapEditor } from '../TipTapEditor'
 
-export function NewTaskModal() {
+interface NewTaskModalProps {
+  handleCloseModal: () => void
+}
+
+export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
   return (
     <Dialog.Portal>
       <DialogOverlay />
@@ -35,8 +39,11 @@ export function NewTaskModal() {
           </DialogClose>
         </ModalHeader>
         <ModalContent>
-          <TaskTitleInput type="text" defaultValue="Título da Tarefa" />
-          <TipTapEditor />
+          <TaskTitleInput type="text" placeholder="Adicione um título" />
+          <TaskDescriptionInput
+            rows={15}
+            placeholder="Adicione uma descrição"
+          />
         </ModalContent>
         <ModalFooter>
           <CancelButton>Cancelar</CancelButton>

@@ -1,9 +1,9 @@
 import {
   CaretRight,
   CheckSquare,
-  Circle,
   CircleDashed,
   DotsThree,
+  Folder,
   PlusCircle,
   SquaresFour,
   UserCircle,
@@ -88,7 +88,7 @@ export function NavBar() {
               <ProjectItem key={project.id} $projectColor={project.color}>
                 <NavLink to={`/tasks/${project.id}`}>
                   <div>
-                    <Circle weight="fill" size={14} />
+                    <Folder weight="fill" size={14} />
                     <span>{project.title}</span>
                   </div>
                   <CaretRight />
