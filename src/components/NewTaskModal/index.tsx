@@ -5,6 +5,7 @@ import {
   DialogClose,
   DialogContent,
   DialogOverlay,
+  MaturityPicker,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -13,43 +14,152 @@ import {
   TaskTitleInput,
 } from './styles'
 import { X } from '@phosphor-icons/react'
-import { StatusPicker } from '../StatusPicker'
-import { PriorityPicker } from '../PriorityPicker'
-import { MaturityPicker } from '../MaturityPicker'
+import { StatusPicker, StatusSchema } from '../StatusPicker'
+import { PriorityPicker, PrioritySchema } from '../PriorityPicker'
 import { ProjectPicker } from '../ProjectPicker'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import { Project, TasksContext } from '../../contexts/TaskContext'
+import { useForm } from 'react-hook-form'
+import { useCreateTask } from '../../hooks/tasks/useCreateTask'
+import { string, z } from 'zod'
+import { useNotify } from '../../hooks/useNotify'
 
 interface NewTaskModalProps {
   handleCloseModal: () => void
 }
 
+const createTaskFormSchema = z.object({
+  projectId: z.string(),
+  title: z.string(),
+  description: z.string(),
+  maturity: string(),
+  priority: string(),
+  status: string(),
+})
+
+type CreateTaskFormSchema = z.infer<typeof createTaskFormSchema>
+
 export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
+  const [selectedProject, setSelecetdProject] = useState({} as Project)
+  const [selectedStatus, setSelectedStatus] = useState({} as StatusSchema)
+  const [selectedPriority, setSelectedPriority] = useState({} as PrioritySchema)
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<CreateTaskFormSchema>()
+  const { createTask } = useCreateTask()
+  const { handleUpdateOpenedTasks, handleUpdateCompletedTasks } =
+    useContext(TasksContext)
+  const { notify } = useNotify()
+
+  const handleSelectProject = useCallback(
+    ({ color, createdAt, description, id, title, userId }: Project) => {
+      setSelecetdProject({ color, createdAt, description, id, title, userId })
+    },
+    [],
+  )
+
+  const handleSelectStatus = useCallback(
+    ({ color, id, title, value }: StatusSchema) => {
+      setSelectedStatus({ color, id, title, value })
+    },
+    [],
+  )
+
+  const handleSelectPriority = useCallback(
+    ({ color, id, title, value }: StatusSchema) => {
+      setSelectedPriority({ color, id, title, value })
+    },
+    [],
+  )
+
+  useEffect(() => {
+    setValue('projectId', selectedProject.id)
+    setValue('status', selectedStatus.value)
+    setValue('priority', selectedPriority.value)
+  }, [
+    selectedPriority.value,
+    selectedProject.id,
+    selectedStatus.value,
+    setValue,
+  ])
+
+  const onSubmit = useCallback(
+    async ({ description, maturity, title }: CreateTaskFormSchema) => {
+      const projectId = getValues('projectId')
+      const status = getValues('status')
+      const priority = getValues('priority')
+
+      const isTaskCreated = await createTask({
+        description,
+        maturity,
+        priority,
+        projectId,
+        title,
+        status,
+      })
+
+      if (isTaskCreated) {
+        reset()
+        handleCloseModal()
+        handleUpdateOpenedTasks()
+        handleUpdateCompletedTasks()
+        notify({ type: 'sucess', message: 'Tarefa criada com sucesso' })
+      }
+    },
+    [
+      createTask,
+      getValues,
+      handleCloseModal,
+      handleUpdateCompletedTasks,
+      handleUpdateOpenedTasks,
+      notify,
+      reset,
+    ],
+  )
+
   return (
     <Dialog.Portal>
       <DialogOverlay />
-      <DialogContent>
-        <ModalHeader>
-          <TaskIformations>
-            <ProjectPicker />
-            <StatusPicker />
-            <PriorityPicker />
-            <MaturityPicker />
-          </TaskIformations>
-          <DialogClose>
-            <X size={20} />
-          </DialogClose>
-        </ModalHeader>
-        <ModalContent>
-          <TaskTitleInput type="text" placeholder="Adicione um título" />
-          <TaskDescriptionInput
-            rows={15}
-            placeholder="Adicione uma descrição"
-          />
-        </ModalContent>
-        <ModalFooter>
-          <CancelButton>Cancelar</CancelButton>
-          <CreateTaskButton>Criar Tarefa</CreateTaskButton>
-        </ModalFooter>
-      </DialogContent>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent>
+          <ModalHeader>
+            <TaskIformations>
+              <ProjectPicker handleSelectProject={handleSelectProject} />
+              <StatusPicker handleSelectStatus={handleSelectStatus} />
+              <PriorityPicker handleSelectPriority={handleSelectPriority} />
+              <MaturityPicker type="date" {...register('maturity')} required />
+            </TaskIformations>
+            <DialogClose disabled={isSubmitting}>
+              <X size={20} />
+            </DialogClose>
+          </ModalHeader>
+          <ModalContent>
+            <TaskTitleInput
+              type="text"
+              placeholder="Adicione um título"
+              {...register('title')}
+              required
+            />
+            <TaskDescriptionInput
+              rows={15}
+              placeholder="Adicione uma descrição"
+              {...register('description')}
+            />
+          </ModalContent>
+          <ModalFooter>
+            <CancelButton disabled={isSubmitting}>Cancelar</CancelButton>
+            <CreateTaskButton disabled={isSubmitting}>
+              {isSubmitting ? 'Criando Tarefa...' : 'Criar Tarefa'}
+            </CreateTaskButton>
+          </ModalFooter>
+        </DialogContent>
+      </form>
     </Dialog.Portal>
   )
 }

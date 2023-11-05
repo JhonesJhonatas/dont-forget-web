@@ -1,10 +1,16 @@
 import styled, { css } from 'styled-components'
 
-interface ContainerProps {
-  $choosedStatus: string
+interface OptionsFieldProps {
+  $isOpen: boolean
 }
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.div`
+  width: 10rem;
+  font-size: 0.75rem;
+`
+
+export const SelectorField = styled.div`
+  width: 100%;
   background-color: ${(props) => props.theme.cardBgPrimary};
   padding: 0.5rem;
   border-radius: 6px;
@@ -12,47 +18,68 @@ export const Container = styled.div<ContainerProps>`
 
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  gap: 0.75rem;
 
   transition: all 0.2s ease-in-out;
 
   &:hover {
     background-color: ${(props) => props.theme.borderCard};
   }
+`
 
-  svg {
-    ${(props) =>
-      props.$choosedStatus === 'toDo' &&
-      css`
-        color: ${(props) => props.theme.opened};
-      `}
+export const ChoosedField = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`
 
-    ${(props) =>
-      props.$choosedStatus === 'standby' &&
-      css`
-        color: ${(props) => props.theme.stand_by};
-      `}
+export const SelectorControllers = styled.div``
 
-      ${(props) =>
-      props.$choosedStatus === 'inProgress' &&
-      css`
-        color: ${(props) => props.theme.in_progress};
-      `}
+export const OptionsField = styled.div<OptionsFieldProps>`
+  ${(props) =>
+    props.$isOpen
+      ? css`
+          width: 10rem;
+          background-color: ${(props) => props.theme.cardBgPrimary};
+          padding: 0.5rem;
+          border-radius: 6px;
 
-      ${(props) =>
-      props.$choosedStatus === 'approval' &&
-      css`
-        color: ${(props) => props.theme.approval};
-      `}
+          margin-top: 0.5rem;
+          position: absolute;
+          z-index: 1;
 
-      ${(props) =>
-      props.$choosedStatus === 'payment' &&
-      css`
-        color: ${(props) => props.theme.payment};
-      `}
-  }
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        `
+      : `
+    display: none;
+    `}
+`
 
-  span {
-    font-size: 0.75rem;
+export const ListOfOptions = styled.ul`
+  width: 100%;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  li {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: ${(props) => props.theme.borderCard};
+    }
   }
 `

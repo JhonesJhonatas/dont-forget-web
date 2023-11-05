@@ -1,32 +1,72 @@
-import { Folder } from '@phosphor-icons/react'
-import { Container } from './styles'
+import { CaretDown, CaretUp, Folder } from '@phosphor-icons/react'
+import {
+  ChoosedField,
+  Container,
+  ListOfOptions,
+  OptionsField,
+  SelectorControllers,
+  SelectorField,
+} from './styles'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { Project, TasksContext } from '../../contexts/TaskContext'
 
-export function ProjectPicker() {
-  const [choosedProject, setChoosedProject] = useState<Project>()
+interface ProjectPickerProps {
+  handleSelectProject: (data: Project) => void
+}
+
+export function ProjectPicker({ handleSelectProject }: ProjectPickerProps) {
+  const [togleOptions, setTogleOptions] = useState(false)
+  const [choosedOption, setChoosedOption] = useState<Project>()
 
   const { allProjects } = useContext(TasksContext)
 
-  const handleChooseProject = useCallback(
-    (projectId: string) => {
-      const choosedProject = allProjects.find(
-        (project) => project.id === projectId,
-      )
+  useEffect(() => {
+    setChoosedOption(allProjects[0])
+    handleSelectProject(allProjects[0])
+  }, [allProjects, handleSelectProject])
 
-      setChoosedProject(choosedProject)
+  const handleTogleOptions = () => {
+    setTogleOptions(!togleOptions)
+  }
+
+  const handleChoseOption = useCallback(
+    ({ color, createdAt, description, id, title, userId }: Project) => {
+      setChoosedOption({ color, createdAt, description, id, title, userId })
+      handleSelectProject({ color, createdAt, description, id, title, userId })
     },
-    [allProjects],
+    [handleSelectProject],
   )
 
-  useEffect(() => {
-    setChoosedProject(allProjects[0])
-  }, [allProjects])
-
   return (
-    <Container $projectColor={choosedProject?.color}>
-      <Folder weight="fill" />
-      <span>{choosedProject?.title}</span>
+    <Container>
+      <SelectorField onClick={() => handleTogleOptions()}>
+        <ChoosedField>
+          <Folder weight="fill" color={choosedOption?.color} />
+          <span>{choosedOption?.title}</span>
+        </ChoosedField>
+        <SelectorControllers>
+          {togleOptions ? <CaretUp /> : <CaretDown />}
+        </SelectorControllers>
+      </SelectorField>
+
+      <OptionsField $isOpen={togleOptions}>
+        <ListOfOptions>
+          {allProjects.map((project) => {
+            return (
+              <li
+                key={project.id}
+                onClick={() => {
+                  handleChoseOption(project)
+                  handleTogleOptions()
+                }}
+              >
+                <Folder weight="fill" color={project.color} />
+                <span>{project.title}</span>
+              </li>
+            )
+          })}
+        </ListOfOptions>
+      </OptionsField>
     </Container>
   )
 }

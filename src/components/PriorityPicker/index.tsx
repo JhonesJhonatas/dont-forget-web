@@ -1,34 +1,103 @@
-import { Flag } from '@phosphor-icons/react'
-import { Container } from './styles'
-import { useEffect, useState } from 'react'
+import { CaretDown, CaretUp, Flag } from '@phosphor-icons/react'
+import {
+  ChoosedField,
+  Container,
+  ListOfOptions,
+  OptionsField,
+  SelectorControllers,
+  SelectorField,
+} from './styles'
+import { useCallback, useEffect, useState } from 'react'
 
-export function PriorityPicker() {
-  const [choosedPriority, setChoosedPriority] = useState('low')
-  const [formattedChoosedPriority, setFormattedChoosedPriority] =
-    useState('Em Aberto')
+export interface PrioritySchema {
+  id: string
+  title: string
+  value: string
+  color: string
+}
+
+interface PriorityPickerProps {
+  handleSelectPriority: ({ color, id, title, value }: PrioritySchema) => void
+}
+
+const priorityList: PrioritySchema[] = [
+  {
+    id: '111111',
+    title: 'Baixa',
+    value: 'low',
+    color: '#22C55E',
+  },
+  {
+    id: '2222222',
+    title: 'Normal',
+    value: 'normal',
+    color: '#3B82F6',
+  },
+  {
+    id: '3333333',
+    title: 'Alta',
+    value: 'high',
+    color: '#F97316',
+  },
+  {
+    id: '4444444',
+    title: 'Urgente',
+    value: 'urgent',
+    color: '#dc2626',
+  },
+]
+
+export function PriorityPicker({ handleSelectPriority }: PriorityPickerProps) {
+  const [togleOptions, setTogleOptions] = useState(false)
+  const [choosedOption, setChoosedOption] = useState<PrioritySchema>()
 
   useEffect(() => {
-    if (choosedPriority === 'low') {
-      setFormattedChoosedPriority('Baixa')
-    }
+    setChoosedOption(priorityList[0])
+    handleSelectPriority(priorityList[0])
+  }, [handleSelectPriority])
 
-    if (choosedPriority === 'normal') {
-      setFormattedChoosedPriority('Normal')
-    }
+  const handleTogleOptions = () => {
+    setTogleOptions(!togleOptions)
+  }
 
-    if (choosedPriority === 'high') {
-      setFormattedChoosedPriority('Alta')
-    }
-
-    if (choosedPriority === 'urgent') {
-      setFormattedChoosedPriority('Urgente')
-    }
-  }, [choosedPriority])
+  const handleChoseOption = useCallback(
+    ({ color, id, title, value }: PrioritySchema) => {
+      setChoosedOption({ color, id, title, value })
+      handleSelectPriority({ color, id, title, value })
+    },
+    [handleSelectPriority],
+  )
 
   return (
-    <Container $choosedPriority={choosedPriority}>
-      <Flag weight="fill" />
-      <span>{formattedChoosedPriority}</span>
+    <Container>
+      <SelectorField onClick={() => handleTogleOptions()}>
+        <ChoosedField>
+          <Flag weight="fill" color={choosedOption?.color} />
+          <span>{choosedOption?.title}</span>
+        </ChoosedField>
+        <SelectorControllers>
+          {togleOptions ? <CaretUp /> : <CaretDown />}
+        </SelectorControllers>
+      </SelectorField>
+
+      <OptionsField $isOpen={togleOptions}>
+        <ListOfOptions>
+          {priorityList.map((priority) => {
+            return (
+              <li
+                key={priority.id}
+                onClick={() => {
+                  handleTogleOptions()
+                  handleChoseOption(priority)
+                }}
+              >
+                <Flag weight="fill" color={priority.color} />
+                <span>{priority.title}</span>
+              </li>
+            )
+          })}
+        </ListOfOptions>
+      </OptionsField>
     </Container>
   )
 }

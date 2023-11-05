@@ -41,11 +41,27 @@ export const TaskIformations = styled.div`
   gap: 1rem;
 `
 
+export const MaturityPicker = styled.input`
+  background-color: ${(props) => props.theme.cardBgPrimary};
+  border: 1px solid ${(props) => props.theme.borderCard};
+  color: ${(props) => props.theme.textPrimary};
+  padding: 0.35rem;
+  border-radius: 6px;
+
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border: 1px solid ${(props) => props.theme.enphasis};
+  }
+`
+
 export const DialogClose = styled(Dialog.Close)`
   border: none;
   outline: none;
   background-color: transparent;
   color: ${(props) => props.theme.textPrimary};
+  cursor: pointer;
 `
 
 export const ModalContent = styled.div`

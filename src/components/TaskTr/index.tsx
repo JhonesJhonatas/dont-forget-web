@@ -61,7 +61,7 @@ export function TaskTr({ task }: TaskTrProps) {
       return 'Normal'
     }
     if (task.priority === 'high') {
-      return 'Importante'
+      return 'Alta'
     }
     if (task.priority === 'urgent') {
       return 'Urgente'

@@ -9,6 +9,7 @@ const newTaskDataSchema = z.object({
   description: z.string(),
   maturity: z.string(),
   priority: z.string(),
+  status: z.string(),
 })
 
 type NewTAskDAtaSchema = z.infer<typeof newTaskDataSchema>
@@ -20,6 +21,7 @@ export const useCreateTask = () => {
       maturity,
       priority,
       projectId,
+      status,
       title,
     }: NewTAskDAtaSchema) => {
       const formattedData = {
@@ -27,7 +29,7 @@ export const useCreateTask = () => {
         priority,
         projectId,
         title,
-        status: 'toDo',
+        status,
         maturity: formatISO(parseISO(maturity)),
       }
 
