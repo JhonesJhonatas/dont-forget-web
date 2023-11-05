@@ -23,6 +23,7 @@ import { useForm } from 'react-hook-form'
 import { useCreateTask } from '../../hooks/tasks/useCreateTask'
 import { string, z } from 'zod'
 import { useNotify } from '../../hooks/useNotify'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface NewTaskModalProps {
   handleCloseModal: () => void
@@ -30,9 +31,9 @@ interface NewTaskModalProps {
 
 const createTaskFormSchema = z.object({
   projectId: z.string(),
-  title: z.string(),
+  title: z.string().nonempty({ message: 'O título é obrigatório' }),
   description: z.string(),
-  maturity: string(),
+  maturity: string().nonempty({ message: 'Campo obrigatório' }),
   priority: string(),
   status: string(),
 })
@@ -50,8 +51,10 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
     setValue,
     getValues,
     reset,
-    formState: { isSubmitting },
-  } = useForm<CreateTaskFormSchema>()
+    formState: { isSubmitting, errors },
+  } = useForm<CreateTaskFormSchema>({
+    resolver: zodResolver(createTaskFormSchema),
+  })
   const { createTask } = useCreateTask()
   const { handleUpdateOpenedTasks, handleUpdateCompletedTasks } =
     useContext(TasksContext)
@@ -123,6 +126,19 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
     ],
   )
 
+  useEffect(() => {
+    if (errors.title?.message) {
+      notify({ type: 'error', message: 'É necessário adicionar um título' })
+    }
+
+    if (errors.maturity?.message) {
+      notify({
+        type: 'error',
+        message: 'É necessário adicionar uma data de vencimento',
+      })
+    }
+  }, [errors.maturity?.message, errors.title?.message, notify])
+
   return (
     <Dialog.Portal>
       <DialogOverlay />
@@ -133,7 +149,7 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
               <ProjectPicker handleSelectProject={handleSelectProject} />
               <StatusPicker handleSelectStatus={handleSelectStatus} />
               <PriorityPicker handleSelectPriority={handleSelectPriority} />
-              <MaturityPicker type="date" {...register('maturity')} required />
+              <MaturityPicker type="date" {...register('maturity')} />
             </TaskIformations>
             <DialogClose disabled={isSubmitting}>
               <X size={20} />
@@ -144,7 +160,6 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
               type="text"
               placeholder="Adicione um título"
               {...register('title')}
-              required
             />
             <TaskDescriptionInput
               rows={15}

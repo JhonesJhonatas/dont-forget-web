@@ -78,6 +78,7 @@ export const TaskTitleInput = styled.input`
   color: ${(props) => props.theme.textPrimary};
   font-size: 2rem;
   font-weight: bold;
+  border-radius: 6px;
 `
 
 export const TaskDescriptionInput = styled.textarea`
