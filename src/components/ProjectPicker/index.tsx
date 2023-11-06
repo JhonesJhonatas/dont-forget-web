@@ -12,18 +12,27 @@ import { Project, TasksContext } from '../../contexts/TaskContext'
 
 interface ProjectPickerProps {
   handleSelectProject: (data: Project) => void
+  initialValue?: Project
 }
 
-export function ProjectPicker({ handleSelectProject }: ProjectPickerProps) {
+export function ProjectPicker({
+  handleSelectProject,
+  initialValue,
+}: ProjectPickerProps) {
   const [togleOptions, setTogleOptions] = useState(false)
   const [choosedOption, setChoosedOption] = useState<Project>()
 
   const { allProjects } = useContext(TasksContext)
 
   useEffect(() => {
-    setChoosedOption(allProjects[0])
-    handleSelectProject(allProjects[0])
-  }, [allProjects, handleSelectProject])
+    if (initialValue) {
+      setChoosedOption(initialValue)
+      handleSelectProject(initialValue)
+    } else {
+      setChoosedOption(allProjects[0])
+      handleSelectProject(allProjects[0])
+    }
+  }, [allProjects, handleSelectProject, initialValue])
 
   const handleTogleOptions = () => {
     setTogleOptions(!togleOptions)

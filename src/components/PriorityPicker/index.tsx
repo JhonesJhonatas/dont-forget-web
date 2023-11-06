@@ -18,6 +18,7 @@ export interface PrioritySchema {
 
 interface PriorityPickerProps {
   handleSelectPriority: ({ color, id, title, value }: PrioritySchema) => void
+  initialPriority?: string
 }
 
 const priorityList: PrioritySchema[] = [
@@ -47,14 +48,26 @@ const priorityList: PrioritySchema[] = [
   },
 ]
 
-export function PriorityPicker({ handleSelectPriority }: PriorityPickerProps) {
+export function PriorityPicker({
+  handleSelectPriority,
+  initialPriority,
+}: PriorityPickerProps) {
   const [togleOptions, setTogleOptions] = useState(false)
   const [choosedOption, setChoosedOption] = useState<PrioritySchema>()
 
   useEffect(() => {
-    setChoosedOption(priorityList[0])
-    handleSelectPriority(priorityList[0])
-  }, [handleSelectPriority])
+    if (initialPriority) {
+      const formattedPriority = priorityList.find(
+        (priority) => priority.value === initialPriority,
+      ) as PrioritySchema
+
+      setChoosedOption(formattedPriority)
+      handleSelectPriority(formattedPriority)
+    } else {
+      setChoosedOption(priorityList[0])
+      handleSelectPriority(priorityList[0])
+    }
+  }, [handleSelectPriority, initialPriority])
 
   const handleTogleOptions = () => {
     setTogleOptions(!togleOptions)

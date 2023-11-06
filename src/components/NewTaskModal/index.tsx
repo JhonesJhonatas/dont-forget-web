@@ -168,7 +168,14 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
             />
           </ModalContent>
           <ModalFooter>
-            <CancelButton disabled={isSubmitting}>Cancelar</CancelButton>
+            <CancelButton
+              disabled={isSubmitting}
+              onClick={() => {
+                handleCloseModal()
+              }}
+            >
+              Cancelar
+            </CancelButton>
             <CreateTaskButton disabled={isSubmitting}>
               {isSubmitting ? 'Criando Tarefa...' : 'Criar Tarefa'}
             </CreateTaskButton>

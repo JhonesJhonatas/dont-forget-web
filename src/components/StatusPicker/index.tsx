@@ -18,6 +18,7 @@ export interface StatusSchema {
 
 interface StatusPickerProps {
   handleSelectStatus: ({ color, id, title, value }: StatusSchema) => void
+  initialStatus?: string
 }
 
 const statusList: StatusSchema[] = [
@@ -53,14 +54,26 @@ const statusList: StatusSchema[] = [
   },
 ]
 
-export function StatusPicker({ handleSelectStatus }: StatusPickerProps) {
+export function StatusPicker({
+  handleSelectStatus,
+  initialStatus,
+}: StatusPickerProps) {
   const [togleOptions, setTogleOptions] = useState(false)
   const [choosedOption, setChoosedOption] = useState<StatusSchema>()
 
   useEffect(() => {
-    setChoosedOption(statusList[0])
-    handleSelectStatus(statusList[0])
-  }, [handleSelectStatus])
+    if (initialStatus) {
+      const formattedStatus = statusList.find(
+        (status) => status.value === initialStatus,
+      ) as StatusSchema
+
+      setChoosedOption(formattedStatus)
+      handleSelectStatus(formattedStatus)
+    } else {
+      setChoosedOption(statusList[0])
+      handleSelectStatus(statusList[0])
+    }
+  }, [handleSelectStatus, initialStatus])
 
   const handleTogleOptions = () => {
     setTogleOptions(!togleOptions)

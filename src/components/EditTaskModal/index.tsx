@@ -1,120 +1,119 @@
-import { Check, Trash, X } from '@phosphor-icons/react'
 import * as Dialog from '@radix-ui/react-dialog'
 import {
   CancelButton,
-  ConcludeButton,
-  DeleteButton,
-  DialogCloese,
+  CreateTaskButton,
+  DialogClose,
   DialogContent,
   DialogOverlay,
-  FlexArea,
-  FormFooter,
-  InputDate,
-  InputPriority,
-  InputStatus,
-  InputTextArea,
-  InputTitle,
+  MaturityPicker,
+  ModalContent,
+  ModalFooter,
   ModalHeader,
-  NewTaskForm,
-  SaveButton,
+  TaskDescriptionInput,
+  TaskIformations,
+  TaskTitleInput,
 } from './styles'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { X } from '@phosphor-icons/react'
+import { StatusPicker, StatusSchema } from '../StatusPicker'
+import { PriorityPicker, PrioritySchema } from '../PriorityPicker'
+import { ProjectPicker } from '../ProjectPicker'
+import { useCallback, useContext, useEffect, useState } from 'react'
+import { OpenedTask, Project, TasksContext } from '../../contexts/TaskContext'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { useCallback, useContext, useEffect } from 'react'
+import { string, z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { useDeleteOpenedTask } from '../../hooks/tasks/useDeleteOpenedTask'
-import { useNotify } from '../../hooks/useNotify'
-import { TasksContext } from '../../contexts/TaskContext'
 import { useUpdateOpenedTask } from '../../hooks/tasks/useUpdateOpenedTask'
-import { useConcludeTask } from '../../hooks/tasks/useConcludeTask'
+import { useNotify } from '../../hooks/useNotify'
 
-const editTaskFormSchema = z.object({
-  id: z.string(),
+interface NewTaskModalProps {
+  handleCloseModal: () => void
+  task: OpenedTask
+}
+
+const editFormSchema = z.object({
   projectId: z.string(),
-  title: z.string(),
-  status: z.string(),
-  priority: z.string(),
-  maturity: z.string(),
+  title: z.string().min(4).nonempty({ message: 'O título é obrigatório' }),
   description: z.string(),
+  maturity: string().min(4).nonempty({ message: 'Campo obrigatório' }),
+  priority: string(),
+  status: string(),
 })
 
-type EditTaskFormSchema = z.infer<typeof editTaskFormSchema>
+type EditFormSchema = z.infer<typeof editFormSchema>
 
-interface Task {
-  id: string
-  title: string
-  description: string
-  priority: string
-  status: string
-  maturity: string
-  createdAt: string
-  completedAt?: string
-  projectId: string
-  userId: string
-}
+export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
+  const [selectedProject, setSelecetdProject] = useState({} as Project)
+  const [selectedStatus, setSelectedStatus] = useState({} as StatusSchema)
+  const [selectedPriority, setSelectedPriority] = useState({} as PrioritySchema)
 
-interface EditTaskModalProps {
-  task: Task
-  handleTogleModal: () => void
-  isTaskConcluded: boolean
-}
-
-export function EditTaskModal({
-  task,
-  handleTogleModal,
-  isTaskConcluded,
-}: EditTaskModalProps) {
   const {
     register,
     setValue,
-    getValues,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<EditTaskFormSchema>({
-    resolver: zodResolver(editTaskFormSchema),
+    reset,
+    formState: { isSubmitting, errors },
+  } = useForm<EditFormSchema>({
+    resolver: zodResolver(editFormSchema),
   })
-  const { deleteOpenedTask } = useDeleteOpenedTask()
-  const { notify } = useNotify()
-  const { handleUpdateOpenedTasks, handleUpdateCompletedTasks } =
-    useContext(TasksContext)
-  const { concludeTask } = useConcludeTask()
+  const { allProjects, handleUpdateOpenedTasks } = useContext(TasksContext)
   const { updateOpenedTask } = useUpdateOpenedTask()
+  const { notify } = useNotify()
 
-  const formattedMaturity = format(new Date(task.maturity), 'yyyy-MM-dd')
+  const handleSelectProject = useCallback(
+    ({ color, createdAt, description, id, title, userId }: Project) => {
+      setSelecetdProject({ color, createdAt, description, id, title, userId })
+    },
+    [],
+  )
+
+  const handleSelectStatus = useCallback(
+    ({ color, id, title, value }: StatusSchema) => {
+      setSelectedStatus({ color, id, title, value })
+    },
+    [],
+  )
+
+  const handleSelectPriority = useCallback(
+    ({ color, id, title, value }: StatusSchema) => {
+      setSelectedPriority({ color, id, title, value })
+    },
+    [],
+  )
+
+  const initialProject = allProjects.find(
+    (project) => project.id === task.projectId,
+  )
 
   useEffect(() => {
-    setValue('id', task.id)
-    setValue('projectId', task.projectId)
+    setValue('projectId', selectedProject.id)
+    setValue('status', selectedStatus.value)
+    setValue('priority', selectedPriority.value)
     setValue('title', task.title)
-    setValue('status', task.status)
-    setValue('priority', task.priority)
-    setValue('maturity', formattedMaturity)
     setValue('description', task.description)
+    setValue('maturity', format(new Date(task.maturity), 'yyyy-MM-dd'))
   }, [
+    selectedPriority.value,
+    selectedProject.id,
+    selectedStatus.value,
     setValue,
     task.description,
-    task.id,
-    formattedMaturity,
-    task.priority,
-    task.projectId,
-    task.status,
+    task.maturity,
     task.title,
   ])
 
   const onSubmit = useCallback(
     async ({
       description,
-      id,
       maturity,
       priority,
       projectId,
       status,
       title,
-    }: EditTaskFormSchema) => {
-      const updatedTask = await updateOpenedTask({
+    }: EditFormSchema) => {
+      const taskUpdated = await updateOpenedTask({
         description,
-        id,
+        id: task.id,
         maturity,
         priority,
         projectId,
@@ -122,143 +121,88 @@ export function EditTaskModal({
         title,
       })
 
-      if (updatedTask) {
-        handleTogleModal()
+      if (taskUpdated) {
         handleUpdateOpenedTasks()
-        notify({ type: 'sucess', message: 'Tarefa editada com sucesso' })
+        handleCloseModal()
+        reset()
+        notify({ type: 'sucess', message: 'Tarefa atualizada com sucesso.' })
       }
     },
-    [handleTogleModal, handleUpdateOpenedTasks, notify, updateOpenedTask],
+    [
+      handleCloseModal,
+      handleUpdateOpenedTasks,
+      notify,
+      reset,
+      task.id,
+      updateOpenedTask,
+    ],
   )
 
-  const handleDeleteTask = useCallback(
-    async (id: string) => {
-      deleteOpenedTask({ id, handleUpdateOpenedTasks })
-      handleTogleModal()
-      notify({ type: 'sucess', message: 'Tarefa excluída' })
-      handleUpdateOpenedTasks()
-    },
-    [deleteOpenedTask, handleTogleModal, handleUpdateOpenedTasks, notify],
-  )
-
-  const handleConcludeTask = useCallback(async () => {
-    const formattedData = {
-      taskId: task.id,
-      createdAt: task.createdAt,
-      description: getValues('description'),
-      maturity: getValues('maturity'),
-      priority: getValues('priority'),
-      projectId: getValues('projectId'),
-      status: 'concluded',
-      title: getValues('title'),
+  useEffect(() => {
+    if (errors.title?.message) {
+      notify({ type: 'error', message: 'É necessário adicionar um título' })
     }
 
-    const taskHasConcluded = await concludeTask(formattedData)
-
-    if (taskHasConcluded) {
-      handleTogleModal()
-      handleUpdateOpenedTasks()
-      handleUpdateCompletedTasks()
-      notify({ type: 'sucess', message: 'Task Concluída com sucesso' })
-    } else {
-      notify({ type: 'error', message: 'Houve algum erro ao concluir' })
+    if (errors.maturity?.message) {
+      notify({
+        type: 'error',
+        message: 'É necessário adicionar uma data de vencimento',
+      })
     }
-  }, [
-    concludeTask,
-    getValues,
-    handleTogleModal,
-    handleUpdateCompletedTasks,
-    handleUpdateOpenedTasks,
-    notify,
-    task.createdAt,
-    task.id,
-  ])
+  }, [errors.maturity?.message, errors.title?.message, notify])
 
   return (
     <Dialog.Portal>
       <DialogOverlay />
-      <DialogContent>
-        <ModalHeader>
-          <Dialog.Title>📝 • Editar task</Dialog.Title>
-          <DialogCloese>
-            <X />
-          </DialogCloese>
-        </ModalHeader>
-        <NewTaskForm onSubmit={handleSubmit(onSubmit)}>
-          <InputTitle>
-            Título:
-            <input
-              type="text"
-              placeholder="Título"
-              {...register('title')}
-              disabled={isTaskConcluded}
-            />
-          </InputTitle>
-          <InputStatus>
-            Status:
-            <select {...register('status')} disabled={isTaskConcluded}>
-              <option value="toDo">Em Aberto</option>
-              <option value="standby">StandBy</option>
-              <option value="inProgress">Em Andamento</option>
-              <option value="approval">Aprovação</option>
-              <option value="payment">Aguardando Pagamento</option>
-              <option value="concluded">Concluída</option>
-            </select>
-          </InputStatus>
-          <FlexArea>
-            <InputPriority>
-              Prioridade:
-              <select {...register('priority')} disabled={isTaskConcluded}>
-                <option value="low">Baixa</option>
-                <option value="normal">Normal</option>
-                <option value="high">Alta</option>
-                <option value="urgent">Urgente</option>
-              </select>
-            </InputPriority>
-            <InputDate>
-              DeadLine:
-              <input
-                type="date"
-                {...register('maturity')}
-                disabled={isTaskConcluded}
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <DialogContent>
+          <ModalHeader>
+            <TaskIformations>
+              <ProjectPicker
+                handleSelectProject={handleSelectProject}
+                initialValue={initialProject}
               />
-            </InputDate>
-          </FlexArea>
-          <InputTextArea>
-            Descrição:
-            <textarea {...register('description')} disabled={isTaskConcluded} />
-          </InputTextArea>
-          <FormFooter>
-            <div>
-              <DeleteButton
-                onClick={() => {
-                  handleDeleteTask(task.id)
-                }}
-                disabled={isTaskConcluded}
-              >
-                Excluir
-                <Trash />
-              </DeleteButton>
-              <ConcludeButton
-                type="button"
-                onClick={() => handleConcludeTask()}
-                disabled={isTaskConcluded}
-              >
-                Concluir
-                <Check />
-              </ConcludeButton>
-            </div>
-            <div>
-              <Dialog.Close asChild>
-                <CancelButton>Cancelar</CancelButton>
-              </Dialog.Close>
-              <SaveButton disabled={isSubmitting || isTaskConcluded}>
-                Salvar
-              </SaveButton>
-            </div>
-          </FormFooter>
-        </NewTaskForm>
-      </DialogContent>
+              <StatusPicker
+                handleSelectStatus={handleSelectStatus}
+                initialStatus={task.status}
+              />
+              <PriorityPicker
+                handleSelectPriority={handleSelectPriority}
+                initialPriority={task.priority}
+              />
+              <MaturityPicker type="date" {...register('maturity')} />
+            </TaskIformations>
+            <DialogClose>
+              <X size={20} />
+            </DialogClose>
+          </ModalHeader>
+          <ModalContent>
+            <TaskTitleInput
+              type="text"
+              placeholder="Adicione um título"
+              {...register('title')}
+            />
+            <TaskDescriptionInput
+              rows={15}
+              placeholder="Adicione uma descrição"
+              {...register('description')}
+            />
+          </ModalContent>
+          <ModalFooter>
+            <CancelButton
+              onClick={() => {
+                handleCloseModal()
+                reset()
+              }}
+            >
+              Cancelar
+            </CancelButton>
+            <CreateTaskButton disabled={isSubmitting}>
+              {isSubmitting ? 'Salvando...' : 'Salvar'}
+            </CreateTaskButton>
+          </ModalFooter>
+        </DialogContent>
+      </form>
     </Dialog.Portal>
   )
 }
