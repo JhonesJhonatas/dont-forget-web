@@ -18,7 +18,7 @@ import {
 import { useContext, useEffect, useState } from 'react'
 import {
   format,
-  getDay,
+  getDate,
   getMonth,
   getYear,
   isBefore,
@@ -125,9 +125,13 @@ export function DashBoard() {
         new Date(
           getYear(new Date(task.maturity)),
           getMonth(new Date(task.maturity)),
-          getDay(new Date(task.maturity)),
+          getDate(new Date(task.maturity)),
         ),
-        new Date(getYear(new Date()), getMonth(new Date()), getDay(new Date())),
+        new Date(
+          getYear(new Date()),
+          getMonth(new Date()),
+          getDate(new Date()),
+        ),
       ),
     )
     setLateTasks(lateTasks)

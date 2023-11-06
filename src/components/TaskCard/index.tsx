@@ -99,7 +99,7 @@ export function TaskCard({ task }: TaskCardProps) {
       </Dialog.Trigger>
       <EditTaskModal
         task={task}
-        handleTogleModal={handleTogleModal}
+        handleCloseModal={handleTogleModal}
         isTaskConcluded={task.status === 'concluded'}
       />
     </Dialog.Root>

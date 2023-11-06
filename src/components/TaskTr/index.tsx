@@ -61,7 +61,7 @@ export function TaskTr({ task }: TaskTrProps) {
       return 'Normal'
     }
     if (task.priority === 'high') {
-      return 'Importante'
+      return 'Alta'
     }
     if (task.priority === 'urgent') {
       return 'Urgente'
@@ -104,7 +104,7 @@ export function TaskTr({ task }: TaskTrProps) {
       </Dialog.Trigger>
       <EditTaskModal
         task={task}
-        handleTogleModal={handleTogleModal}
+        handleCloseModal={handleTogleModal}
         isTaskConcluded={task.status === 'concluded'}
       />
     </Dialog.Root>
