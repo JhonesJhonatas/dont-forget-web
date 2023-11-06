@@ -29,6 +29,7 @@ import { useNotify } from '../../hooks/useNotify'
 interface NewTaskModalProps {
   handleCloseModal: () => void
   task: OpenedTask
+  isTaskConcluded: boolean
 }
 
 const editFormSchema = z.object({

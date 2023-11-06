@@ -9,22 +9,10 @@ import {
 import { useCallback, useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { EditTaskModal } from '../EditTaskModal'
-
-interface Task {
-  id: string
-  title: string
-  description: string
-  priority: string
-  status: string
-  maturity: string
-  createdAt: string
-  completedAt?: string
-  projectId: string
-  userId: string
-}
+import { OpenedTask } from '../../contexts/TaskContext'
 
 interface TaskTrProps {
-  task: Task
+  task: OpenedTask
 }
 
 export function TaskTr({ task }: TaskTrProps) {
@@ -104,7 +92,7 @@ export function TaskTr({ task }: TaskTrProps) {
       </Dialog.Trigger>
       <EditTaskModal
         task={task}
-        handleTogleModal={handleTogleModal}
+        handleCloseModal={handleTogleModal}
         isTaskConcluded={task.status === 'concluded'}
       />
     </Dialog.Root>

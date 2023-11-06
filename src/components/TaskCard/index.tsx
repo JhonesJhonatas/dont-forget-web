@@ -12,22 +12,10 @@ import { format } from 'date-fns'
 import { useCallback, useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { EditTaskModal } from '../EditTaskModal'
-
-interface Task {
-  id: string
-  title: string
-  description: string
-  priority: string
-  status: string
-  maturity: string
-  createdAt: string
-  completedAt?: string
-  projectId: string
-  userId: string
-}
+import { OpenedTask } from '../../contexts/TaskContext'
 
 interface TaskCardProps {
-  task: Task
+  task: OpenedTask
 }
 
 export function TaskCard({ task }: TaskCardProps) {
@@ -99,7 +87,7 @@ export function TaskCard({ task }: TaskCardProps) {
       </Dialog.Trigger>
       <EditTaskModal
         task={task}
-        handleTogleModal={handleTogleModal}
+        handleCloseModal={handleTogleModal}
         isTaskConcluded={task.status === 'concluded'}
       />
     </Dialog.Root>
