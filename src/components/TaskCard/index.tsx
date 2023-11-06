@@ -12,10 +12,22 @@ import { format } from 'date-fns'
 import { useCallback, useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { EditTaskModal } from '../EditTaskModal'
-import { OpenedTask } from '../../contexts/TaskContext'
+
+interface Task {
+  id: string
+  title: string
+  description: string
+  priority: string
+  status: string
+  maturity: string
+  createdAt: string
+  completedAt?: string
+  projectId: string
+  userId: string
+}
 
 interface TaskCardProps {
-  task: OpenedTask
+  task: Task
 }
 
 export function TaskCard({ task }: TaskCardProps) {

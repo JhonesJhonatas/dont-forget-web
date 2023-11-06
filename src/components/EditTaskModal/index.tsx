@@ -18,7 +18,7 @@ import { StatusPicker, StatusSchema } from '../StatusPicker'
 import { PriorityPicker, PrioritySchema } from '../PriorityPicker'
 import { ProjectPicker } from '../ProjectPicker'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { OpenedTask, Project, TasksContext } from '../../contexts/TaskContext'
+import { Project, TasksContext } from '../../contexts/TaskContext'
 import { useForm } from 'react-hook-form'
 import { string, z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -26,9 +26,22 @@ import { format } from 'date-fns'
 import { useUpdateOpenedTask } from '../../hooks/tasks/useUpdateOpenedTask'
 import { useNotify } from '../../hooks/useNotify'
 
+interface Task {
+  id: string
+  title: string
+  description: string
+  priority: string
+  status: string
+  maturity: string
+  createdAt: string
+  completedAt?: string
+  projectId: string
+  userId: string
+}
+
 interface NewTaskModalProps {
   handleCloseModal: () => void
-  task: OpenedTask
+  task: Task
   isTaskConcluded: boolean
 }
 
