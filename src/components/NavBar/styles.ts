@@ -103,35 +103,102 @@ export const NavItem = styled.div`
   }
 `
 
+export const ProjectsArea = styled.div`
+  width: 100%;
+  background-color: ${(props) => props.theme.cardBgPrimary};
+  border-radius: 6px;
+  padding: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`
+
+export const ProjectsHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  svg:last-child {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+`
+
+export const ProjectsTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`
+
+export const ProjectsContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+`
+
 export const ProjectItem = styled.div<ProjectItemProps>`
   width: 100%;
+  padding: 0.1rem 0.5rem;
+  border-radius: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    background-color: ${(props) => props.theme.borderCard};
+  }
 
   a {
-    padding: 0.1rem 0.4rem;
-    border-radius: 40px;
+    flex: 1;
+
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: start;
+    gap: 1rem;
     text-decoration: none;
     transition: all 0.2s ease-in-out;
     color: ${(props) => props.theme.textPrimary};
+    padding: 0.25rem;
 
-    div {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 
-      svg {
-        color: ${(props) => props.$projectColor};
-      }
+    svg {
+      color: ${(props) => props.$projectColor};
     }
 
-    &:hover {
-      background-color: ${(props) => props.theme.cardBgPrimary};
+    svg:last-child {
+      display: none;
     }
 
     &.active {
-      background-color: ${(props) => props.theme.cardBgPrimary};
+      svg:last-child {
+        display: flex;
+        color: ${(props) => props.theme.enphasis};
+      }
+    }
+  }
+`
+
+export const ProjectController = styled.div`
+  display: flex;
+  align-items: center;
+
+  svg {
+    cursor: pointer;
+    line-height: 0;
+    color: ${(props) => props.theme.textSecondary};
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      color: ${(props) => props.theme.textPrimary};
     }
   }
 `

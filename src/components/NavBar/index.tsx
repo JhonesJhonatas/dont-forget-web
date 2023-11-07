@@ -1,7 +1,7 @@
 import {
   CaretRight,
   CheckSquare,
-  CircleDashed,
+  Circle,
   DotsThree,
   Folder,
   PlusCircle,
@@ -15,7 +15,12 @@ import {
   NavItem,
   NewProject,
   NewTaskButton,
+  ProjectController,
   ProjectItem,
+  ProjectsArea,
+  ProjectsContent,
+  ProjectsHeader,
+  ProjectsTitle,
   Section,
   UserEmail,
   UserInfos,
@@ -29,6 +34,7 @@ import { NewTaskModal } from '../NewTaskModal'
 import { NewProjectModal } from '../NewProjectModal'
 import { TasksContext } from '../../contexts/TaskContext'
 import { UserOptionsDropDown } from './components/UserOptionsDropDown'
+import { ProjectsDropDown } from './components/ProjectsDropDown'
 
 export function NavBar() {
   const [open, setOpen] = useState(false)
@@ -83,36 +89,38 @@ export function NavBar() {
               <CaretRight />
             </NavLink>
           </NavItem>
-          {allProjects.map((project) => {
-            return (
-              <ProjectItem key={project.id} $projectColor={project.color}>
-                <NavLink to={`/tasks/${project.id}`}>
-                  <div>
-                    <Folder weight="fill" size={14} />
-                    <span>{project.title}</span>
-                  </div>
-                  <CaretRight />
-                </NavLink>
-              </ProjectItem>
-            )
-          })}
-          <Dialog.Root
-            open={newProjectModalOpen}
-            onOpenChange={setNewProjectModalOpen}
-          >
-            <Dialog.Trigger asChild>
-              <NewProject>
-                <div>
-                  <CircleDashed size={14} />
-                  <span>Novo Projeto</span>
-                </div>
-                <PlusCircle />
-              </NewProject>
-            </Dialog.Trigger>
-            <NewProjectModal
-              handleCloseNewProjectModal={handleCloseNewProjectModal}
-            />
-          </Dialog.Root>
+          <ProjectsArea>
+            <ProjectsHeader>
+              <ProjectsTitle>
+                <Folder weight="fill" />
+                <span>Projetos</span>
+              </ProjectsTitle>
+              <PlusCircle size={20} />
+            </ProjectsHeader>
+            <ProjectsContent>
+              {allProjects.map((project) => {
+                return (
+                  <ProjectItem key={project.id} $projectColor={project.color}>
+                    <NavLink to={`/tasks/${project.id}`}>
+                      <Folder weight="fill" size={14} />
+                      <span>{project.title}</span>
+                      <Circle weight="fill" size={10} />
+                    </NavLink>
+                    <ProjectController>
+                      <DropdownMenu.Root>
+                        <DropdownMenu.Trigger asChild>
+                          <DotsThree size={24} />
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Portal>
+                          <ProjectsDropDown />
+                        </DropdownMenu.Portal>
+                      </DropdownMenu.Root>
+                    </ProjectController>
+                  </ProjectItem>
+                )
+              })}
+            </ProjectsContent>
+          </ProjectsArea>
         </NavContent>
       </Section>
       <Dialog.Root open={open} onOpenChange={setOpen}>
