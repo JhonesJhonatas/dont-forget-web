@@ -1,7 +1,9 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import {
   CancelButton,
+  ConcludeOption,
   CreateTaskButton,
+  DeleteOption,
   DialogClose,
   DialogContent,
   DialogOverlay,
@@ -9,11 +11,13 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  TaskControllers,
   TaskDescriptionInput,
   TaskIformations,
+  TaskOptions,
   TaskTitleInput,
 } from './styles'
-import { X } from '@phosphor-icons/react'
+import { CheckCircle, TrashSimple, X } from '@phosphor-icons/react'
 import { StatusPicker, StatusSchema } from '../StatusPicker'
 import { PriorityPicker, PrioritySchema } from '../PriorityPicker'
 import { ProjectPicker } from '../ProjectPicker'
@@ -25,6 +29,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { useUpdateOpenedTask } from '../../hooks/tasks/useUpdateOpenedTask'
 import { useNotify } from '../../hooks/useNotify'
+import { useDeleteOpenedTask } from '../../hooks/tasks/useDeleteOpenedTask'
+import { useConcludeTask } from '../../hooks/tasks/useConcludeTask'
 
 interface Task {
   id: string
@@ -64,14 +70,18 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
   const {
     register,
     setValue,
+    getValues,
     handleSubmit,
     reset,
     formState: { isSubmitting, errors },
   } = useForm<EditFormSchema>({
     resolver: zodResolver(editFormSchema),
   })
-  const { allProjects, handleUpdateOpenedTasks } = useContext(TasksContext)
+  const { allProjects, handleUpdateOpenedTasks, handleUpdateCompletedTasks } =
+    useContext(TasksContext)
   const { updateOpenedTask } = useUpdateOpenedTask()
+  const { deleteOpenedTask } = useDeleteOpenedTask()
+  const { concludeTask } = useConcludeTask()
   const { notify } = useNotify()
 
   const handleSelectProject = useCallback(
@@ -165,6 +175,45 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
     }
   }, [errors.maturity?.message, errors.title?.message, notify])
 
+  const handleDeleteTask = useCallback(() => {
+    deleteOpenedTask({ id: task.id, handleUpdateOpenedTasks })
+    handleCloseModal()
+    handleUpdateOpenedTasks()
+    handleUpdateCompletedTasks()
+    notify({ type: 'sucess', message: 'Tarefa excluída' })
+  }, [
+    deleteOpenedTask,
+    handleCloseModal,
+    handleUpdateCompletedTasks,
+    handleUpdateOpenedTasks,
+    notify,
+    task.id,
+  ])
+
+  const handleCompleteTask = useCallback(() => {
+    concludeTask({
+      createdAt: task.createdAt,
+      description: getValues('description'),
+      maturity: getValues('maturity'),
+      priority: getValues('priority'),
+      projectId: getValues('projectId'),
+      status: getValues('status'),
+      taskId: task.id,
+      title: getValues('title'),
+    })
+    handleCloseModal()
+    reset()
+    notify({ type: 'sucess', message: 'Tarefa Concluída com sucesso' })
+  }, [
+    concludeTask,
+    getValues,
+    handleCloseModal,
+    notify,
+    reset,
+    task.createdAt,
+    task.id,
+  ])
+
   return (
     <Dialog.Portal>
       <DialogOverlay />
@@ -186,9 +235,21 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
               />
               <MaturityPicker type="date" {...register('maturity')} />
             </TaskIformations>
-            <DialogClose>
-              <X size={20} />
-            </DialogClose>
+            <TaskOptions>
+              <TaskControllers>
+                <ConcludeOption onClick={() => handleCompleteTask()}>
+                  <span>Concluir Task</span>
+                  <CheckCircle size={24} />
+                </ConcludeOption>
+                <DeleteOption onClick={() => handleDeleteTask()}>
+                  <span>Excluir Task</span>
+                  <TrashSimple size={24} />
+                </DeleteOption>
+              </TaskControllers>
+              <DialogClose>
+                <X size={20} />
+              </DialogClose>
+            </TaskOptions>
           </ModalHeader>
           <ModalContent>
             <TaskTitleInput
@@ -211,7 +272,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
             >
               Cancelar
             </CancelButton>
-            <CreateTaskButton disabled={isSubmitting}>
+            <CreateTaskButton>
               {isSubmitting ? 'Salvando...' : 'Salvar'}
             </CreateTaskButton>
           </ModalFooter>
