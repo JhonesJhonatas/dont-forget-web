@@ -1,6 +1,10 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import styled from 'styled-components'
 
+interface ConcludeOptionProps {
+  isComplete?: boolean
+}
+
 export const DialogOverlay = styled(Dialog.Overlay)`
   background-color: rgba(0 0 0 / 0.75);
   position: fixed;
@@ -39,6 +43,80 @@ export const TaskIformations = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+`
+
+export const TaskOptions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+`
+
+export const TaskControllers = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`
+
+export const ConcludeOption = styled.div<ConcludeOptionProps>`
+  border: 1.5px solid ${(props) => props.theme.sucess};
+  padding: 0.25rem;
+  border-radius: 60px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+
+  span {
+    display: none;
+    margin-left: 0.5rem;
+  }
+
+  svg {
+    color: ${(props) => props.theme.sucess};
+  }
+
+  &:hover {
+    background-color: ${(props) => props.theme.sucess};
+    span {
+      display: flex;
+    }
+    svg {
+      color: ${(props) => props.theme.textPrimary};
+    }
+  }
+`
+
+export const DeleteOption = styled.div`
+  border: 1.5px solid ${(props) => props.theme.error};
+  padding: 0.25rem;
+  border-radius: 60px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+
+  span {
+    display: none;
+    margin-left: 0.5rem;
+  }
+
+  svg {
+    color: ${(props) => props.theme.error};
+  }
+
+  &:hover {
+    background-color: ${(props) => props.theme.error};
+    span {
+      display: flex;
+    }
+    svg {
+      color: ${(props) => props.theme.textPrimary};
+    }
+  }
 `
 
 export const MaturityPicker = styled.input`

@@ -151,7 +151,7 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
               <PriorityPicker handleSelectPriority={handleSelectPriority} />
               <MaturityPicker type="date" {...register('maturity')} />
             </TaskIformations>
-            <DialogClose disabled={isSubmitting}>
+            <DialogClose>
               <X size={20} />
             </DialogClose>
           </ModalHeader>
@@ -169,14 +169,13 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
           </ModalContent>
           <ModalFooter>
             <CancelButton
-              disabled={isSubmitting}
               onClick={() => {
                 handleCloseModal()
               }}
             >
               Cancelar
             </CancelButton>
-            <CreateTaskButton disabled={isSubmitting}>
+            <CreateTaskButton>
               {isSubmitting ? 'Criando Tarefa...' : 'Criar Tarefa'}
             </CreateTaskButton>
           </ModalFooter>
