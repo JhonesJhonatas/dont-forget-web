@@ -202,12 +202,16 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
       title: getValues('title'),
     })
     handleCloseModal()
+    handleUpdateOpenedTasks()
+    handleUpdateCompletedTasks()
     reset()
     notify({ type: 'sucess', message: 'Tarefa Concluída com sucesso' })
   }, [
     concludeTask,
     getValues,
     handleCloseModal,
+    handleUpdateCompletedTasks,
+    handleUpdateOpenedTasks,
     notify,
     reset,
     task.createdAt,

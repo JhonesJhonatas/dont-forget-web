@@ -50,7 +50,6 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
     handleSubmit,
     setValue,
     getValues,
-    reset,
     formState: { isSubmitting, errors },
   } = useForm<CreateTaskFormSchema>({
     resolver: zodResolver(createTaskFormSchema),
@@ -108,11 +107,13 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
       })
 
       if (isTaskCreated) {
-        reset()
         handleCloseModal()
         handleUpdateOpenedTasks()
         handleUpdateCompletedTasks()
         notify({ type: 'sucess', message: 'Tarefa criada com sucesso' })
+        setValue('title', '')
+        setValue('description', '')
+        setValue('maturity', '')
       }
     },
     [
@@ -122,7 +123,7 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
       handleUpdateCompletedTasks,
       handleUpdateOpenedTasks,
       notify,
-      reset,
+      setValue,
     ],
   )
 
