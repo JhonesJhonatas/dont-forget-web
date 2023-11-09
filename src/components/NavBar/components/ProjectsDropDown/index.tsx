@@ -2,17 +2,40 @@ import { Pen, Trash } from '@phosphor-icons/react'
 import { DropDownContent, DropDownItem } from './styles'
 import { useCallback, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AuthContext } from '../../../../contexts/AuthContext'
+import { useDeleteProject } from '../../../../hooks/projects/useDeleteProjec'
+import { TasksContext } from '../../../../contexts/TaskContext'
 
-export function ProjectsDropDown() {
+interface ProjectsDropDownProps {
+  projectId: string
+}
+
+export function ProjectsDropDown({ projectId }: ProjectsDropDownProps) {
   const navigate = useNavigate()
 
-  const { handleLogOut } = useContext(AuthContext)
+  const { deleteProject } = useDeleteProject()
+  const {
+    handleUpdateProjects,
+    handleUpdateCompletedTasks,
+    handleUpdateOpenedTasks,
+  } = useContext(TasksContext)
 
-  const handleSignOut = useCallback(() => {
-    handleLogOut()
-    navigate('/')
-  }, [handleLogOut, navigate])
+  const handleDeleteProject = useCallback(
+    async (projectId: string) => {
+      const deletedProjects = await deleteProject(projectId)
+
+      if (deletedProjects) {
+        handleUpdateProjects()
+        handleUpdateCompletedTasks()
+        handleUpdateOpenedTasks()
+      }
+    },
+    [
+      deleteProject,
+      handleUpdateCompletedTasks,
+      handleUpdateOpenedTasks,
+      handleUpdateProjects,
+    ],
+  )
 
   const handleNavigateTo = useCallback(
     (route: string) => {
@@ -27,7 +50,7 @@ export function ProjectsDropDown() {
         <Pen size={14} />
         <span>Editar</span>
       </DropDownItem>
-      <DropDownItem onClick={handleSignOut}>
+      <DropDownItem onClick={() => handleDeleteProject(projectId)}>
         <Trash size={14} />
         <span>Excluir</span>
       </DropDownItem>

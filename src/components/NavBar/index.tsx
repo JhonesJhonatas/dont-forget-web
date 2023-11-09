@@ -94,11 +94,16 @@ export function NavBar() {
                 <Folder weight="fill" />
                 <span>Projetos</span>
               </ProjectsTitle>
-              <Dialog.Root open={newProjectModalOpen} onOpenChange={setNewProjectModalOpen}>
-                <Dialog.Trigger  asChild>
+              <Dialog.Root
+                open={newProjectModalOpen}
+                onOpenChange={setNewProjectModalOpen}
+              >
+                <Dialog.Trigger asChild>
                   <PlusCircle size={20} />
                 </Dialog.Trigger>
-                <NewProjectModal handleCloseNewProjectModal={handleCloseNewProjectModal} />
+                <NewProjectModal
+                  handleCloseNewProjectModal={handleCloseNewProjectModal}
+                />
               </Dialog.Root>
             </ProjectsHeader>
             <ProjectsContent>
@@ -116,7 +121,7 @@ export function NavBar() {
                           <DotsThree size={24} />
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Portal>
-                          <ProjectsDropDown />
+                          <ProjectsDropDown projectId={project.id} />
                         </DropdownMenu.Portal>
                       </DropdownMenu.Root>
                     </ProjectController>
