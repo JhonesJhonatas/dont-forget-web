@@ -13,7 +13,6 @@ import {
   NavContent,
   NavHeader,
   NavItem,
-  NewProject,
   NewTaskButton,
   ProjectController,
   ProjectItem,
@@ -95,7 +94,12 @@ export function NavBar() {
                 <Folder weight="fill" />
                 <span>Projetos</span>
               </ProjectsTitle>
-              <PlusCircle size={20} />
+              <Dialog.Root open={newProjectModalOpen} onOpenChange={setNewProjectModalOpen}>
+                <Dialog.Trigger  asChild>
+                  <PlusCircle size={20} />
+                </Dialog.Trigger>
+                <NewProjectModal handleCloseNewProjectModal={handleCloseNewProjectModal} />
+              </Dialog.Root>
             </ProjectsHeader>
             <ProjectsContent>
               {allProjects.map((project) => {

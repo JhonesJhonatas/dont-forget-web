@@ -1,8 +1,8 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import * as Dialog from '@radix-ui/react-dialog'
 
-interface ColorDemonstrationProps {
-  $chosenColor: string
+interface BoxColorProps {
+  $isOpen: boolean
 }
 
 export const DialogOverlay = styled(Dialog.Overlay)`
@@ -13,7 +13,7 @@ export const DialogOverlay = styled(Dialog.Overlay)`
 `
 
 export const DialogContent = styled(Dialog.Content)`
-  background-color: ${(props) => props.theme.cardBgPrimary};
+  background-color: ${(props) => props.theme.cardBgSecondary};
   border-radius: 6px;
   box-shadow:
     hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
@@ -32,128 +32,92 @@ export const DialogContent = styled(Dialog.Content)`
   gap: 1.5rem;
 `
 
-export const ModalHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-
-export const DialogCloese = styled(Dialog.Close)`
-  border: 0;
-  background-color: transparent;
-  color: ${(props) => props.theme.textPrimary};
-  transition: all 0.2s ease-in-out;
-
-  svg {
-    width: 1rem;
-    height: 1rem;
-    cursor: pointer;
-    line-height: 0;
-  }
-
-  &:hover {
-    transform: scale(1.2);
-  }
-`
-
 export const ModalContent = styled.div`
+  flex: 1;
+  display: flex;
+  gap: 1rem;
+`
+
+export const FormContent = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
 `
 
-export const FlexArea = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  justify-content: space-between;
-`
-
-export const InputTitle = styled.label`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-
-  input {
-    border-radius: 6px;
-    outline: 0;
-    height: 1.8rem;
-    padding: 1.5rem 1rem;
-    background-color: ${(props) => props.theme.cardBgSecondary};
-    border: 1px solid ${(props) => props.theme.borderCard};
-    color: ${(props) => props.theme.textPrimary};
-
-    &:focus {
-      outline: 2px solid ${(props) => props.theme.enphasis};
-    }
-  }
-`
-
-export const InputColor = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-`
-
-export const ColorDemonstration = styled.div<ColorDemonstrationProps>`
-  background-color: ${(props) => props.theme.borderCard};
-  padding: 0.75rem;
-  border-radius: 6px;
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-
+export const ColorPicker = styled.div`
   svg {
-    line-height: none;
-    color: ${(props) => props.$chosenColor};
-  }
-`
+    background-color: ${(props) => props.theme.cardBgPrimary};
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 60px;
+    padding: 0.5rem;
 
-export const InputTextArea = styled.label`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
 
-  textarea {
-    border-radius: 6px;
-    height: 10rem;
-    resize: none;
-    padding: 1rem;
-    width: 100%;
-    background-color: ${(props) => props.theme.cardBgSecondary};
-    border: 1px solid ${(props) => props.theme.borderCard};
-    outline: 0;
-    color: ${(props) => props.theme.textPrimary};
-
-    &:focus {
-      outline: 2px solid ${(props) => props.theme.enphasis};
+    &:hover {
+      background-color: ${(props) => props.theme.borderCard};
     }
   }
 `
 
-export const FormFooter = styled.div`
+export const BoxColors = styled.div<BoxColorProps>`
+  ${(props) =>
+    props.$isOpen
+      ? css`
+          display: grid;
+        `
+      : css`
+          display: none;
+        `}
+  margin-top: 1rem;
+  position: absolute;
+  background-color: ${(props) => props.theme.cardBgPrimary};
+  padding: 0.5rem;
+  border-radius: 6px;
+
+  grid-template-columns: 1fr 1fr;
+`
+
+export const TaskTitleInput = styled.input`
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: ${(props) => props.theme.textPrimary};
+  font-size: 2rem;
+  font-weight: bold;
+  border-radius: 6px;
+`
+
+export const TaskDescriptionInput = styled.textarea`
+  height: 100%;
+  width: 100%;
+  resize: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: ${(props) => props.theme.textPrimary};
+  font-size: 1rem;
+  font-weight: regular;
+`
+
+export const ModalFooter = styled.div`
   display: flex;
   align-items: center;
-  justify-content: end;
   gap: 1rem;
+  justify-content: end;
 `
 
 export const CancelButton = styled.button`
   border: none;
   background-color: transparent;
   color: ${(props) => props.theme.textPrimary};
+
   cursor: pointer;
 `
 
-export const SaveButton = styled.button`
+export const CreateTaskButton = styled.button`
   border: 0;
   background-color: ${(props) => props.theme.enphasis};
   color: ${(props) => props.theme.textPrimary};

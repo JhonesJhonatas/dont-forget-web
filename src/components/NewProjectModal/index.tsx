@@ -1,35 +1,19 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import {
-  InputColor,
-  DialogCloese,
   DialogContent,
   DialogOverlay,
-  FlexArea,
-  InputTitle,
-  ModalContent,
-  ModalHeader,
-  ColorDemonstration,
-  InputTextArea,
-  FormFooter,
   CancelButton,
-  SaveButton,
+  TaskTitleInput,
+  ModalFooter,
+  CreateTaskButton,
+  TaskDescriptionInput,
+  ModalContent,
+  ColorPicker,
+  FormContent,
+  BoxColors,
 } from './styles'
-import { Circle, X } from '@phosphor-icons/react'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useContext, useState } from 'react'
-import { useCreateProject } from '../../hooks/projects/useCreateProject'
-import { TasksContext } from '../../contexts/TaskContext'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { ChoseColorDropDown } from './components/ChoseColorDropDown'
-
-const newProjectFormSchema = z.object({
-  title: z.string(),
-  description: z.string(),
-})
-
-type NewProjectFormSchema = z.infer<typeof newProjectFormSchema>
+import { Folder } from '@phosphor-icons/react'
+import { useCallback, useState } from 'react'
 
 interface NewProjectModalProps {
   handleCloseNewProjectModal: () => void
@@ -38,96 +22,118 @@ interface NewProjectModalProps {
 export function NewProjectModal({
   handleCloseNewProjectModal,
 }: NewProjectModalProps) {
-  const [chosenColor, setChosenColor] = useState('#cbd5e1')
+  const [togleColorPicker, setTogleColorPicker] = useState(false)
+  const [choosedColor, setChoosedColor] = useState('#3b82f6')
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { isSubmitting },
-  } = useForm<NewProjectFormSchema>({
-    resolver: zodResolver(newProjectFormSchema),
-  })
-  const { createNewProject } = useCreateProject()
-  const { handleUpdateProjects } = useContext(TasksContext)
+  const handleTogleColorPicker = () => {
+    setTogleColorPicker(!togleColorPicker)
+  }
 
-  const onSubmit = useCallback(
-    async ({ description, title }: NewProjectFormSchema) => {
-      const formattedData = {
-        description,
-        title,
-        color: chosenColor,
-      }
-
-      const createdProject = await createNewProject(formattedData)
-
-      if (createdProject) {
-        handleUpdateProjects()
-        handleCloseNewProjectModal()
-        reset()
-      }
-    },
-    [
-      chosenColor,
-      createNewProject,
-      handleCloseNewProjectModal,
-      handleUpdateProjects,
-      reset,
-    ],
-  )
-
-  const choseColor = useCallback((colorCode: string) => {
-    setChosenColor(colorCode)
+  const handleChoseColor = useCallback((colorHex: string) => {
+    setChoosedColor(colorHex)
   }, [])
 
   return (
     <Dialog.Portal>
       <DialogOverlay />
       <DialogContent>
-        <ModalHeader>
-          <Dialog.Title>Novo Projeto</Dialog.Title>
-          <DialogCloese>
-            <X />
-          </DialogCloese>
-        </ModalHeader>
         <ModalContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <FlexArea>
-              <InputTitle>
-                Título:
-                <input
-                  type="text"
-                  placeholder="Título"
-                  {...register('title')}
-                  required
-                />
-              </InputTitle>
-              <InputColor>
-                Cor:
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger asChild>
-                    <ColorDemonstration $chosenColor={chosenColor}>
-                      <Circle size={24} weight="fill" />
-                    </ColorDemonstration>
-                  </DropdownMenu.Trigger>
-                  <ChoseColorDropDown choseColor={choseColor} />
-                </DropdownMenu.Root>
-              </InputColor>
-            </FlexArea>
-            <InputTextArea {...register('description')}>
-              Informações:
-              <textarea />
-            </InputTextArea>
-            <FormFooter>
-              <Dialog.Close asChild>
-                <CancelButton>Cancelar</CancelButton>
-              </Dialog.Close>
-              <SaveButton type="submit" disabled={isSubmitting}>
-                Salvar
-              </SaveButton>
-            </FormFooter>
-          </form>
+          <FormContent>
+            <TaskTitleInput type="text" placeholder="Nome do Projeto/Cliente" />
+            <TaskDescriptionInput
+              rows={15}
+              placeholder="Adicione uma descrição"
+            />
+          </FormContent>
+          <ColorPicker>
+            <Folder
+              weight="fill"
+              size={24}
+              color={choosedColor}
+              onClick={() => handleTogleColorPicker()}
+            />
+            <BoxColors $isOpen={togleColorPicker}>
+              <Folder
+                weight="fill"
+                onClick={() => {
+                  handleChoseColor('#ef4444')
+                  setTogleColorPicker(false)
+                }}
+                size={18}
+                color="#ef4444"
+              />
+              <Folder
+                weight="fill"
+                onClick={() => {
+                  handleChoseColor('#f97316')
+                  setTogleColorPicker(false)
+                }}
+                size={18}
+                color="#f97316"
+              />
+              <Folder
+                weight="fill"
+                onClick={() => {
+                  handleChoseColor('#eab308')
+                  setTogleColorPicker(false)
+                }}
+                size={18}
+                color="#eab308"
+              />
+              <Folder
+                weight="fill"
+                onClick={() => {
+                  handleChoseColor('#22c55e')
+                  setTogleColorPicker(false)
+                }}
+                size={18}
+                color="#22c55e"
+              />
+              <Folder
+                weight="fill"
+                onClick={() => {
+                  handleChoseColor('#06b6d4')
+                  setTogleColorPicker(false)
+                }}
+                size={18}
+                color="#06b6d4"
+              />
+              <Folder
+                weight="fill"
+                onClick={() => {
+                  handleChoseColor('#3b82f6')
+                  setTogleColorPicker(false)
+                }}
+                size={18}
+                color="#3b82f6"
+              />
+              <Folder
+                weight="fill"
+                onClick={() => {
+                  handleChoseColor('#a855f7')
+                  setTogleColorPicker(false)
+                }}
+                size={18}
+                color="#a855f7"
+              />
+              <Folder
+                weight="fill"
+                onClick={() => {
+                  handleChoseColor('#ec4899')
+                  setTogleColorPicker(false)
+                }}
+                size={18}
+                color="#ec4899"
+              />
+            </BoxColors>
+          </ColorPicker>
         </ModalContent>
+        <ModalFooter>
+          <CancelButton onClick={() => handleCloseNewProjectModal()}>
+            Cancelar
+          </CancelButton>
+          <CreateTaskButton>Criar Projeto</CreateTaskButton>
+        </ModalFooter>
       </DialogContent>
     </Dialog.Portal>
   )
