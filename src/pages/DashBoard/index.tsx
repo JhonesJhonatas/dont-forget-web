@@ -1,4 +1,3 @@
-import { ResumeCard } from './components/ResumeCard'
 import {
   CardsArea,
   Container,
@@ -41,6 +40,7 @@ import { useSeparateOpenedTasksByStatus } from '../../hooks/tasks/useSeparateOpe
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { OpenedTask, TasksContext } from '../../contexts/TaskContext'
+import { ResumeCard } from '../../components/ResumeCard'
 
 export function DashBoard() {
   const navigate = useNavigate()

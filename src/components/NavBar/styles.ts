@@ -190,8 +190,13 @@ export const ProjectItem = styled.div<ProjectItemProps>`
 export const ProjectController = styled.div`
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 
-  svg {
+  svg:first-child {
+    color: ${(props) => props.theme.textSecondary};
+  }
+
+  svg:last-child {
     cursor: pointer;
     line-height: 0;
     color: ${(props) => props.theme.textSecondary};

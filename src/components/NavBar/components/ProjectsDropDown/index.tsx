@@ -1,9 +1,7 @@
-import { Pen, Trash } from '@phosphor-icons/react'
+import { Folder, Gear } from '@phosphor-icons/react'
 import { DropDownContent, DropDownItem } from './styles'
-import { useCallback, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useDeleteProject } from '../../../../hooks/projects/useDeleteProjec'
-import { TasksContext } from '../../../../contexts/TaskContext'
+import { useCallback } from 'react'
 
 interface ProjectsDropDownProps {
   projectId: string
@@ -12,47 +10,26 @@ interface ProjectsDropDownProps {
 export function ProjectsDropDown({ projectId }: ProjectsDropDownProps) {
   const navigate = useNavigate()
 
-  const { deleteProject } = useDeleteProject()
-  const {
-    handleUpdateProjects,
-    handleUpdateCompletedTasks,
-    handleUpdateOpenedTasks,
-  } = useContext(TasksContext)
-
-  const handleDeleteProject = useCallback(
-    async (projectId: string) => {
-      const deletedProjects = await deleteProject(projectId)
-
-      if (deletedProjects) {
-        handleUpdateProjects()
-        handleUpdateCompletedTasks()
-        handleUpdateOpenedTasks()
-      }
-    },
-    [
-      deleteProject,
-      handleUpdateCompletedTasks,
-      handleUpdateOpenedTasks,
-      handleUpdateProjects,
-    ],
-  )
-
   const handleNavigateTo = useCallback(
-    (route: string) => {
-      navigate(route)
+    (path: string) => {
+      navigate(path)
     },
     [navigate],
   )
 
   return (
     <DropDownContent>
-      <DropDownItem onClick={() => handleNavigateTo('/settings')}>
-        <Pen size={14} />
-        <span>Editar</span>
+      <DropDownItem
+        onClick={() => handleNavigateTo(`/project-viewer/${projectId}`)}
+      >
+        <Folder size={14} />
+        <span>Visualizar Projeto</span>
       </DropDownItem>
-      <DropDownItem onClick={() => handleDeleteProject(projectId)}>
-        <Trash size={14} />
-        <span>Excluir</span>
+      <DropDownItem
+        onClick={() => handleNavigateTo(`/project-settings/${projectId}`)}
+      >
+        <Gear size={14} />
+        <span>Configurações</span>
       </DropDownItem>
     </DropDownContent>
   )

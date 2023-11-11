@@ -4,6 +4,7 @@ import {
   Circle,
   DotsThree,
   Folder,
+  Lock,
   PlusCircle,
   SquaresFour,
   UserCircle,
@@ -116,6 +117,7 @@ export function NavBar() {
                       <Circle weight="fill" size={10} />
                     </NavLink>
                     <ProjectController>
+                      <Lock size={14} alt="Projeto Privado" />
                       <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild>
                           <DotsThree size={24} />
