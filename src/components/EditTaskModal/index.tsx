@@ -147,6 +147,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
 
       if (taskUpdated) {
         handleUpdateOpenedTasks()
+        handleUpdateCompletedTasks()
         handleCloseModal()
         reset()
         notify({ type: 'sucess', message: 'Tarefa atualizada com sucesso.' })
@@ -154,6 +155,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
     },
     [
       handleCloseModal,
+      handleUpdateCompletedTasks,
       handleUpdateOpenedTasks,
       notify,
       reset,

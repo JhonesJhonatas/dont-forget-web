@@ -1,43 +1,27 @@
 import styled from 'styled-components'
-import * as Dialog from '@radix-ui/react-dialog'
 
-export const DialogOverlay = styled(Dialog.Overlay)`
-  background-color: rgba(0 0 0 / 0.75);
-  position: fixed;
-  inset: 0;
-  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `
 
-export const DialogContent = styled(Dialog.Content)`
+export const EditProjectArea = styled.div`
   background-color: ${(props) => props.theme.cardBgSecondary};
+  padding: 1rem;
   border-radius: 6px;
-  box-shadow:
-    hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
-    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
-  position: fixed;
-  z-index: 1;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40rem;
-  padding: 2rem;
-  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
-
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
 `
 
-export const ModalContent = styled.div`
-  flex: 1;
+export const EditProjectInputs = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 1rem;
+  align-items: start;
 `
 
-export const FormContent = styled.div`
-  flex: 1;
+export const TitleAndColor = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 1rem;
 `
 
@@ -78,13 +62,14 @@ export const TaskDescriptionInput = styled.textarea`
   color: ${(props) => props.theme.textPrimary};
   font-size: 1rem;
   font-weight: regular;
+  overflow: auto;
 `
 
-export const ModalFooter = styled.div`
+export const FormFooter = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
   justify-content: end;
+  gap: 1rem;
 `
 
 export const CancelButton = styled.button`
@@ -95,7 +80,7 @@ export const CancelButton = styled.button`
   cursor: pointer;
 `
 
-export const CreateTaskButton = styled.button`
+export const SubmitButton = styled.button`
   border: 0;
   background-color: ${(props) => props.theme.enphasis};
   color: ${(props) => props.theme.textPrimary};
@@ -115,5 +100,36 @@ export const CreateTaskButton = styled.button`
 
   &:hover {
     background-color: ${(props) => props.theme.enphasisHover};
+  }
+`
+
+export const ExcludeProjectButton = styled.button`
+  background-color: transparent;
+  border: 1px solid ${(props) => props.theme.error};
+  color: ${(props) => props.theme.error};
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    span {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+  }
+
+  &:hover {
+    background-color: ${(props) => props.theme.error};
+    color: ${(props) => props.theme.textPrimary};
   }
 `

@@ -6,6 +6,8 @@ import { Settings } from './pages/Settings'
 import { Login } from './pages/Login'
 import { CreateUser } from './pages/CreateUser'
 import { TasksByProjects } from './pages/TasksByProjects'
+import { ProjectViewer } from './pages/ProjectViewer'
+import { ProjectSettings } from './pages/ProjectSettings'
 
 export function Router() {
   return (
@@ -19,6 +21,11 @@ export function Router() {
           <Route path="all" element={<AllTasks />} />
           <Route path=":projectId" element={<TasksByProjects />} />
         </Route>
+        <Route path="/project-viewer/:projectId" element={<ProjectViewer />} />
+        <Route
+          path="/project-settings/:projectId"
+          element={<ProjectSettings />}
+        />
         <Route path="/settings" element={<Settings />} />
       </Route>
     </Routes>

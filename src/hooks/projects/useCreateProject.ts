@@ -14,13 +14,13 @@ const useCreateProject = () => {
   const createNewProject = useCallback(
     async ({ title, description, color }: CreateUserFormSchema) => {
       try {
-        await api.post('/projects/create-project', {
+        const projectCreated = await api.post('/projects/create-project', {
           title,
           description,
           color,
         })
 
-        return true
+        return projectCreated
       } catch (err) {
         return false
       }

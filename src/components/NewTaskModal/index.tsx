@@ -24,7 +24,6 @@ import { useCreateTask } from '../../hooks/tasks/useCreateTask'
 import { string, z } from 'zod'
 import { useNotify } from '../../hooks/useNotify'
 import { zodResolver } from '@hookform/resolvers/zod'
-
 interface NewTaskModalProps {
   handleCloseModal: () => void
 }

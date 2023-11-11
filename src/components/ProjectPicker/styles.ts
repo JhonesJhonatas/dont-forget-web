@@ -53,9 +53,9 @@ export const OptionsField = styled.div<OptionsFieldProps>`
           align-items: center;
           gap: 0.75rem;
         `
-      : `
-    display: none;
-    `}
+      : css`
+          display: none;
+        `}
 `
 
 export const ListOfOptions = styled.ul`
