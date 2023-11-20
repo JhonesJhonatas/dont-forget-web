@@ -52,6 +52,12 @@ const statusList: StatusSchema[] = [
     value: 'payment',
     color: '#f43f5e',
   },
+  {
+    id: '555555',
+    title: 'Concluída',
+    value: 'concluded',
+    color: '#07bc0c',
+  },
 ]
 
 export function StatusPicker({
