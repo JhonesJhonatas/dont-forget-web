@@ -56,8 +56,12 @@ export function AllTasks() {
 
   const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('kanban')
 
-  const { allOpenedTasks, openedTasksIsLoading } = useContext(TasksContext)
-  const { allConcludedTasks } = useContext(TasksContext)
+  const {
+    allOpenedTasks,
+    openedTasksIsLoading,
+    allConcludedTasks,
+    concludedTasksIsLoading,
+  } = useContext(TasksContext)
 
   const {
     approvalTasks,
@@ -256,7 +260,7 @@ export function AllTasks() {
                       <span>Concluídas</span>
                       <small>({allConcludedTasks.length})</small>
                     </ListViewTableHeader>
-                    {openedTasksIsLoading ? (
+                    {concludedTasksIsLoading ? (
                       <ListViewLoading />
                     ) : (
                       <ListViewTableBody>
@@ -345,7 +349,7 @@ export function AllTasks() {
                       )}
                     </td>
                     <td>
-                      {openedTasksIsLoading ? (
+                      {concludedTasksIsLoading ? (
                         <CardViewLoading />
                       ) : (
                         <CardsArea>

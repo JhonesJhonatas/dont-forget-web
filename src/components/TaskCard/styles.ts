@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 
 interface PriorityProps {
-  level: string
+  $level: string
 }
 
 interface StatusProps {
@@ -127,7 +127,7 @@ export const Priority = styled.div<PriorityProps>`
   }
 
   ${(props) =>
-    props.level === 'low' &&
+    props.$level === 'low' &&
     css`
       svg {
         color: ${props.theme.sucess};
@@ -135,7 +135,7 @@ export const Priority = styled.div<PriorityProps>`
     `}
 
   ${(props) =>
-    props.level === 'normal' &&
+    props.$level === 'normal' &&
     css`
       svg {
         color: ${props.theme.enphasis};
@@ -143,7 +143,7 @@ export const Priority = styled.div<PriorityProps>`
     `}
 
   ${(props) =>
-    props.level === 'high' &&
+    props.$level === 'high' &&
     css`
       svg {
         color: ${props.theme.danger};
@@ -151,7 +151,7 @@ export const Priority = styled.div<PriorityProps>`
     `}
 
     ${(props) =>
-    props.level === 'urgent' &&
+    props.$level === 'urgent' &&
     css`
       svg {
         color: ${props.theme.error};

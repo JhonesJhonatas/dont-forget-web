@@ -37,8 +37,11 @@ import { ListViewLoading } from '../../components/ListViewLoading'
 import { TaskTr } from '../../components/TaskTr'
 import { TaskCard } from '../../components/TaskCard'
 import { CardViewLoading } from '../../components/CardViewLoading'
-import { useGetAllOpenedTasksByProject } from '../../hooks/tasks/useGetAllOpenedTasksByProject'
-import { useGetAllConcludedTasksByProjectId } from '../../hooks/tasks/useGetAllConcludedTasksByProjectId'
+import {
+  ConcludedTask,
+  OpenedTask,
+  TasksContext,
+} from '../../contexts/TaskContext'
 
 type TogleTaksViewSchema = 'list' | 'kanban'
 
@@ -58,16 +61,34 @@ export function TasksByProjects() {
   }, [authenticated, navigate])
 
   const [currentView, setCurrentView] = useState<TogleTaksViewSchema>('kanban')
+  const [filteredOpenedTasks, setFilteredOpenedTasks] = useState<OpenedTask[]>(
+    [],
+  )
+  const [filteredConcludedTasks, setFilteredConcludedTasks] = useState<
+    ConcludedTask[]
+  >([])
 
   const { projectId } = useParams<RouterParams>()
+  const { allOpenedTasks, allConcludedTasks, openedTasksIsLoading } =
+    useContext(TasksContext)
 
   const capturedProjectId = projectId || ''
 
-  const { allOpenedTasks, openedTasksIsLoading } =
-    useGetAllOpenedTasksByProject({ projectId: capturedProjectId })
-  const { allConcludedTasks } = useGetAllConcludedTasksByProjectId({
-    projectId: capturedProjectId,
-  })
+  useEffect(() => {
+    const filteredTasks = allOpenedTasks.filter(
+      (openedTask) => openedTask.projectId === capturedProjectId,
+    )
+
+    setFilteredOpenedTasks(filteredTasks)
+  }, [allOpenedTasks, capturedProjectId])
+
+  useEffect(() => {
+    const filteredTasks = allConcludedTasks.filter(
+      (concludedTask) => concludedTask.projectId === capturedProjectId,
+    )
+
+    setFilteredConcludedTasks(filteredTasks)
+  }, [allConcludedTasks, capturedProjectId])
 
   const {
     approvalTasks,
@@ -75,7 +96,7 @@ export function TasksByProjects() {
     paymentTasks,
     standByTasks,
     toDoTasks,
-  } = useSeparateOpenedTasksByStatus(allOpenedTasks)
+  } = useSeparateOpenedTasksByStatus(filteredOpenedTasks)
 
   const handleChangeView = useCallback((view: TogleTaksViewSchema) => {
     setCurrentView(view)
@@ -356,7 +377,7 @@ export function TasksByProjects() {
                       <CardViewLoading />
                     ) : (
                       <CardsArea>
-                        {allConcludedTasks.map((task) => {
+                        {filteredConcludedTasks.map((task) => {
                           return <TaskCard key={task.id} task={task} />
                         })}
                       </CardsArea>

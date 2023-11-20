@@ -27,10 +27,10 @@ import { useForm } from 'react-hook-form'
 import { string, z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { useUpdateOpenedTask } from '../../hooks/tasks/useUpdateOpenedTask'
 import { useNotify } from '../../hooks/useNotify'
 import { useDeleteOpenedTask } from '../../hooks/tasks/useDeleteOpenedTask'
 import { useConcludeTask } from '../../hooks/tasks/useConcludeTask'
+import { useUpdateOpenedTask } from '../../hooks/tasks/useUpdateOpenedTask'
 
 interface Task {
   id: string
@@ -77,7 +77,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
   } = useForm<EditFormSchema>({
     resolver: zodResolver(editFormSchema),
   })
-  const { allProjects, handleUpdateOpenedTasks, handleUpdateCompletedTasks } =
+  const { handleUpdateOpenedTasks, handleUpdateCompletedTasks, allProjects } =
     useContext(TasksContext)
   const { updateOpenedTask } = useUpdateOpenedTask()
   const { deleteOpenedTask } = useDeleteOpenedTask()
@@ -192,8 +192,8 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
     task.id,
   ])
 
-  const handleCompleteTask = useCallback(() => {
-    concludeTask({
+  const handleCompleteTask = useCallback(async () => {
+    const concludedTask = await concludeTask({
       createdAt: task.createdAt,
       description: getValues('description'),
       maturity: getValues('maturity'),
@@ -203,11 +203,14 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
       taskId: task.id,
       title: getValues('title'),
     })
-    handleCloseModal()
-    handleUpdateOpenedTasks()
-    handleUpdateCompletedTasks()
-    reset()
-    notify({ type: 'sucess', message: 'Tarefa Concluída com sucesso' })
+
+    if (concludedTask) {
+      handleCloseModal()
+      handleUpdateOpenedTasks()
+      handleUpdateCompletedTasks()
+      reset()
+      notify({ type: 'sucess', message: 'Tarefa Concluída com sucesso' })
+    }
   }, [
     concludeTask,
     getValues,

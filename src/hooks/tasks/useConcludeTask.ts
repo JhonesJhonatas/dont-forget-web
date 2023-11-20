@@ -21,7 +21,6 @@ const useConcludeTask = () => {
       maturity,
       priority,
       projectId,
-      status,
       taskId,
       title,
     }: ConcludeTaskProps) => {
@@ -32,7 +31,7 @@ const useConcludeTask = () => {
           maturity: formatISO(parseISO(maturity)),
           priority,
           projectId,
-          status,
+          status: 'concluded',
           taskId,
           title,
         })

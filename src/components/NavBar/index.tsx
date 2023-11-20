@@ -7,7 +7,6 @@ import {
   Lock,
   PlusCircle,
   SquaresFour,
-  UserCircle,
 } from '@phosphor-icons/react'
 import {
   Container,
@@ -35,6 +34,7 @@ import { NewProjectModal } from '../NewProjectModal'
 import { TasksContext } from '../../contexts/TaskContext'
 import { UserOptionsDropDown } from './components/UserOptionsDropDown'
 import { ProjectsDropDown } from './components/ProjectsDropDown'
+import defaultProfilePic from '../../assets/imgs/defaultProfilePic.svg'
 
 export function NavBar() {
   const [open, setOpen] = useState(false)
@@ -55,7 +55,7 @@ export function NavBar() {
       <Section>
         <NavHeader>
           <UserInfos>
-            <UserCircle size={38} />
+            <img src={defaultProfilePic} alt="Foto de Perfil" />
             <div>
               <UserName>{localStorage.getItem('name')}</UserName>
               <UserEmail>{localStorage.getItem('email')}</UserEmail>

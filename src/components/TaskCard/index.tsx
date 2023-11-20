@@ -86,7 +86,7 @@ export function TaskCard({ task }: TaskCardProps) {
             </Status>
           </CardHeader>
           <CardElements>
-            <Priority level={task.priority}>
+            <Priority $level={task.priority}>
               <Flag weight="fill" />
               <span>{formattedPriority}</span>
             </Priority>
