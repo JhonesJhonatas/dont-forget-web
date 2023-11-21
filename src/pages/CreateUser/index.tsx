@@ -1,172 +1,65 @@
-import { CaretLeft, CaretRight } from '@phosphor-icons/react'
-import {
-  BackToLogin,
-  BoxBanner,
-  Container,
-  CreateUserBox,
-  FlexArea,
-  FormArea,
-  Header,
-  InputElement,
-  SubmitButton,
-  Title,
-} from './styles'
-import createUserBanner from '../../assets/imgs/Banner Create User.png'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { useNotify } from '../../hooks/useNotify'
-import { useCreateUser } from '../../hooks/user/useCreateUser'
+import { useCallback, useMemo, useState } from 'react'
+import { StepHeader } from './components/StepHeader'
+import { StepUser } from './components/StepUser'
+import { Container } from './styles'
+import { StepPersonalData } from './components/StepPersonalData'
+import { StepSecurity } from './components/StepSecurity'
+import { StepProject } from './components/StepProject'
 
-const createUserFormSchema = z.object({
-  name: z.string(),
-  email: z
-    .string()
-    .email({ message: 'Este campo precisa ser um email válido.' }),
-  role: z.string(),
-  password: z.string().min(6, 'A senha precisa ter no mínimo 6 caracteres.'),
-  passwordConfirmation: z.string(),
-})
-
-type CreateUserFormSchema = z.infer<typeof createUserFormSchema>
+export interface FormDataSchema {
+  name?: string
+  email?: string
+  password?: string
+  birthDate?: Date
+  role?: string
+  title?: string
+  description?: string
+  color?: string
+}
 
 export function CreateUser() {
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting, errors },
-  } = useForm<CreateUserFormSchema>({
-    resolver: zodResolver(createUserFormSchema),
-  })
-  const { createNewUser } = useCreateUser()
-  const navigate = useNavigate()
-  const { notify } = useNotify()
+  const [stepCurrent, setStepCurrent] = useState(0)
+  const [formData, setFormData] = useState({} as FormDataSchema)
 
-  const onSubmit = useCallback(
-    async ({
-      email,
-      name,
-      password,
-      passwordConfirmation,
-      role,
-    }: CreateUserFormSchema) => {
-      if (password !== passwordConfirmation) {
-        notify({ type: 'error', message: 'Senhas não coincidem' })
-      }
+  console.log('formData:', formData)
 
-      if (password === passwordConfirmation) {
-        const userCreated = await createNewUser({
-          email,
-          name,
-          password,
-          role,
-        })
+  const nextStep = useCallback(() => {
+    setStepCurrent(stepCurrent + 1)
+  }, [stepCurrent])
 
-        if (userCreated) {
-          notify({ type: 'sucess', message: 'Usuário Cadastrado com sucesso' })
-          localStorage.setItem('emailToLogin', email)
-          navigate('/')
-        } else {
-          notify({ type: 'error', message: 'Email já cadastrado' })
-        }
-      }
-    },
-    [createNewUser, navigate, notify],
-  )
-
-  const handleBackToLoginPage = useCallback(() => {
-    navigate('/')
-  }, [navigate])
+  const currentView = useMemo(() => {
+    if (stepCurrent === 0) {
+      return <StepUser setFormData={setFormData} nextStep={nextStep} />
+    }
+    if (stepCurrent === 1) {
+      return (
+        <StepPersonalData
+          setFormData={setFormData}
+          nextStep={nextStep}
+          formData={formData}
+        />
+      )
+    }
+    if (stepCurrent === 2) {
+      return (
+        <StepSecurity
+          setFormData={setFormData}
+          nextStep={nextStep}
+          formData={formData}
+        />
+      )
+    }
+    if (stepCurrent === 3) {
+      return <StepProject />
+    }
+  }, [formData, nextStep, stepCurrent])
 
   return (
     <>
       <Container>
-        <CreateUserBox>
-          <BoxBanner>
-            <img src={createUserBanner} alt="" />
-          </BoxBanner>
-          <FormArea>
-            <Header>
-              <Title>
-                Criar <strong>Conta</strong>
-              </Title>
-              <BackToLogin onClick={handleBackToLoginPage}>
-                <CaretLeft />
-                <span>Voltar para a página de login</span>
-              </BackToLogin>
-            </Header>
-            <FormArea>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <InputElement>
-                  Nome:
-                  <input
-                    type="text"
-                    placeholder="Seu nome"
-                    {...register('name')}
-                    required
-                  />
-                </InputElement>
-                <InputElement>
-                  Email:
-                  <input
-                    type="email"
-                    placeholder="seuemail@email.com"
-                    {...register('email')}
-                    required
-                  />
-                  {errors.email && (
-                    <small>Este campo precisa ser um email válido</small>
-                  )}
-                </InputElement>
-                <InputElement>
-                  Profissão:
-                  <input
-                    type="text"
-                    placeholder="Desenvolvedor"
-                    {...register('role')}
-                    required
-                  />
-                </InputElement>
-                <FlexArea>
-                  <InputElement>
-                    Senha:
-                    <input
-                      type="password"
-                      placeholder="**********"
-                      {...register('password')}
-                      required
-                    />
-                    {errors.password && (
-                      <small>{errors.password.message}</small>
-                    )}
-                  </InputElement>
-                  <InputElement>
-                    Confirmação de Senha:
-                    <input
-                      type="password"
-                      placeholder="**********"
-                      {...register('passwordConfirmation')}
-                      required
-                    />
-                    {errors.password && (
-                      <small>A Senha precisa ter no mínimo 6 dígitos</small>
-                    )}
-                  </InputElement>
-                </FlexArea>
-                <SubmitButton type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'Cadastrando...' : 'Cadastrar'}
-                  <CaretRight />
-                </SubmitButton>
-              </form>
-            </FormArea>
-          </FormArea>
-        </CreateUserBox>
+        <StepHeader stepCurrent={stepCurrent} />
+        {currentView}
       </Container>
-      <ToastContainer />
     </>
   )
 }
