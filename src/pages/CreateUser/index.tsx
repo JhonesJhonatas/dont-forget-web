@@ -5,23 +5,64 @@ import { Container } from './styles'
 import { StepPersonalData } from './components/StepPersonalData'
 import { StepSecurity } from './components/StepSecurity'
 import { StepProject } from './components/StepProject'
+import { useCreateUser } from '../../hooks/user/useCreateUser'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
+import { useNotify } from '../../hooks/useNotify'
 
-export interface FormDataSchema {
-  name?: string
-  email?: string
-  password?: string
-  birthDate?: Date
-  role?: string
-  title?: string
-  description?: string
-  color?: string
+export type StepUserDataSchema = {
+  name: string
+  email: string
+}
+
+export type StepPersonalDataSchema = {
+  role: string
+  birthDate: Date
+}
+
+export type StepSecuritySchema = {
+  password: string
+}
+
+export type StepProjectDataSchema = {
+  projectName: string
+  projectColor: string
+  projectDescription: string
 }
 
 export function CreateUser() {
   const [stepCurrent, setStepCurrent] = useState(0)
-  const [formData, setFormData] = useState({} as FormDataSchema)
+  const [stepUserData, setStepUserData] = useState({} as StepUserDataSchema)
+  const [stepPersonalData, setStepPersonalData] = useState(
+    {} as StepPersonalDataSchema,
+  )
+  const [stepSecurityData, setStepSecurityData] = useState(
+    {} as StepSecuritySchema,
+  )
 
-  console.log('formData:', formData)
+  const { createNewUser } = useCreateUser()
+  const { notify } = useNotify()
+
+  const onSubmit = useCallback(
+    async ({
+      projectName,
+      projectColor,
+      projectDescription,
+    }: StepProjectDataSchema) => {
+      const createdUser = await createNewUser({
+        ...stepUserData,
+        ...stepPersonalData,
+        ...stepSecurityData,
+        projectName,
+        projectColor,
+        projectDescription,
+      })
+      if (createdUser) {
+        notify({ type: 'sucess', message: 'Usuário Cadastrado com sucesso' })
+      }
+    },
+    [createNewUser, notify, stepPersonalData, stepSecurityData, stepUserData],
+  )
 
   const nextStep = useCallback(() => {
     setStepCurrent(stepCurrent + 1)
@@ -29,30 +70,25 @@ export function CreateUser() {
 
   const currentView = useMemo(() => {
     if (stepCurrent === 0) {
-      return <StepUser setFormData={setFormData} nextStep={nextStep} />
+      return <StepUser setFormData={setStepUserData} nextStep={nextStep} />
     }
     if (stepCurrent === 1) {
       return (
         <StepPersonalData
-          setFormData={setFormData}
+          setFormData={setStepPersonalData}
           nextStep={nextStep}
-          formData={formData}
         />
       )
     }
     if (stepCurrent === 2) {
       return (
-        <StepSecurity
-          setFormData={setFormData}
-          nextStep={nextStep}
-          formData={formData}
-        />
+        <StepSecurity setFormData={setStepSecurityData} nextStep={nextStep} />
       )
     }
     if (stepCurrent === 3) {
-      return <StepProject />
+      return <StepProject onSubmit={onSubmit} />
     }
-  }, [formData, nextStep, stepCurrent])
+  }, [nextStep, onSubmit, stepCurrent])
 
   return (
     <>
@@ -60,6 +96,7 @@ export function CreateUser() {
         <StepHeader stepCurrent={stepCurrent} />
         {currentView}
       </Container>
+      <ToastContainer />
     </>
   )
 }

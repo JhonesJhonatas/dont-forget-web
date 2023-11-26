@@ -3,12 +3,11 @@ import { Container, InputElement, SubmitButton } from './styles'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { useCallback } from 'react'
-import { FormDataSchema } from '../..'
+import { StepSecuritySchema } from '../..'
 
 interface StepSecurityProps {
   nextStep: () => void
-  setFormData: (data: FormDataSchema) => void
-  formData: FormDataSchema
+  setFormData: (params: StepSecuritySchema) => void
 }
 
 const stepSecurityFormData = z.object({
@@ -18,28 +17,21 @@ const stepSecurityFormData = z.object({
 
 type StepSecurityFormData = z.infer<typeof stepSecurityFormData>
 
-export function StepSecurity({
-  nextStep,
-  setFormData,
-  formData,
-}: StepSecurityProps) {
+export function StepSecurity({ nextStep, setFormData }: StepSecurityProps) {
   const { register, handleSubmit } = useForm<StepSecurityFormData>()
 
   const onSubmit = useCallback(
     ({ confirmPassword, password }: StepSecurityFormData) => {
       const passwordMatch = password === confirmPassword
 
-      console.log(formData)
-
       if (passwordMatch) {
         setFormData({
           password,
-          ...formData,
         })
         nextStep()
       }
     },
-    [formData, nextStep, setFormData],
+    [nextStep, setFormData],
   )
 
   return (

@@ -3,12 +3,11 @@ import { Container, InputDate, InputElement, SubmitButton } from './styles'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useCallback } from 'react'
-import { FormDataSchema } from '../..'
+import { StepPersonalDataSchema } from '../..'
 
 interface StepPersonalDataProps {
   nextStep: () => void
-  setFormData: (data: FormDataSchema) => void
-  formData: FormDataSchema
+  setFormData: (params: StepPersonalDataSchema) => void
 }
 
 const personalDataFormSchema = z.object({
@@ -21,7 +20,6 @@ type PersonalDataFormSchema = z.infer<typeof personalDataFormSchema>
 export function StepPersonalData({
   nextStep,
   setFormData,
-  formData,
 }: StepPersonalDataProps) {
   const { register, handleSubmit } = useForm<PersonalDataFormSchema>()
 
@@ -30,11 +28,10 @@ export function StepPersonalData({
       setFormData({
         role,
         birthDate,
-        ...formData,
       })
       nextStep()
     },
-    [formData, nextStep, setFormData],
+    [nextStep, setFormData],
   )
 
   return (

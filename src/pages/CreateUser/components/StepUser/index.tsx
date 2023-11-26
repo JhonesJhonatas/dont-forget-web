@@ -3,11 +3,11 @@ import { Container, InputElement, SubmitButton } from './styles'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useCallback } from 'react'
-import { FormDataSchema } from '../..'
+import { StepUserDataSchema } from '../..'
 
 interface StepUserProps {
   nextStep: () => void
-  setFormData: (data: FormDataSchema) => void
+  setFormData: (params: StepUserDataSchema) => void
 }
 
 const userFormSchema = z.object({

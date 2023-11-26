@@ -6,20 +6,37 @@ const createUserFormSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   role: z.string(),
+  birthDate: z.date(),
   password: z.string(),
+  projectName: z.string(),
+  projectColor: z.string(),
+  projectDescription: z.string(),
 })
 
 type CreateUserFormSchema = z.infer<typeof createUserFormSchema>
 
 const useCreateUser = () => {
   const createNewUser = useCallback(
-    async ({ email, name, password, role }: CreateUserFormSchema) => {
+    async ({
+      email,
+      name,
+      password,
+      role,
+      birthDate,
+      projectName,
+      projectColor,
+      projectDescription,
+    }: CreateUserFormSchema) => {
       try {
         await api.post('/users/create-user', {
           email,
           name,
           password,
           role,
+          birthDate: new Date(birthDate),
+          projectName,
+          projectColor,
+          projectDescription,
         })
 
         return true
