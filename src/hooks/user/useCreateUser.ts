@@ -6,7 +6,7 @@ const createUserFormSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   role: z.string(),
-  birthDate: z.date(),
+  birthDate: z.string(),
   password: z.string(),
   projectName: z.string(),
   projectColor: z.string(),

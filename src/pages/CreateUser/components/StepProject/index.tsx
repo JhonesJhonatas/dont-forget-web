@@ -11,7 +11,9 @@ interface StepProjectProps {
 }
 
 const stepProjectFormSchema = z.object({
-  projectName: z.string().min(3),
+  projectName: z
+    .string()
+    .min(3, { message: 'O nome do projeto deve possuir ao menos 3 digitos.' }),
   projectColor: z.string(),
   projectDescription: z.string(),
 })
@@ -19,7 +21,12 @@ const stepProjectFormSchema = z.object({
 type StepProjectFormSchema = z.infer<typeof stepProjectFormSchema>
 
 export function StepProject({ onSubmit }: StepProjectProps) {
-  const { register, handleSubmit, setValue } = useForm<StepProjectFormSchema>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<StepProjectFormSchema>({
     resolver: zodResolver(stepProjectFormSchema),
   })
 
@@ -41,7 +48,7 @@ export function StepProject({ onSubmit }: StepProjectProps) {
   return (
     <Container>
       <form onSubmit={handleSubmit(handleCreateUser)}>
-        <InputElement>
+        <InputElement hasError={!!errors.projectName}>
           Nome do Projeto ou Cliente:
           <input
             type="text"
@@ -49,6 +56,7 @@ export function StepProject({ onSubmit }: StepProjectProps) {
             {...register('projectName')}
             required
           />
+          {errors.projectName && <small>{errors.projectName.message}</small>}
         </InputElement>
         <InputElement>
           Descrição:

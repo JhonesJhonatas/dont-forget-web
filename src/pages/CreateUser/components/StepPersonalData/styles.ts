@@ -1,4 +1,8 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+
+interface InputElementProps {
+  hasError?: boolean
+}
 
 export const Container = styled.div`
   width: 100%;
@@ -10,7 +14,7 @@ export const Container = styled.div`
   }
 `
 
-export const InputElement = styled.label`
+export const InputElement = styled.label<InputElementProps>`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -23,12 +27,24 @@ export const InputElement = styled.label`
     height: 1.8rem;
     padding: 1.5rem 1rem;
     background-color: ${(props) => props.theme.cardBgPrimary};
-    border: 1px solid ${(props) => props.theme.borderCard};
     color: ${(props) => props.theme.textPrimary};
 
-    &:focus {
-      outline: 2px solid ${(props) => props.theme.enphasis};
-    }
+    ${(props) =>
+      props.hasError
+        ? css`
+            border: 2px solid ${(props) => props.theme.error};
+
+            &:focus {
+              outline: 2px solid ${(props) => props.theme.errorHover};
+            }
+          `
+        : css`
+            border: 1px solid ${(props) => props.theme.borderCard};
+
+            &:focus {
+              outline: 2px solid ${(props) => props.theme.enphasis};
+            }
+          `}
   }
 
   small {

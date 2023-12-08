@@ -9,6 +9,7 @@ import { useCreateUser } from '../../hooks/user/useCreateUser'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { useNotify } from '../../hooks/useNotify'
+import { useNavigate } from 'react-router-dom'
 
 export type StepUserDataSchema = {
   name: string
@@ -17,7 +18,7 @@ export type StepUserDataSchema = {
 
 export type StepPersonalDataSchema = {
   role: string
-  birthDate: Date
+  birthDate: string
 }
 
 export type StepSecuritySchema = {
@@ -41,6 +42,7 @@ export function CreateUser() {
   )
 
   const { createNewUser } = useCreateUser()
+  const navigate = useNavigate()
   const { notify } = useNotify()
 
   const onSubmit = useCallback(
@@ -59,9 +61,18 @@ export function CreateUser() {
       })
       if (createdUser) {
         notify({ type: 'sucess', message: 'Usuário Cadastrado com sucesso' })
+        localStorage.setItem('emailToLogin', stepUserData.email)
+        navigate('/')
       }
     },
-    [createNewUser, notify, stepPersonalData, stepSecurityData, stepUserData],
+    [
+      createNewUser,
+      navigate,
+      notify,
+      stepPersonalData,
+      stepSecurityData,
+      stepUserData,
+    ],
   )
 
   const nextStep = useCallback(() => {
