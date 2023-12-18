@@ -80,7 +80,7 @@ export function TaskCard({ task }: TaskCardProps) {
         <Container>
           <CardHeader>
             <CardTitle>{task.title}</CardTitle>
-            <Status status={task.status}>
+            <Status $status={task.status}>
               <Circle weight="fill" />
               <span>{formattedStatus}</span>
             </Status>

@@ -2,19 +2,17 @@ import {
   CardsArea,
   Container,
   DashBoardHeader,
+  EmptyTasksMessage,
   FlexArea,
   ListViewTable,
   ListViewTableBody,
-  Notifications,
-  TasksForToday,
-  TasksForTomorrow,
-  TasksResume,
+  TasksArea,
   TextHeader,
   TitleOfBox,
   WelcomeIcon,
   WelcomePhrase,
 } from './styles'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import {
   format,
   getDate,
@@ -22,6 +20,7 @@ import {
   getYear,
   isBefore,
   isFriday,
+  isFuture,
   isMonday,
   isSaturday,
   isSunday,
@@ -41,6 +40,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { OpenedTask, TasksContext } from '../../contexts/TaskContext'
 import { ResumeCard } from '../../components/ResumeCard'
+import emptyImage from '../../assets/imgs/emptyTasksVector.svg'
 
 export function DashBoard() {
   const navigate = useNavigate()
@@ -56,6 +56,7 @@ export function DashBoard() {
   const [tasksForToday, setTasksForToday] = useState<OpenedTask[]>([])
   const [tasksForTomorrow, setTasksForTomorrow] = useState<OpenedTask[]>([])
   const [lateTasks, setLateTasks] = useState<OpenedTask[]>([])
+  const [futureTasks, setFutureTasks] = useState<OpenedTask[]>([])
   const [messageForToday, setMessageForToday] = useState('')
 
   const { allOpenedTasks, openedTasksIsLoading, allConcludedTasks } =
@@ -120,6 +121,20 @@ export function DashBoard() {
   }, [allOpenedTasks])
 
   useEffect(() => {
+    const futureTasks = allOpenedTasks.filter((task) =>
+      isFuture(
+        new Date(
+          getYear(parseISO(task.maturity.toString())),
+          getMonth(parseISO(task.maturity.toString())),
+          getDate(parseISO(task.maturity.toString())) - 1,
+        ),
+      ),
+    )
+
+    setFutureTasks(futureTasks)
+  }, [allOpenedTasks])
+
+  useEffect(() => {
     const lateTasks = allOpenedTasks.filter((task) =>
       isBefore(
         new Date(
@@ -136,6 +151,106 @@ export function DashBoard() {
     )
     setLateTasks(lateTasks)
   }, [allOpenedTasks])
+
+  const whatShowInTodayTasks = useMemo(() => {
+    if (openedTasksIsLoading) {
+      return <TasksLoading />
+    }
+
+    if (tasksForToday.length === 0) {
+      return (
+        <EmptyTasksMessage>
+          <img src={emptyImage} alt="Você não possui tarefas neste quadro" />{' '}
+          <span>Você ainda não possui tarefas para hoje!</span>
+        </EmptyTasksMessage>
+      )
+    }
+
+    if (tasksForToday.length > 0) {
+      return (
+        <ListViewTableBody>
+          {tasksForToday.map((task) => {
+            return <TaskTr key={task.id} task={task} />
+          })}
+        </ListViewTableBody>
+      )
+    }
+  }, [openedTasksIsLoading, tasksForToday])
+
+  const whatShowInTomorrowTasks = useMemo(() => {
+    if (openedTasksIsLoading) {
+      return <TasksLoading />
+    }
+
+    if (tasksForTomorrow.length === 0) {
+      return (
+        <EmptyTasksMessage>
+          <img src={emptyImage} alt="Você não possui tarefas neste quadro" />{' '}
+          <span>Você ainda não possui tarefas para amanhã!</span>
+        </EmptyTasksMessage>
+      )
+    }
+
+    if (tasksForTomorrow.length > 0) {
+      return (
+        <ListViewTableBody>
+          {tasksForTomorrow.map((task) => {
+            return <TaskTr key={task.id} task={task} />
+          })}
+        </ListViewTableBody>
+      )
+    }
+  }, [openedTasksIsLoading, tasksForTomorrow])
+
+  const whatShowInLateTasks = useMemo(() => {
+    if (openedTasksIsLoading) {
+      return <TasksLoading />
+    }
+
+    if (lateTasks.length === 0) {
+      return (
+        <EmptyTasksMessage>
+          <img src={emptyImage} alt="Você não possui tarefas neste quadro" />{' '}
+          <span>Você não possui tarefas atrasadas!</span>
+        </EmptyTasksMessage>
+      )
+    }
+
+    if (lateTasks.length > 0) {
+      return (
+        <ListViewTableBody>
+          {lateTasks.map((task) => {
+            return <TaskTr key={task.id} task={task} />
+          })}
+        </ListViewTableBody>
+      )
+    }
+  }, [lateTasks, openedTasksIsLoading])
+
+  const whatShowInFutureTasks = useMemo(() => {
+    if (openedTasksIsLoading) {
+      return <TasksLoading />
+    }
+
+    if (futureTasks.length === 0) {
+      return (
+        <EmptyTasksMessage>
+          <img src={emptyImage} alt="Você não possui tarefas neste quadro" />{' '}
+          <span>Você não possui tarefas futuras!</span>
+        </EmptyTasksMessage>
+      )
+    }
+
+    if (futureTasks.length > 0) {
+      return (
+        <ListViewTableBody>
+          {futureTasks.map((task) => {
+            return <TaskTr key={task.id} task={task} />
+          })}
+        </ListViewTableBody>
+      )
+    }
+  }, [futureTasks, openedTasksIsLoading])
 
   return (
     <>
@@ -158,56 +273,30 @@ export function DashBoard() {
           <ResumeCard amount={allConcludedTasks.length} status="concluded" />
         </CardsArea>
         <FlexArea>
-          <Notifications>
+          <TasksArea>
             <TitleOfBox>
               <span>Tarefas para Hoje:</span>
             </TitleOfBox>
-            <ListViewTable>
-              {openedTasksIsLoading ? (
-                <TasksLoading />
-              ) : (
-                <ListViewTableBody>
-                  {tasksForToday.map((task) => {
-                    return <TaskTr key={task.id} task={task} />
-                  })}
-                </ListViewTableBody>
-              )}
-            </ListViewTable>
-          </Notifications>
-          <TasksResume>
-            <TasksForToday>
-              <TitleOfBox>
-                <span>Tarefas para amanhã:</span>
-              </TitleOfBox>
-              <ListViewTable>
-                {openedTasksIsLoading ? (
-                  <TasksLoading />
-                ) : (
-                  <ListViewTableBody>
-                    {tasksForTomorrow.map((task) => {
-                      return <TaskTr key={task.id} task={task} />
-                    })}
-                  </ListViewTableBody>
-                )}
-              </ListViewTable>
-            </TasksForToday>
-            <TasksForTomorrow>
-              <TitleOfBox>
-                <span>Tarefas atrasadas:</span>
-              </TitleOfBox>
-              <ListViewTable>
-                {openedTasksIsLoading ? (
-                  <TasksLoading />
-                ) : (
-                  <ListViewTableBody>
-                    {lateTasks.map((task) => {
-                      return <TaskTr key={task.id} task={task} />
-                    })}
-                  </ListViewTableBody>
-                )}
-              </ListViewTable>
-            </TasksForTomorrow>
-          </TasksResume>
+            <ListViewTable>{whatShowInTodayTasks}</ListViewTable>
+          </TasksArea>
+          <TasksArea>
+            <TitleOfBox>
+              <span>Tarefas para Amanhã:</span>
+            </TitleOfBox>
+            <ListViewTable>{whatShowInTomorrowTasks}</ListViewTable>
+          </TasksArea>
+          <TasksArea>
+            <TitleOfBox>
+              <span>Tarefas atrasadas:</span>
+            </TitleOfBox>
+            <ListViewTable>{whatShowInLateTasks}</ListViewTable>
+          </TasksArea>
+          <TasksArea>
+            <TitleOfBox>
+              <span>Tarefas futuras:</span>
+            </TitleOfBox>
+            <ListViewTable>{whatShowInFutureTasks}</ListViewTable>
+          </TasksArea>
         </FlexArea>
       </Container>
       <ToastContainer />

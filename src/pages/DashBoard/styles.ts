@@ -48,32 +48,6 @@ export const FlexArea = styled.section`
   height: calc(100vh - 16rem);
 `
 
-export const TasksResume = styled.div`
-  height: 100%;
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 1.5rem;
-  overflow: auto;
-`
-
-export const TasksForToday = styled.div`
-  background-color: ${(props) => hexToRgba(props.theme.opened, 0.02)};
-  border: 1px solid ${(props) => props.theme.cardBgPrimary};
-  padding: 1rem;
-  border-radius: 6px;
-  height: 100%;
-  overflow: auto;
-`
-
-export const TasksForTomorrow = styled.div`
-  background-color: ${(props) => hexToRgba(props.theme.opened, 0.02)};
-  border: 1px solid ${(props) => props.theme.cardBgPrimary};
-  padding: 1rem;
-  border-radius: 6px;
-  height: 100%;
-  overflow: auto;
-`
-
 export const TitleOfBox = styled.div`
   padding-bottom: 0.5rem;
   border-bottom: 1px solid ${(props) => props.theme.cardBgPrimary};
@@ -84,26 +58,42 @@ export const TitleOfBox = styled.div`
   }
 `
 
-export const ListViewTable = styled.table`
-  width: 99%;
-  border-collapse: separate;
-  border-spacing: 0 1rem;
+export const ListViewTable = styled.div`
+  padding: 1rem 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `
 
-export const ListViewTableHeader = styled.thead`
-  tr {
-    th {
-      font-weight: 300;
-      text-align: start;
-    }
-  }
+export const ListViewTableBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `
 
-export const ListViewTableBody = styled.tbody``
-
-export const Notifications = styled.div`
+export const TasksArea = styled.div`
+  width: 100%;
+  height: 100%;
   background-color: ${(props) => hexToRgba(props.theme.opened, 0.02)};
   border: 1px solid ${(props) => props.theme.cardBgPrimary};
   padding: 1rem;
   border-radius: 6px;
+  overflow: auto;
+`
+
+export const EmptyTasksMessage = styled.div`
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 14rem;
+  }
 `
