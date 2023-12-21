@@ -5,11 +5,11 @@ interface PriorityProps {
 }
 
 interface StatusProps {
-  status: string
+  $status: string
 }
 
 export const Container = styled.div`
-  width: 20rem;
+  min-width: 20rem;
   background-color: ${(props) => props.theme.cardBgSecondary};
   border: 1px solid ${(props) => props.theme.borderCard};
   border-radius: 6px;
@@ -50,7 +50,7 @@ export const Status = styled.div<StatusProps>`
 
   svg {
     ${(props) =>
-      props.status === 'toDo' &&
+      props.$status === 'toDo' &&
       css`
         color: ${props.theme.opened};
       `}
@@ -58,7 +58,7 @@ export const Status = styled.div<StatusProps>`
 
   svg {
     ${(props) =>
-      props.status === 'standby' &&
+      props.$status === 'standby' &&
       css`
         color: ${props.theme.stand_by};
       `}
@@ -66,7 +66,7 @@ export const Status = styled.div<StatusProps>`
 
   svg {
     ${(props) =>
-      props.status === 'inProgress' &&
+      props.$status === 'inProgress' &&
       css`
         color: ${props.theme.in_progress};
       `}
@@ -74,7 +74,7 @@ export const Status = styled.div<StatusProps>`
 
   svg {
     ${(props) =>
-      props.status === 'approval' &&
+      props.$status === 'approval' &&
       css`
         color: ${props.theme.approval};
       `}
@@ -82,7 +82,7 @@ export const Status = styled.div<StatusProps>`
 
   svg {
     ${(props) =>
-      props.status === 'payment' &&
+      props.$status === 'payment' &&
       css`
         color: ${props.theme.payment};
       `}
@@ -90,7 +90,7 @@ export const Status = styled.div<StatusProps>`
 
   svg {
     ${(props) =>
-      props.status === 'concluded' &&
+      props.$status === 'concluded' &&
       css`
         color: ${props.theme.concluded};
       `}

@@ -8,34 +8,22 @@ interface PriorityContainer {
   $priority: string
 }
 
-export const TableTr = styled.tr`
+export const TaskItem = styled.div`
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 6px;
   background-color: ${(props) => props.theme.cardBgSecondary};
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 
-  td {
-    width: 18%;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+`
 
-    &:first-child {
-      border-radius: 6px 0 0 6px;
-      width: 50%;
-
-      div {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 1rem;
-      }
-    }
-
-    &:last-child {
-      border-radius: 0 6px 6px 0;
-    }
-  }
-
-  &:hover {
-    background-color: ${(props) => props.theme.cardBgPrimary};
-  }
+export const DescriptionContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `
 
 export const StatusContainer = styled.div<StatusContainerProps>`

@@ -1,10 +1,11 @@
 import { Calendar, Flag, Folder } from '@phosphor-icons/react'
 import { format } from 'date-fns'
 import {
+  DescriptionContainer,
   MaturityContainer,
   PriorityContainer,
   StatusContainer,
-  TableTr,
+  TaskItem,
 } from './style'
 import { useCallback, useMemo, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -75,32 +76,24 @@ export function TaskTr({ task }: TaskTrProps) {
   return (
     <Dialog.Root open={togleModalEdit} onOpenChange={setTogleModalEdit}>
       <Dialog.Trigger asChild>
-        <TableTr key={task.id}>
-          <td>
-            <div>
-              <Folder />
-              {task.title}
-            </div>
-          </td>
-          <td>
-            <StatusContainer $status={task.status}>
-              <div></div>
-              {formattedStatus}
-            </StatusContainer>{' '}
-          </td>
-          <td>
-            <MaturityContainer>
-              <Calendar />
-              {formattedDate}
-            </MaturityContainer>
-          </td>
-          <td>
-            <PriorityContainer $priority={task.priority}>
-              <Flag weight="fill" />
-              {formattedPriority}
-            </PriorityContainer>
-          </td>
-        </TableTr>
+        <TaskItem key={task.id}>
+          <DescriptionContainer>
+            <Folder />
+            {task.title}
+          </DescriptionContainer>
+          <StatusContainer $status={task.status}>
+            <div></div>
+            {formattedStatus}
+          </StatusContainer>
+          <MaturityContainer>
+            <Calendar />
+            {formattedDate}
+          </MaturityContainer>
+          <PriorityContainer $priority={task.priority}>
+            <Flag weight="fill" />
+            {formattedPriority}
+          </PriorityContainer>
+        </TaskItem>
       </Dialog.Trigger>
       <EditTaskModal
         task={task}
