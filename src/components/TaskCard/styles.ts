@@ -9,7 +9,7 @@ interface StatusProps {
 }
 
 export const Container = styled.div`
-  width: 20rem;
+  min-width: 20rem;
   background-color: ${(props) => props.theme.cardBgSecondary};
   border: 1px solid ${(props) => props.theme.borderCard};
   border-radius: 6px;
