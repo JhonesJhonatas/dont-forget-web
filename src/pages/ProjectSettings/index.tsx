@@ -3,10 +3,15 @@ import {
   CancelButton,
   ColorPicker,
   Container,
+  DialogContent,
+  DialogOverlay,
   EditProjectArea,
   EditProjectInputs,
+  ExcludeMessage,
   ExcludeProjectButton,
+  Footer,
   FormFooter,
+  LabelInput,
   SubmitButton,
   TaskDescriptionInput,
   TaskTitleInput,
@@ -23,6 +28,7 @@ import { useEditProject } from '../../hooks/projects/useEditProject'
 import { useNotify } from '../../hooks/useNotify'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import * as Dialog from '@radix-ui/react-dialog'
 
 type RouterParams = {
   projectId: string
@@ -31,12 +37,14 @@ type RouterParams = {
 export function ProjectSettings() {
   const [togleColorPicker, setTogleColorPicker] = useState(false)
   const [choosedColor, setChoosedColor] = useState('')
+  const [confirDeleteModal, setConfirmDeleteModal] = useState(false)
+  const [excludeButtonIsDisabled, setExcludeButtonIsDisabled] = useState(true)
 
   const { projectId } = useParams<RouterParams>()
 
   const capturedProjectId = projectId || ''
 
-  const { register, setValue, handleSubmit, getValues } = useForm()
+  const { register, setValue, handleSubmit, getValues, watch } = useForm()
   const { project } = useGetProjectById(capturedProjectId)
   const { deleteProject } = useDeleteProject()
   const { handleUpdateProjects } = useContext(TasksContext)
@@ -92,6 +100,16 @@ export function ProjectSettings() {
     }
   }, [capturedProjectId, deleteProject, handleUpdateProjects, navigate])
 
+  const confirmNameToDeleteInput = watch('confirmNameToDelete')
+
+  useEffect(() => {
+    if (confirmNameToDeleteInput === project?.title) {
+      setExcludeButtonIsDisabled(false)
+    } else {
+      setExcludeButtonIsDisabled(true)
+    }
+  }, [confirmNameToDeleteInput, project?.title])
+
   return (
     <>
       <Container>
@@ -133,15 +151,60 @@ export function ProjectSettings() {
             </FormFooter>
           </form>
         </EditProjectArea>
-        <ExcludeProjectButton onClick={handleDeleteProject}>
-          <div>
-            <Trash size={20} />
-            <span>Excluir Projeto</span>
-          </div>
-          <span>
-            Isso exluirá o projeto e todas as tarefas relacionadas a ele.
-          </span>
-        </ExcludeProjectButton>
+        <Dialog.Root
+          open={confirDeleteModal}
+          onOpenChange={setConfirmDeleteModal}
+        >
+          <Dialog.Trigger asChild>
+            <ExcludeProjectButton>
+              <div>
+                <Trash size={20} />
+                <span>Excluir Projeto</span>
+              </div>
+              <span>
+                Isso exluirá o projeto e todas as tarefas relacionadas a ele.
+              </span>
+            </ExcludeProjectButton>
+          </Dialog.Trigger>
+
+          <Dialog.Portal>
+            <DialogOverlay />
+            <DialogContent>
+              <Dialog.Title>⚠️ - Atenção!</Dialog.Title>
+              <ExcludeMessage>
+                <span>
+                  Excluir este projeto inclui excluir todas as tarefas
+                  relacionadas a ele! <strong>Esta Ação é irreversível!</strong>
+                </span>
+              </ExcludeMessage>
+              <LabelInput>
+                <span>
+                  Digite <strong>{project?.title}</strong> para liberar o botão
+                  de excluir.
+                </span>
+                <input
+                  type="text"
+                  placeholder="Nome do Projeto"
+                  {...register('confirmNameToDelete')}
+                />
+              </LabelInput>
+              <Footer>
+                <CancelButton
+                  type="button"
+                  onClick={() => setConfirmDeleteModal(false)}
+                >
+                  Cancelar
+                </CancelButton>
+                <SubmitButton
+                  disabled={excludeButtonIsDisabled}
+                  onClick={() => handleDeleteProject()}
+                >
+                  Excluir Projeto
+                </SubmitButton>
+              </Footer>
+            </DialogContent>
+          </Dialog.Portal>
+        </Dialog.Root>
       </Container>
       <ToastContainer />
     </>

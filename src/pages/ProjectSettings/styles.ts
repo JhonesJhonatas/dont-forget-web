@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import * as Dialog from '@radix-ui/react-dialog'
 
 export const Container = styled.div`
   display: flex;
@@ -101,6 +102,12 @@ export const SubmitButton = styled.button`
   &:hover {
     background-color: ${(props) => props.theme.enphasisHover};
   }
+
+  &:disabled {
+    background-color: ${(props) => props.theme.cardBgPrimary};
+    color: ${(props) => props.theme.cardBgSecondary};
+    cursor: not-allowed;
+  }
 `
 
 export const ExcludeProjectButton = styled.button`
@@ -130,6 +137,63 @@ export const ExcludeProjectButton = styled.button`
 
   &:hover {
     background-color: ${(props) => props.theme.error};
+    color: ${(props) => props.theme.textPrimary};
+  }
+`
+
+export const DialogOverlay = styled(Dialog.Overlay)`
+  background-color: rgba(0 0 0 / 0.75);
+  position: fixed;
+  inset: 0;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+`
+
+export const DialogContent = styled(Dialog.Content)`
+  background-color: ${(props) => props.theme.cardBgSecondary};
+  border-radius: 6px;
+  box-shadow:
+    hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  position: fixed;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40rem;
+  padding: 2rem;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`
+
+export const Footer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  justify-content: end;
+`
+
+export const ExcludeMessage = styled.div`
+  background-color: ${(props) => props.theme.error};
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+`
+
+export const LabelInput = styled.label`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  input {
+    border: 1px solid ${(props) => props.theme.borderCard};
+    outline: none;
+    background-color: ${(props) => props.theme.cardBgPrimary};
+    padding: 0.75rem;
+    border-radius: 6px;
     color: ${(props) => props.theme.textPrimary};
   }
 `
