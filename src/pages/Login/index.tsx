@@ -7,11 +7,12 @@ import {
   InputElement,
   SubmitButton,
   LogoArea,
+  PasswordInputArea,
 } from './styles'
 import taskModel from '../../assets/imgs/taskModel.svg'
-import { CaretRight } from '@phosphor-icons/react'
+import { CaretRight, Eye, EyeClosed } from '@phosphor-icons/react'
 import { useForm } from 'react-hook-form'
-import { useCallback, useContext, useEffect } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import dontForgetWhiteLogo from '../../assets/imgs/dontForget-white.svg'
 import 'react-toastify/dist/ReactToastify.css'
@@ -29,6 +30,8 @@ const loginFormSchema = z.object({
 type LoginFormSchema = z.infer<typeof loginFormSchema>
 
 export function Login() {
+  const [passwordType, setPasswordType] = useState('password')
+
   const {
     handleSubmit,
     register,
@@ -78,6 +81,15 @@ export function Login() {
     navigate('/create-user')
   }, [navigate])
 
+  const handleToglePasswordView = useCallback((action: string) => {
+    if (action === 'hide') {
+      setPasswordType('password')
+    }
+    if (action === 'show') {
+      setPasswordType('text')
+    }
+  }, [])
+
   return (
     <>
       <Container>
@@ -97,13 +109,25 @@ export function Login() {
               />
             </InputElement>
             <InputElement>
-              Senha:
-              <input
-                type="password"
-                placeholder="**********"
-                {...register('password')}
-                required
-              />
+              <PasswordInputArea>
+                <input
+                  type={passwordType}
+                  placeholder="******"
+                  {...register('password')}
+                  required
+                />
+                {passwordType === 'password' ? (
+                  <EyeClosed
+                    size={20}
+                    onClick={() => handleToglePasswordView('show')}
+                  />
+                ) : (
+                  <Eye
+                    size={20}
+                    onClick={() => handleToglePasswordView('hide')}
+                  />
+                )}
+              </PasswordInputArea>
             </InputElement>
 
             <SubmitButton type="submit" disabled={isSubmitting}>

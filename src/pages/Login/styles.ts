@@ -46,6 +46,7 @@ export const InputElement = styled.label`
   gap: 0.25rem;
 
   input {
+    width: 100%;
     border-radius: 6px;
     outline: 0;
     height: 1.8rem;
@@ -57,6 +58,19 @@ export const InputElement = styled.label`
     &:focus {
       outline: 2px solid ${(props) => props.theme.enphasis};
     }
+  }
+`
+
+export const PasswordInputArea = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: end;
+
+  svg {
+    cursor: pointer;
+    position: absolute;
+    margin-right: 0.5rem;
   }
 `
 
