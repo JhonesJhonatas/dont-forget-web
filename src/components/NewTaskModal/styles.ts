@@ -56,7 +56,7 @@ export const MaturityPicker = styled.input`
   }
 `
 
-export const DialogClose = styled(Dialog.Close)`
+export const DialogClose = styled.div`
   border: none;
   outline: none;
   background-color: transparent;
