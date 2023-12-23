@@ -33,6 +33,34 @@ export const DialogContent = styled(Dialog.Content)`
   gap: 1.5rem;
 `
 
+export const DialogConfirmDeleteContent = styled(Dialog.Content)`
+  width: 30vw;
+  height: fit-content;
+  padding: 2rem;
+  background-color: ${(props) => props.theme.cardBgSecondary};
+  border-radius: 6px;
+  box-shadow:
+    hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  position: fixed;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  span {
+    background-color: ${(props) => props.theme.error};
+    color: ${(props) => props.theme.textPrimary};
+    padding: 0.5rem;
+    border-radius: 6px;
+  }
+`
+
 export const ModalHeader = styled.div`
   display: flex;
   align-items: center;
