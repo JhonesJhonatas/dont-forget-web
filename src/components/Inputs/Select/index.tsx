@@ -11,12 +11,14 @@ interface SelectProps {
   options: OptionsSchema[]
   name: string
   required?: boolean
+  disabled?: boolean
 }
 
 export function Select({
   label,
   options,
   name,
+  disabled,
   required = false,
 }: SelectProps) {
   const { register } = useFormContext()
@@ -24,7 +26,7 @@ export function Select({
   return (
     <StyledLabel>
       <span>{label || null}</span>
-      <select {...register(name)} required={required}>
+      <select {...register(name)} required={required} disabled={disabled}>
         {options.map((option) => {
           return (
             <option key={option.value} value={option.value}>

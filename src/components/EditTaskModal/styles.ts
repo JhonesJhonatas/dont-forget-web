@@ -5,6 +5,10 @@ interface ConcludeOptionProps {
   isComplete?: boolean
 }
 
+interface CreateTaskButtonPops {
+  disabled?: boolean
+}
+
 export const DialogOverlay = styled(Dialog.Overlay)`
   background-color: rgba(0 0 0 / 0.75);
   position: fixed;
@@ -116,6 +120,37 @@ export const ConcludeOption = styled.div<ConcludeOptionProps>`
   }
 `
 
+export const UndoComletedTaskOption = styled.div`
+  border: 1.5px solid ${(props) => props.theme.enphasis};
+  padding: 0.25rem;
+  border-radius: 60px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  cursor: pointer;
+  transition: all 0.4s ease-in-out;
+
+  span {
+    display: none;
+    margin-left: 0.5rem;
+  }
+
+  svg {
+    color: ${(props) => props.theme.enphasis};
+  }
+
+  &:hover {
+    background-color: ${(props) => props.theme.enphasis};
+    span {
+      display: flex;
+    }
+    svg {
+      color: ${(props) => props.theme.textPrimary};
+    }
+  }
+`
+
 export const DeleteOption = styled.div`
   border: 1.5px solid ${(props) => props.theme.error};
   padding: 0.25rem;
@@ -213,7 +248,7 @@ export const CancelButton = styled.button`
   cursor: pointer;
 `
 
-export const CreateTaskButton = styled.button`
+export const CreateTaskButton = styled.button<CreateTaskButtonPops>`
   border: 0;
   background-color: ${(props) => props.theme.enphasis};
   color: ${(props) => props.theme.textPrimary};
@@ -233,5 +268,11 @@ export const CreateTaskButton = styled.button`
 
   &:hover {
     background-color: ${(props) => props.theme.enphasisHover};
+  }
+
+  &:disabled {
+    background-color: ${(props) => props.theme.cardBgPrimary};
+    color: ${(props) => props.theme.background};
+    cursor: not-allowed;
   }
 `
