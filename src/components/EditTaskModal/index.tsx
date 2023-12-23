@@ -16,13 +16,17 @@ import {
   TaskIformations,
   TaskOptions,
   TaskTitleInput,
+  UndoComletedTaskOption,
 } from './styles'
-import { CheckCircle, TrashSimple, X } from '@phosphor-icons/react'
-import { useContext, useState } from 'react'
+import {
+  ArrowCounterClockwise,
+  CheckCircle,
+  TrashSimple,
+  X,
+} from '@phosphor-icons/react'
+import { useContext, useMemo, useState } from 'react'
 import { TasksContext } from '../../contexts/TaskContext'
-
 import { string, z } from 'zod'
-
 import { Select } from '../Inputs/Select'
 import { DatePicker } from '../Inputs/DatePicker'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -63,6 +67,7 @@ type EditFormSchema = z.infer<typeof editFormSchema>
 export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
   const [confirmDeleteModalIsOpen, setConfirmDeleteModalIsOpen] =
     useState(false)
+  const thisTaskIsConcluded = task.status === 'concluded'
 
   const defaultValues = {
     title: task.title,
@@ -76,7 +81,8 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
   const methods = useForm<EditFormSchema>({
     values: defaultValues,
   })
-  const { allProjects, handleUpdateOpenedTasks } = useContext(TasksContext)
+  const { allProjects, handleUpdateOpenedTasks, handleUpdateCompletedTasks } =
+    useContext(TasksContext)
   const { notify } = useNotify()
 
   const projectOptios = allProjects.map((project) => {
@@ -86,14 +92,19 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
     }
   })
 
-  const statusOptions = [
-    { label: 'Em Aberto', value: 'toDo' },
-    { label: 'StandBy', value: 'standby' },
-    { label: 'Em Andamento', value: 'inProgress' },
-    { label: 'Aprovação', value: 'approval' },
-    { label: 'Pagamento', value: 'payment' },
-    { label: 'Concluída', value: 'concluded' },
-  ]
+  const statusOptions = useMemo(() => {
+    if (thisTaskIsConcluded) {
+      return [{ label: 'Concluída', value: 'concluded' }]
+    }
+
+    return [
+      { label: 'Em Aberto', value: 'toDo' },
+      { label: 'StandBy', value: 'standby' },
+      { label: 'Em Andamento', value: 'inProgress' },
+      { label: 'Aprovação', value: 'approval' },
+      { label: 'Pagamento', value: 'payment' },
+    ]
+  }, [thisTaskIsConcluded])
 
   const priorityOptions = [
     { label: 'Baixa', value: 'low' },
@@ -119,6 +130,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
 
         handleCloseModal()
         handleUpdateOpenedTasks()
+        handleUpdateCompletedTasks()
         notify({ type: 'sucess', message: 'Tarefa atualizada com sucesso!' })
       } catch (err) {
         notify({ type: 'error', message: err as string })
@@ -144,6 +156,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
 
         handleCloseModal()
         handleUpdateOpenedTasks()
+        handleUpdateCompletedTasks()
         notify({ type: 'sucess', message: 'Tarefa concluída com sucesso!' })
       } catch (err) {
         notify({ type: 'error', message: err as string })
@@ -151,12 +164,38 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
     },
   )
 
+  const handleUndoCompletedTask = methods.handleSubmit(async () => {
+    try {
+      await api.post('/tasks/undo-concluded-task-by-id', {
+        completedTaskId: task.id,
+      })
+
+      handleCloseModal()
+      handleUpdateOpenedTasks()
+      handleUpdateCompletedTasks()
+      notify({ type: 'sucess', message: 'Conclusão desfeita com sucesso!' })
+    } catch (err) {
+      notify({ type: 'error', message: err as string })
+    }
+  })
+
   const handleDeleteTask = methods.handleSubmit(async () => {
     try {
+      if (thisTaskIsConcluded) {
+        await api.delete(`/tasks/delete-concluded-task-by-id/${task.id}`)
+
+        handleCloseModal()
+        handleUpdateOpenedTasks()
+        handleUpdateCompletedTasks()
+        notify({ type: 'sucess', message: 'Tarefa excluída com sucesso!' })
+
+        return
+      }
       await api.delete(`/tasks/delete-opened-task-by-id/${task.id}`)
 
       handleCloseModal()
       handleUpdateOpenedTasks()
+      handleUpdateCompletedTasks()
       notify({ type: 'sucess', message: 'Tarefa excluída com sucesso!' })
     } catch (err) {
       notify({ type: 'error', message: err as string })
@@ -176,33 +215,48 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
                   options={projectOptios}
                   name="projectId"
                   required={true}
+                  disabled={thisTaskIsConcluded}
                 />
-                <Select label="Status:" options={statusOptions} name="status" />
+                <Select
+                  label="Status:"
+                  options={statusOptions}
+                  name="status"
+                  disabled={thisTaskIsConcluded}
+                />
                 <Select
                   label="Prioridade:"
                   options={priorityOptions}
                   name="priority"
                   required={true}
+                  disabled={thisTaskIsConcluded}
                 />
                 <DatePicker
                   label="Vencimento:"
                   name="maturity"
+                  disabled={thisTaskIsConcluded}
                   required={true}
                 />
               </TaskIformations>
               <TaskOptions>
                 <TaskControllers>
-                  <ConcludeOption onClick={handleConcludeTask}>
-                    <span>Concluir Task</span>
-                    <CheckCircle size={24} />
-                  </ConcludeOption>
+                  {!thisTaskIsConcluded ? (
+                    <ConcludeOption onClick={handleConcludeTask}>
+                      <span>Concluir Tarefa</span>
+                      <CheckCircle size={24} />
+                    </ConcludeOption>
+                  ) : (
+                    <UndoComletedTaskOption onClick={handleUndoCompletedTask}>
+                      <span>Desfazer Conclusão</span>
+                      <ArrowCounterClockwise size={24} />
+                    </UndoComletedTaskOption>
+                  )}
                   <Dialog.Root
                     open={confirmDeleteModalIsOpen}
                     onOpenChange={setConfirmDeleteModalIsOpen}
                   >
                     <Dialog.Trigger asChild>
                       <DeleteOption>
-                        <span>Excluir Task</span>
+                        <span>Excluir Tarefa</span>
                         <TrashSimple size={24} />
                       </DeleteOption>
                     </Dialog.Trigger>
@@ -240,22 +294,31 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
                 type="text"
                 placeholder="Adicione um título"
                 {...methods.register('title')}
+                disabled={thisTaskIsConcluded}
               />
               <TaskDescriptionInput
                 rows={15}
-                placeholder="Adicione uma descrição"
+                placeholder={
+                  thisTaskIsConcluded
+                    ? 'Este projeto não teve uma descrição'
+                    : 'Adicione uma descrição'
+                }
                 {...methods.register('description')}
+                disabled={thisTaskIsConcluded}
               />
             </ModalContent>
             <ModalFooter>
               <CancelButton
+                type="button"
                 onClick={() => {
                   handleCloseModal()
                 }}
               >
-                Cancelar
+                Fechar
               </CancelButton>
-              <CreateTaskButton>Salvar</CreateTaskButton>
+              <CreateTaskButton type="submit" disabled={thisTaskIsConcluded}>
+                Salvar
+              </CreateTaskButton>
             </ModalFooter>
           </DialogContent>
         </form>
