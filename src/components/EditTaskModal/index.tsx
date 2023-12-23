@@ -24,7 +24,7 @@ import {
   TrashSimple,
   X,
 } from '@phosphor-icons/react'
-import { useContext, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
 import { TasksContext } from '../../contexts/TaskContext'
 import { string, z } from 'zod'
 import { Select } from '../Inputs/Select'
@@ -137,6 +137,11 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
       }
     },
   )
+
+  const handleCloseThisModal = useCallback(() => {
+    methods.reset()
+    handleCloseModal()
+  }, [handleCloseModal, methods])
 
   const handleConcludeTask = methods.handleSubmit(
     async (data: EditFormSchema) => {
@@ -284,7 +289,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
                     </Dialog.Portal>
                   </Dialog.Root>
                 </TaskControllers>
-                <DialogClose>
+                <DialogClose onClick={handleCloseThisModal}>
                   <X size={20} />
                 </DialogClose>
               </TaskOptions>
@@ -308,12 +313,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
               />
             </ModalContent>
             <ModalFooter>
-              <CancelButton
-                type="button"
-                onClick={() => {
-                  handleCloseModal()
-                }}
-              >
+              <CancelButton type="button" onClick={handleCloseThisModal}>
                 Fechar
               </CancelButton>
               <CreateTaskButton type="submit" disabled={thisTaskIsConcluded}>
