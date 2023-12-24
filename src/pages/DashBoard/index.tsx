@@ -32,8 +32,6 @@ import {
   parseISO,
 } from 'date-fns'
 import { TasksLoading } from './components/TasksLoading'
-import { AuthContext } from '../../contexts/AuthContext'
-import { useNavigate } from 'react-router-dom'
 import { TaskTr } from '../../components/TaskTr'
 import { useSeparateOpenedTasksByStatus } from '../../hooks/tasks/useSeparateOpenedTasksByStatus'
 import 'react-toastify/dist/ReactToastify.css'
@@ -43,16 +41,6 @@ import { ResumeCard } from '../../components/ResumeCard'
 import emptyImage from '../../assets/imgs/emptyTasksVector.svg'
 
 export function DashBoard() {
-  const navigate = useNavigate()
-
-  const { authenticated } = useContext(AuthContext)
-
-  useEffect(() => {
-    if (!authenticated) {
-      navigate('/')
-    }
-  }, [authenticated, navigate])
-
   const [tasksForToday, setTasksForToday] = useState<OpenedTask[]>([])
   const [tasksForTomorrow, setTasksForTomorrow] = useState<OpenedTask[]>([])
   const [lateTasks, setLateTasks] = useState<OpenedTask[]>([])
