@@ -4,8 +4,10 @@ import {
   DashBoardHeader,
   EmptyTasksMessage,
   FlexArea,
+  InitialInfo,
   ListViewTable,
   ListViewTableBody,
+  NotificationsArea,
   TasksArea,
   TextHeader,
   TitleOfBox,
@@ -41,6 +43,7 @@ import { ToastContainer } from 'react-toastify'
 import { OpenedTask, TasksContext } from '../../contexts/TaskContext'
 import { ResumeCard } from '../../components/ResumeCard'
 import emptyImage from '../../assets/imgs/emptyTasksVector.svg'
+import { Bell } from '@phosphor-icons/react'
 
 export function DashBoard() {
   const navigate = useNavigate()
@@ -256,13 +259,18 @@ export function DashBoard() {
     <>
       <Container>
         <DashBoardHeader>
-          <WelcomeIcon>
-            <span>👋</span>
-          </WelcomeIcon>
-          <TextHeader>
-            <WelcomePhrase>Olá, {localStorage.getItem('name')}</WelcomePhrase>
-            <span>{messageForToday}</span>
-          </TextHeader>
+          <InitialInfo>
+            <WelcomeIcon>
+              <span>👋</span>
+            </WelcomeIcon>
+            <TextHeader>
+              <WelcomePhrase>Olá, {localStorage.getItem('name')}</WelcomePhrase>
+              <span>{messageForToday}</span>
+            </TextHeader>
+          </InitialInfo>
+          <NotificationsArea>
+            <Bell size={24} />
+          </NotificationsArea>
         </DashBoardHeader>
         <CardsArea>
           <ResumeCard amount={toDoTasks.length} status="opened" />

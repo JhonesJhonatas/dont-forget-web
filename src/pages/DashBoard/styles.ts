@@ -14,7 +14,14 @@ export const DashBoardHeader = styled.section`
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
+`
+
+export const InitialInfo = styled.div`
+  display: flex;
+  gap: 0.5;
+  align-items: center;
 `
 
 export const TextHeader = styled.div`
@@ -26,6 +33,15 @@ export const TextHeader = styled.div`
 export const WelcomeIcon = styled.div`
   span {
     font-size: 2.5rem;
+  }
+`
+
+export const NotificationsArea = styled.div`
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
   }
 `
 
