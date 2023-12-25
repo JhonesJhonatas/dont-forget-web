@@ -4,8 +4,11 @@ import {
   DashBoardHeader,
   EmptyTasksMessage,
   FlexArea,
+  InitialInfo,
   ListViewTable,
   ListViewTableBody,
+  NotificationsArea,
+  PoppoverContent,
   TasksArea,
   TextHeader,
   TitleOfBox,
@@ -39,6 +42,8 @@ import { ToastContainer } from 'react-toastify'
 import { OpenedTask, TasksContext } from '../../contexts/TaskContext'
 import { ResumeCard } from '../../components/ResumeCard'
 import emptyImage from '../../assets/imgs/emptyTasksVector.svg'
+import { Bell, BellSlash } from '@phosphor-icons/react'
+import * as Poppover from '@radix-ui/react-popover'
 
 export function DashBoard() {
   const [tasksForToday, setTasksForToday] = useState<OpenedTask[]>([])
@@ -244,13 +249,28 @@ export function DashBoard() {
     <>
       <Container>
         <DashBoardHeader>
-          <WelcomeIcon>
-            <span>👋</span>
-          </WelcomeIcon>
-          <TextHeader>
-            <WelcomePhrase>Olá, {localStorage.getItem('name')}</WelcomePhrase>
-            <span>{messageForToday}</span>
-          </TextHeader>
+          <InitialInfo>
+            <WelcomeIcon>
+              <span>👋</span>
+            </WelcomeIcon>
+            <TextHeader>
+              <WelcomePhrase>Olá, {localStorage.getItem('name')}</WelcomePhrase>
+              <span>{messageForToday}</span>
+            </TextHeader>
+          </InitialInfo>
+          <Poppover.Root>
+            <Poppover.Trigger asChild>
+              <NotificationsArea>
+                <Bell alt="Notifícações" size={24} />
+              </NotificationsArea>
+            </Poppover.Trigger>
+            <Poppover.Portal>
+              <PoppoverContent>
+                <BellSlash size={40} />
+                <span>Você não possui nenhuma notificação.</span>
+              </PoppoverContent>
+            </Poppover.Portal>
+          </Poppover.Root>
         </DashBoardHeader>
         <CardsArea>
           <ResumeCard amount={toDoTasks.length} status="opened" />

@@ -1,5 +1,6 @@
 import hexToRgba from 'hex-to-rgba'
 import styled from 'styled-components'
+import * as Poppover from '@radix-ui/react-popover'
 
 export const Container = styled.div`
   display: flex;
@@ -14,18 +15,54 @@ export const DashBoardHeader = styled.section`
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
+`
+
+export const InitialInfo = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
 `
 
 export const TextHeader = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
 `
 
 export const WelcomeIcon = styled.div`
   span {
     font-size: 2.5rem;
+  }
+`
+
+export const NotificationsArea = styled.div`
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`
+
+export const PoppoverContent = styled(Poppover.Content)`
+  min-width: 20rem;
+  min-height: 10rem;
+  padding: 1rem;
+  background-color: ${(props) => props.theme.cardBgPrimary};
+  border-radius: 6px;
+  outline: none;
+  border: none;
+  margin-right: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 0.75rem;
   }
 `
 
