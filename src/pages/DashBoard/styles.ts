@@ -21,14 +21,13 @@ export const DashBoardHeader = styled.section`
 
 export const InitialInfo = styled.div`
   display: flex;
-  gap: 0.5;
+  gap: 0.5rem;
   align-items: center;
 `
 
 export const TextHeader = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
 `
 
 export const WelcomeIcon = styled.div`
