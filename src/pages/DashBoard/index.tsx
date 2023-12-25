@@ -8,6 +8,7 @@ import {
   ListViewTable,
   ListViewTableBody,
   NotificationsArea,
+  PoppoverContent,
   TasksArea,
   TextHeader,
   TitleOfBox,
@@ -34,8 +35,6 @@ import {
   parseISO,
 } from 'date-fns'
 import { TasksLoading } from './components/TasksLoading'
-import { AuthContext } from '../../contexts/AuthContext'
-import { useNavigate } from 'react-router-dom'
 import { TaskTr } from '../../components/TaskTr'
 import { useSeparateOpenedTasksByStatus } from '../../hooks/tasks/useSeparateOpenedTasksByStatus'
 import 'react-toastify/dist/ReactToastify.css'
@@ -43,19 +42,10 @@ import { ToastContainer } from 'react-toastify'
 import { OpenedTask, TasksContext } from '../../contexts/TaskContext'
 import { ResumeCard } from '../../components/ResumeCard'
 import emptyImage from '../../assets/imgs/emptyTasksVector.svg'
-import { Bell } from '@phosphor-icons/react'
+import { Bell, BellSlash } from '@phosphor-icons/react'
+import * as Poppover from '@radix-ui/react-popover'
 
 export function DashBoard() {
-  const navigate = useNavigate()
-
-  const { authenticated } = useContext(AuthContext)
-
-  useEffect(() => {
-    if (!authenticated) {
-      navigate('/')
-    }
-  }, [authenticated, navigate])
-
   const [tasksForToday, setTasksForToday] = useState<OpenedTask[]>([])
   const [tasksForTomorrow, setTasksForTomorrow] = useState<OpenedTask[]>([])
   const [lateTasks, setLateTasks] = useState<OpenedTask[]>([])
@@ -268,9 +258,19 @@ export function DashBoard() {
               <span>{messageForToday}</span>
             </TextHeader>
           </InitialInfo>
-          <NotificationsArea>
-            <Bell size={24} />
-          </NotificationsArea>
+          <Poppover.Root>
+            <Poppover.Trigger asChild>
+              <NotificationsArea>
+                <Bell alt="Notifícações" size={24} />
+              </NotificationsArea>
+            </Poppover.Trigger>
+            <Poppover.Portal>
+              <PoppoverContent>
+                <BellSlash size={40} />
+                <span>Você não possui nenhuma notificação.</span>
+              </PoppoverContent>
+            </Poppover.Portal>
+          </Poppover.Root>
         </DashBoardHeader>
         <CardsArea>
           <ResumeCard amount={toDoTasks.length} status="opened" />
