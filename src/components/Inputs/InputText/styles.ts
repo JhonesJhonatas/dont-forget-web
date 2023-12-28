@@ -6,7 +6,7 @@ export const Container = styled.div`
   flex-direction: column;
   gap: 0.25rem;
 
-  span {
+  small {
     font-size: 0.75rem;
   }
 

@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
   padding: 2rem;
+  height: 95%;
 
   display: flex;
   flex-direction: column;
@@ -16,8 +17,8 @@ export const Header = styled.div`
 
 export const Avatar = styled.div`
   img {
-    max-width: 10rem;
-    max-height: 10rem;
+    max-width: 6rem;
+    max-height: 6rem;
   }
 `
 
@@ -30,4 +31,33 @@ export const UserInfo = styled.div`
     font-size: 1.5rem;
     font-weight: bold;
   }
+`
+
+export const StyledForm = styled.form`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: space-between;
+`
+
+export const FieldsArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
+
+export const ButtonsArea = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 1rem;
+`
+
+export const FlexArea = styled.div`
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 `

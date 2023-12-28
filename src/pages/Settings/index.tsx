@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Container, MainContainer, Navigation, NavigationItem } from './styles'
-import { User } from '@phosphor-icons/react'
+import { Shield, User } from '@phosphor-icons/react'
 import { ProfileSettings } from './ProfileSettings'
+import { SecuritySettings } from './SecuritySettings'
 
-type CurrentNavigationItem = 'profile'
+type CurrentNavigationItem = 'profile' | 'security'
 
 export function Settings() {
   const [currentNavigationItem, setCurrentNavigationItem] =
@@ -19,6 +20,7 @@ export function Settings() {
   const whatShowInMainContent = useMemo(() => {
     return {
       profile: <ProfileSettings />,
+      security: <SecuritySettings />,
     }
   }, [])
 
@@ -31,6 +33,13 @@ export function Settings() {
         >
           <User />
           <span>Usuário</span>
+        </NavigationItem>
+        <NavigationItem
+          isActive={currentNavigationItem === 'security'}
+          onClick={() => handleSelectNavigationItem('security')}
+        >
+          <Shield />
+          <span>Segurança</span>
         </NavigationItem>
       </Navigation>
       <MainContainer>
