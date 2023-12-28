@@ -33,12 +33,23 @@ export const UserInfo = styled.div`
   }
 `
 
+export const AccountSettings = styled.div`
+  background-color: ${(props) => props.theme.cardBgSecondary};
+  padding: 1rem;
+  border-radius: 6px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
+
+export const FormTitle = styled.span``
+
 export const StyledForm = styled.form`
   height: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  justify-content: space-between;
 `
 
 export const FieldsArea = styled.div`

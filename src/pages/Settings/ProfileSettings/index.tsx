@@ -1,9 +1,11 @@
 import {
+  AccountSettings,
   Avatar,
   ButtonsArea,
   Container,
   FieldsArea,
   FlexArea,
+  FormTitle,
   Header,
   StyledForm,
   UserInfo,
@@ -31,27 +33,34 @@ export function ProfileSettings() {
         </UserInfo>
       </Header>
       <FormProvider {...methods}>
-        <StyledForm>
-          <FieldsArea>
-            <FlexArea>
-              <InputText name="name" label="Nome:" placeholder="Seu Nome" />
-              <InputText name="email" label="Email:" placeholder="Seu Email" />
-            </FlexArea>
-            <FlexArea>
-              <InputText
-                name="role"
-                label="Profissão:"
-                placeholder="Sua Profissão"
-              />
-              <DatePicker name="maturity" label="Data de Nascimento:" />
-            </FlexArea>
-          </FieldsArea>
+        <AccountSettings>
+          <FormTitle>Dados da Conta:</FormTitle>
+          <StyledForm>
+            <FieldsArea>
+              <FlexArea>
+                <InputText name="name" label="Nome:" placeholder="Seu Nome" />
+                <InputText
+                  name="email"
+                  label="Email:"
+                  placeholder="Seu Email"
+                />
+              </FlexArea>
+              <FlexArea>
+                <InputText
+                  name="role"
+                  label="Profissão:"
+                  placeholder="Sua Profissão"
+                />
+                <DatePicker name="maturity" label="Data de Nascimento:" />
+              </FlexArea>
+            </FieldsArea>
 
-          <ButtonsArea>
-            <Button value="Resetar Formulário" typeColor="cancel" />
-            <Button type="submit" value="Salvar" typeColor="sucess" />
-          </ButtonsArea>
-        </StyledForm>
+            <ButtonsArea>
+              <Button value="Resetar Formulário" typeColor="cancel" />
+              <Button type="submit" value="Salvar" typeColor="sucess" />
+            </ButtonsArea>
+          </StyledForm>
+        </AccountSettings>
       </FormProvider>
     </Container>
   )
