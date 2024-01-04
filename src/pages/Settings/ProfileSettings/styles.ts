@@ -43,7 +43,9 @@ export const AccountSettings = styled.div`
   gap: 1rem;
 `
 
-export const FormTitle = styled.span``
+export const FormTitle = styled.span`
+  font-weight: bold;
+`
 
 export const StyledForm = styled.form`
   height: 100%;

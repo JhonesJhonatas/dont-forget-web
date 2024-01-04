@@ -40,7 +40,7 @@ export function NavBar() {
   const [open, setOpen] = useState(false)
   const [newProjectModalOpen, setNewProjectModalOpen] = useState(false)
 
-  const { allProjects } = useContext(TasksContext)
+  const { allProjects, userData } = useContext(TasksContext)
 
   const handleCloseModal = useCallback(() => {
     setOpen(false)
@@ -57,8 +57,8 @@ export function NavBar() {
           <UserInfos>
             <img src={defaultProfilePic} alt="Foto de Perfil" />
             <div>
-              <UserName>{localStorage.getItem('name')}</UserName>
-              <UserEmail>{localStorage.getItem('email')}</UserEmail>
+              <UserName>{userData.name}</UserName>
+              <UserEmail>{userData.email}</UserEmail>
             </div>
           </UserInfos>
           <DropdownMenu.Root>

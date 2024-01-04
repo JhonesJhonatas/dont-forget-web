@@ -23,7 +23,9 @@ export const StyledForm = styled.form`
   justify-content: space-between;
 `
 
-export const FormTitle = styled.span``
+export const FormTitle = styled.span`
+  font-weight: bold;
+`
 
 export const FieldsArea = styled.div`
   display: flex;
