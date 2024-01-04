@@ -92,12 +92,14 @@ function TasksProvider({ children }: TaskProviderProps) {
   const { authenticated } = useContext(AuthContext)
 
   const handleUpdateUserData = useCallback(() => {
-    setUserDataIsLoading(true)
-    api
-      .get('/users/get-user-data')
-      .then((response) => setUserData(response.data))
-      .finally(() => setUserDataIsLoading(false))
-  }, [])
+    if (authenticated) {
+      setUserDataIsLoading(true)
+      api
+        .get('/users/get-user-data')
+        .then((response) => setUserData(response.data))
+        .finally(() => setUserDataIsLoading(false))
+    }
+  }, [authenticated])
 
   useEffect(() => {
     handleUpdateUserData()
