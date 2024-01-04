@@ -10,30 +10,50 @@ import {
   StyledForm,
 } from './styles'
 import { Button } from '../../../components/Button'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+const formSchema = z.object({
+  password: z.string().nonempty(),
+  newPassword: z.string().nonempty(),
+  confirmNewPassword: z.string().nonempty(),
+})
+
+type FormSchema = z.infer<typeof formSchema>
 
 export function SecuritySettings() {
-  const methods = useForm()
+  const methods = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
+  })
 
   return (
     <Container>
       <PasswordArea>
         <FormProvider {...methods}>
           <StyledForm>
-            <FormTitle>Trocar a Senha:</FormTitle>
+            <FormTitle>Alterar senha:</FormTitle>
             <FieldsArea>
               <FlexArea>
-                <InputPassword name="password" label="Senha Atual:" />
-                <InputPassword name="password" label="Nova Senha:" />
-                <InputPassword name="password" label="Confirmação de Senha:" />
+                <InputPassword
+                  name="password"
+                  label="Senha Atual:"
+                  isRequired
+                />
+                <InputPassword name="password" label="Nova Senha:" isRequired />
+                <InputPassword
+                  name="password"
+                  label="Confirmação de Senha:"
+                  isRequired
+                />
               </FlexArea>
             </FieldsArea>
             <ButtonsArea>
-              <Button value="Limpar Formulário" typeColor="cancel" />
-              <Button
-                type="submit"
-                value="Salvar Nova Senha"
-                typeColor="sucess"
-              />
+              <Button typeColor="cancel" type="button">
+                Limpar Formulário
+              </Button>
+              <Button type="submit" typeColor="sucess">
+                Salvar Nova Senha
+              </Button>
             </ButtonsArea>
           </StyledForm>
         </FormProvider>
