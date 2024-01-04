@@ -1,15 +1,19 @@
+import React from 'react'
 import { StyledButton } from './styled'
 
 interface ButtonProps {
-  value: string
   typeColor?: 'sucess' | 'error' | 'alert' | 'cancel'
   type?: 'button' | 'submit'
+  onClick?: () => void
+  children: React.ReactNode
 }
 
-export function Button({ value, typeColor, type = 'button' }: ButtonProps) {
+const Button = ({ typeColor, children, ...rest }: ButtonProps): JSX.Element => {
   return (
-    <StyledButton type={type} typeColor={typeColor}>
-      {value}
+    <StyledButton {...rest} $typeColor={typeColor}>
+      {children}
     </StyledButton>
   )
 }
+
+export { Button }

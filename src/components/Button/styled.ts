@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 
 interface StyledButtonProps {
-  typeColor?: 'sucess' | 'error' | 'alert' | 'cancel'
+  $typeColor?: 'sucess' | 'error' | 'alert' | 'cancel'
 }
 
 export const StyledButton = styled.button<StyledButtonProps>`
@@ -13,7 +13,7 @@ export const StyledButton = styled.button<StyledButtonProps>`
   transition: all 0.2s ease-in-out;
 
   ${(props) =>
-    props.typeColor === 'cancel'
+    props.$typeColor === 'cancel'
       ? css`
           background-color: transparent;
           color: ${(props) => props.theme.borderCard};
@@ -25,7 +25,7 @@ export const StyledButton = styled.button<StyledButtonProps>`
       : null}
 
   ${(props) =>
-    props.typeColor === 'sucess'
+    props.$typeColor === 'sucess'
       ? css`
           background-color: ${(props) => props.theme.sucess};
           color: ${(props) => props.theme.textPrimary};

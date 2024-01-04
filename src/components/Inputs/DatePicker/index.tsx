@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form'
-import { Container } from './styles'
+import { Container, LabelArea, RequiredMessage } from './styles'
 
 interface DatePickerProps {
   label?: string
@@ -18,7 +18,10 @@ export function DatePicker({
 
   return (
     <Container>
-      {label ? <span>{label}</span> : null}
+      <LabelArea>
+        {label ? <small>{label}</small> : null}
+        {required ? <RequiredMessage>*</RequiredMessage> : null}
+      </LabelArea>
       <input
         type="date"
         {...register(name)}
