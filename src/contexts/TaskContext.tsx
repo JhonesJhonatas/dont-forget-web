@@ -9,6 +9,13 @@ import {
 import { AuthContext } from './AuthContext'
 import { api } from '../lib/axios'
 
+interface DefaultUserDataSchema {
+  name: string
+  email: string
+  role: string
+  birthDate: string
+}
+
 export interface Project {
   id: string
   title: string
@@ -59,6 +66,9 @@ interface TasksContextSchema {
   concludedTasksIsLoading: boolean
   allConcludedTasks: ConcludedTask[]
   handleUpdateCompletedTasks: () => void
+  userData: DefaultUserDataSchema
+  userDataIsLoading: boolean
+  handleUpdateUserData: () => void
 }
 
 interface TaskProviderProps {
@@ -68,6 +78,8 @@ interface TaskProviderProps {
 const TasksContext = createContext({} as TasksContextSchema)
 
 function TasksProvider({ children }: TaskProviderProps) {
+  const [userDataIsLoading, setUserDataIsLoading] = useState(false)
+  const [userData, setUserData] = useState({} as DefaultUserDataSchema)
   const [projectsIsLoading, setProjectsIsLoading] = useState(true)
   const [allProjects, setAllProjects] = useState<Project[]>([])
   const [concludedTasksIsLoading, setConcludedTasksIsLoading] = useState(true)
@@ -78,6 +90,18 @@ function TasksProvider({ children }: TaskProviderProps) {
   const [allOpenedTasks, setAllOpenedTasks] = useState<OpenedTask[]>([])
 
   const { authenticated } = useContext(AuthContext)
+
+  const handleUpdateUserData = useCallback(() => {
+    setUserDataIsLoading(true)
+    api
+      .get('/users/get-user-data')
+      .then((response) => setUserData(response.data))
+      .finally(() => setUserDataIsLoading(false))
+  }, [])
+
+  useEffect(() => {
+    handleUpdateUserData()
+  }, [handleUpdateUserData])
 
   const handleUpdateProjects = useCallback(() => {
     setProjectsIsLoading(true)
@@ -119,6 +143,9 @@ function TasksProvider({ children }: TaskProviderProps) {
   return (
     <TasksContext.Provider
       value={{
+        userData,
+        userDataIsLoading,
+        handleUpdateUserData,
         allOpenedTasks,
         openedTasksIsLoading,
         handleUpdateOpenedTasks,

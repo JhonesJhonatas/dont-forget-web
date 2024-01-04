@@ -6,6 +6,7 @@ export const darkTheme = {
   cardBgSecondary: '#27272A',
   borderCard: '#52525B',
   sucess: '#22C55E',
+  sucessHover: '#16a34a',
   error: '#dc2626',
   errorHover: '#ef4444',
   danger: '#F97316',
