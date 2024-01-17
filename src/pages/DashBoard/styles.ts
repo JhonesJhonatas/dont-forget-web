@@ -1,6 +1,5 @@
 import hexToRgba from 'hex-to-rgba'
 import styled from 'styled-components'
-import * as Poppover from '@radix-ui/react-popover'
 
 export const Container = styled.div`
   display: flex;
@@ -39,25 +38,30 @@ export const WelcomeIcon = styled.div`
 export const NotificationsArea = styled.div`
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  background-color: ${(props) => hexToRgba(props.theme.borderCard, 0.4)};
+  padding: 0.5rem;
+  border-radius: 60px;
 
   &:hover {
-    transform: scale(1.1);
+    background-color: ${(props) => hexToRgba(props.theme.borderCard, 0.6)};
   }
 `
 
-export const PoppoverContent = styled(Poppover.Content)`
-  min-width: 20rem;
-  min-height: 10rem;
-  padding: 1rem;
-  background-color: ${(props) => props.theme.cardBgPrimary};
-  border-radius: 6px;
-  outline: none;
-  border: none;
-  margin-right: 2rem;
+export const NotificationsCount = styled.div`
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: ${(props) => props.theme.error};
+  padding: 0.25rem;
+  border-radius: 60px;
+
+  position: absolute;
+  z-index: 1;
+  margin-top: -30px;
+  right: 40px;
 
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
   align-items: center;
   justify-content: center;
 
