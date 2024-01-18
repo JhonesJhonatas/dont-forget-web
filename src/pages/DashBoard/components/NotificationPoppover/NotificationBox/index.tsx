@@ -1,6 +1,6 @@
 import { Checks } from '@phosphor-icons/react'
 import { Container, Content, ReadButton, Title } from './styles'
-import { NotificationsSchema } from '../../../../../hooks/user/useNotifications'
+import { NotificationsSchema } from '../../../../../hooks/notifications/useNotifications'
 import { useCallback } from 'react'
 import { useNotify } from '../../../../../hooks/useNotify'
 import { api } from '../../../../../lib/axios'

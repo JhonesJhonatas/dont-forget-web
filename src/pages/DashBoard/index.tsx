@@ -45,7 +45,7 @@ import emptyImage from '../../assets/imgs/emptyTasksVector.svg'
 import { Bell } from '@phosphor-icons/react'
 import * as Poppover from '@radix-ui/react-popover'
 import { NotificationPoppover } from './components/NotificationPoppover'
-import { useNotifications } from '../../hooks/user/useNotifications'
+import { useNotifications } from '../../hooks/notifications/useNotifications'
 
 export function DashBoard() {
   const [tasksForToday, setTasksForToday] = useState<OpenedTask[]>([])
