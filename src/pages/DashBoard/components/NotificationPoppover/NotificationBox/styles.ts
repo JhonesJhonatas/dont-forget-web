@@ -6,7 +6,7 @@ interface ContainerProps {
 }
 
 export const Container = styled.div<ContainerProps>`
-  width: 100%;
+  max-width: 30rem;
   display: flex;
   align-items: center;
   gap: 1.5rem;

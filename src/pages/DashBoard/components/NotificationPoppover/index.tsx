@@ -3,7 +3,7 @@ import * as Poppover from '@radix-ui/react-popover'
 import { NoNotificationsMessage, PoppoverContent } from './styles'
 import { useMemo } from 'react'
 import { NotificationBox } from './NotificationBox'
-import { NotificationsSchema } from '../../../../hooks/user/useNotifications'
+import { NotificationsSchema } from '../../../../hooks/notifications/useNotifications'
 
 interface NotificationPoppoverProps {
   notifications: NotificationsSchema[]
