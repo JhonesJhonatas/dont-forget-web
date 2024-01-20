@@ -23,22 +23,53 @@ interface AuthProviderProps {
   children: ReactNode
 }
 
+interface HandleRefreshTokenProps {
+  currentToken: string
+  email: string
+}
+
 const AuthContext = createContext({} as AuthContextSchema)
 
 function AuthProvider({ children }: AuthProviderProps) {
   const [authenticated, setAuthenticated] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
+  const handleRefreshToken = useCallback(
+    async ({ currentToken, email }: HandleRefreshTokenProps) => {
+      try {
+        const {
+          data: {
+            token,
+            user: { name },
+          },
+        } = await api.post('/users/refresh-token', { currentToken, email })
 
-    if (token) {
-      api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`
-      setAuthenticated(true)
+        if (token) {
+          localStorage.setItem('token', token)
+          localStorage.setItem('email', email)
+          localStorage.setItem('name', name)
+          api.defaults.headers.Authorization = `Bearer ${token}`
+          setAuthenticated(true)
+        }
+
+        return true
+      } catch (err) {
+        return false
+      }
+    },
+    [],
+  )
+
+  useEffect(() => {
+    const currentToken = localStorage.getItem('token')
+    const email = localStorage.getItem('email')
+
+    if (currentToken && email) {
+      handleRefreshToken({ currentToken, email })
     }
 
     setLoading(false)
-  }, [])
+  }, [handleRefreshToken])
 
   const handleLogIn = useCallback(
     async ({ email, password }: HandleLogInProps) => {
@@ -54,7 +85,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         })
 
         if (token) {
-          localStorage.setItem('token', JSON.stringify(token))
+          localStorage.setItem('token', token)
           localStorage.setItem('email', email)
           localStorage.setItem('name', name)
           api.defaults.headers.Authorization = `Bearer ${token}`
