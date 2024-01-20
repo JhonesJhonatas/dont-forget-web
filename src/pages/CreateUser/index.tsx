@@ -61,7 +61,7 @@ export function CreateUser() {
       })
       if (createdUser) {
         notify({ type: 'sucess', message: 'Usuário Cadastrado com sucesso' })
-        localStorage.setItem('email', stepUserData.email)
+        localStorage.setItem('emailToLogin', stepUserData.email)
         navigate('/')
       }
     },
