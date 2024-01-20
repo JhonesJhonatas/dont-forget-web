@@ -35,17 +35,14 @@ function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true)
 
   const handleRefreshToken = useCallback(
-    async ({ currentToken, email: emailToLogin }: HandleRefreshTokenProps) => {
+    async ({ currentToken, email }: HandleRefreshTokenProps) => {
       try {
         const {
           data: {
             token,
-            user: { name, email },
+            user: { name },
           },
-        } = await api.post('/users/refresh-token', {
-          currentToken,
-          email: emailToLogin,
-        })
+        } = await api.post('/users/refresh-token', { currentToken, email })
 
         if (token) {
           localStorage.setItem('token', token)
@@ -75,15 +72,15 @@ function AuthProvider({ children }: AuthProviderProps) {
   }, [handleRefreshToken])
 
   const handleLogIn = useCallback(
-    async ({ email: emailToLogin, password }: HandleLogInProps) => {
+    async ({ email, password }: HandleLogInProps) => {
       try {
         const {
           data: {
             token,
-            user: { name, email },
+            user: { name },
           },
         } = await api.post('/users/session', {
-          email: emailToLogin,
+          email,
           password,
         })
 

@@ -51,11 +51,10 @@ export function Login() {
   }, [authenticated, navigate])
 
   useEffect(() => {
-    const emailToLogin = localStorage.getItem('email')
+    const emailToLogin = localStorage.getItem('emailToLogin')
 
     if (emailToLogin) {
       setValue('email', emailToLogin)
-      localStorage.removeItem('email')
     }
   }, [setValue])
 
