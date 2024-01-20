@@ -51,7 +51,7 @@ export function Login() {
   }, [authenticated, navigate])
 
   useEffect(() => {
-    const emailToLogin = localStorage.getItem('emailToLogin')
+    const emailToLogin = localStorage.getItem('email')
 
     if (emailToLogin) {
       setValue('email', emailToLogin)
