@@ -45,6 +45,10 @@ export const Content = styled.div`
   flex-direction: column;
   gap: 0.5rem;
   align-items: start;
+
+  span {
+    text-align: justify;
+  }
 `
 
 export const Title = styled.p`

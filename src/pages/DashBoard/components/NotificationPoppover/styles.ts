@@ -3,6 +3,7 @@ import * as Poppover from '@radix-ui/react-popover'
 
 export const PoppoverContent = styled(Poppover.Content)`
   min-width: 20rem;
+  max-width: 40rem;
   max-height: 36rem;
   padding: 1rem;
   background-color: ${(props) => props.theme.cardBgPrimary};
