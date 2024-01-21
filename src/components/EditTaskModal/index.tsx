@@ -33,6 +33,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { format, formatISO, parseISO } from 'date-fns'
 import { useNotify } from '../../hooks/useNotify'
 import { api } from '../../lib/axios'
+import { Timer } from '../Timer'
 
 interface Task {
   id: string
@@ -241,6 +242,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
                   disabled={thisTaskIsConcluded}
                   required={true}
                 />
+                <Timer />
               </TaskIformations>
               <TaskOptions>
                 <TaskControllers>
