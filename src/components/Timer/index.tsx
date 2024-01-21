@@ -15,12 +15,15 @@ export function Timer() {
   const handleToggleTimer = useCallback(() => {
     if (!started) {
       setStarted(true)
+      setInterval(() => {
+        setCurrentTime(() => currentTime + 1)
+      }, 1000)
     }
 
     if (started) {
       setStarted(false)
     }
-  }, [started])
+  }, [currentTime, started])
 
   return (
     <Container>
