@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
-export const StepUserContainer = styled.div`
+export const FooterContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 1rem;
 `

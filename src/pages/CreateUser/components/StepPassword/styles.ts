@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const StepUserContainer = styled.div`
+export const StepPasswordContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;

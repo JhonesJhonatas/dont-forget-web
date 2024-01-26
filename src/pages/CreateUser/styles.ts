@@ -1,20 +1,27 @@
 import styled from 'styled-components'
 
-export const Container = styled.div`
-  max-width: 55vw;
-  max-height: 70vh;
+export const CreateUserContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+export const BoxLogin = styled.div`
   background-color: ${(props) => props.theme.cardBgSecondary};
-  border: 1px solid ${(props) => props.theme.cardBgPrimary};
+  border: 1px solid ${(props) => props.theme.borderCard};
+  width: 32rem;
   border-radius: 6px;
-  overflow: hidden;
   padding: 2rem;
 
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
+`
 
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+export const LabelInput = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 `
