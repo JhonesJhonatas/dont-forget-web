@@ -1,19 +1,12 @@
-import React from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import { StyledButton } from './styled'
 
-interface ButtonProps {
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   typeColor?: 'sucess' | 'error' | 'alert' | 'cancel'
-  type?: 'button' | 'submit'
-  onClick?: () => void
-  children: React.ReactNode
 }
 
-const Button = ({ typeColor, children, ...rest }: ButtonProps): JSX.Element => {
-  return (
-    <StyledButton {...rest} $typeColor={typeColor}>
-      {children}
-    </StyledButton>
-  )
+const Button = ({ typeColor, ...rest }: ButtonProps): JSX.Element => {
+  return <StyledButton {...rest} $typeColor={typeColor} />
 }
 
 export { Button }

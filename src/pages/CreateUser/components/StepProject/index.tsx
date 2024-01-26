@@ -1,76 +1,30 @@
-import { CheckCircle } from '@phosphor-icons/react'
-import { StepProjectDataSchema } from '../..'
-import { Container, InputElement, SubmitButton } from './styles'
-import { useCallback, useEffect } from 'react'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useFormContext } from 'react-hook-form'
+import { CreateUserFormSchema } from '../..'
+import { InputText } from '../../../../components/Inputs/InputText'
+import { StepProjectContainer } from './styles'
 
-interface StepProjectProps {
-  onSubmit: (params: StepProjectDataSchema) => void
-}
-
-const stepProjectFormSchema = z.object({
-  projectName: z
-    .string()
-    .min(3, { message: 'O nome do projeto deve possuir ao menos 3 digitos.' }),
-  projectColor: z.string(),
-  projectDescription: z.string(),
-})
-
-type StepProjectFormSchema = z.infer<typeof stepProjectFormSchema>
-
-export function StepProject({ onSubmit }: StepProjectProps) {
+function StepProject() {
   const {
-    register,
-    handleSubmit,
-    setValue,
     formState: { errors },
-  } = useForm<StepProjectFormSchema>({
-    resolver: zodResolver(stepProjectFormSchema),
-  })
-
-  const handleCreateUser = useCallback(
-    ({
-      projectColor,
-      projectDescription,
-      projectName,
-    }: StepProjectFormSchema) => {
-      onSubmit({ projectName, projectColor, projectDescription })
-    },
-    [onSubmit],
-  )
-
-  useEffect(() => {
-    setValue('projectColor', '#06b6d4')
-  }, [setValue])
+  } = useFormContext<CreateUserFormSchema>()
 
   return (
-    <Container>
-      <form onSubmit={handleSubmit(handleCreateUser)}>
-        <InputElement hasError={!!errors.projectName}>
-          Nome do Projeto ou Cliente:
-          <input
-            type="text"
-            placeholder="Tarefas de Casa"
-            {...register('projectName')}
-            required
-          />
-          {errors.projectName && <small>{errors.projectName.message}</small>}
-        </InputElement>
-        <InputElement>
-          Descrição:
-          <textarea
-            rows={15}
-            placeholder="Descrição do projeto"
-            {...register('projectDescription')}
-          />
-        </InputElement>
-        <SubmitButton type="submit">
-          Finalizar Cadastro
-          <CheckCircle />
-        </SubmitButton>
-      </form>
-    </Container>
+    <StepProjectContainer>
+      <InputText
+        name="projectName"
+        label="Nome do Projeto:"
+        placeholder="Pessoal"
+        errorMessage={errors.projectName?.message}
+        isRequired
+      />
+      <InputText
+        name="projectDescription"
+        label="Desrição do Projeto (opicional)"
+        placeholder="Desrição do Projeto"
+        errorMessage={errors.projectDescription?.message}
+      />
+    </StepProjectContainer>
   )
 }
+
+export { StepProject }

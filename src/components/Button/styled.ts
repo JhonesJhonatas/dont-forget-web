@@ -5,12 +5,19 @@ interface StyledButtonProps {
 }
 
 export const StyledButton = styled.button<StyledButtonProps>`
+  width: 100%;
   border: none;
   outline: none;
   padding: 0.5rem;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  background-color: ${(props) => props.theme.enphasis};
+  color: ${(props) => props.theme.textPrimary};
+
+  &:focus {
+    border: 2px solid ${(props) => props.theme.enphasisHover};
+  }
 
   ${(props) =>
     props.$typeColor === 'cancel'
