@@ -1,61 +1,144 @@
-import { Pause, Play } from '@phosphor-icons/react'
+import { CaretDown, Play, Stop } from '@phosphor-icons/react'
 import {
   Container,
-  IconArea,
   MainContainer,
-  TimerDescription,
+  PlayPauseButton,
+  TimerArea,
   TimerLabel,
 } from './styles'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { differenceInSeconds, parseISO } from 'date-fns'
+import { api } from '../../lib/axios'
+import { Task } from '../EditTaskModal'
+import { useStopWatchs } from './hooks/useStopWatchs'
 
-export function Timer() {
-  const [currentTime, setCurrentTime] = useState(0)
-  const [started, setStarted] = useState(false)
+interface TimerProps {
+  task: Task
+}
 
-  const intervalRef = useRef<number | null>(null)
+export function Timer({ task }: TimerProps) {
+  const [sopWatchIsActive, setStopWatchIsActive] = useState(false)
+  const [secondsPassed, setSecondsPassed] = useState(0)
 
-  const handleToggleStopWatch = useCallback(() => {
-    setStarted((currentState) => !currentState)
-  }, [])
+  const { activeStopWatch, stopWatchList, handleUpdateStopWatchList } =
+    useStopWatchs(task.id)
 
   useEffect(() => {
-    if (started) {
-      intervalRef.current = window.setInterval(() => {
-        setCurrentTime((prevSeconds) => prevSeconds + 1)
-      }, 1000)
-    } else {
-      clearInterval(intervalRef.current!)
+    if (activeStopWatch) {
+      setStopWatchIsActive(true)
+    }
+  }, [activeStopWatch])
+
+  useEffect(() => {
+    if (!stopWatchList) return
+
+    const onlyCompleteStopWatches = stopWatchList.filter(
+      (stopWatch) => stopWatch.isActive === false,
+    )
+
+    let totalSecondsSpent = 0
+
+    onlyCompleteStopWatches.forEach((stopWatch) => {
+      const secondsPassed = differenceInSeconds(
+        parseISO(stopWatch.endDate || ''),
+        parseISO(stopWatch.startDate),
+      )
+
+      totalSecondsSpent = totalSecondsSpent + secondsPassed
+    })
+
+    const activeStopWatch = stopWatchList.find((stopWatch) => {
+      return stopWatch.isActive === true
+    })
+
+    if (activeStopWatch) {
+      const currentStopWatchSeconds = differenceInSeconds(
+        new Date(),
+        parseISO(activeStopWatch?.startDate),
+      )
+
+      totalSecondsSpent = totalSecondsSpent + currentStopWatchSeconds
     }
 
-    return () => clearInterval(intervalRef.current!)
-  }, [started])
+    setSecondsPassed(totalSecondsSpent)
+  }, [stopWatchList])
 
-  const formatTime = useCallback((time: number): string => {
-    const hours = Math.floor(time / 3600)
-    const minutes = Math.floor((time % 3600) / 60)
-    const secs = time % 60
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(
-      2,
-      '0',
-    )}:${String(secs).padStart(2, '0')}`
+  useEffect(() => {
+    if (sopWatchIsActive) {
+      const intervall = setInterval(() => {
+        setSecondsPassed(() => secondsPassed + 1)
+      }, 1000)
+
+      return () => clearInterval(intervall)
+    }
+  }, [secondsPassed, sopWatchIsActive])
+
+  const handleStartStopWatch = useCallback(async () => {
+    const startedDate = new Date()
+    setStopWatchIsActive(true)
+
+    try {
+      await api.post('tasks/start-stopwatch', {
+        taskId: task.id,
+        startDate: startedDate,
+        isActive: true,
+      })
+
+      handleUpdateStopWatchList()
+    } catch (err) {
+      console.log(err)
+    }
+  }, [handleUpdateStopWatchList, task.id])
+
+  const handleStopStopWatch = useCallback(async () => {
+    setStopWatchIsActive(false)
+
+    const endDate = new Date()
+
+    try {
+      await api.post('/tasks/stop-stopwatch', {
+        id: activeStopWatch?._id,
+        taskId: activeStopWatch?.taskId,
+        startDate: activeStopWatch?.startDate,
+        endDate,
+        isActive: false,
+      })
+    } catch (err) {
+      console.log(err)
+    }
+  }, [
+    activeStopWatch?._id,
+    activeStopWatch?.startDate,
+    activeStopWatch?.taskId,
+  ])
+
+  const formatSeconds = useCallback((seconds: number) => {
+    const hour = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const reestSeconds = seconds % 60
+
+    const hourFormat = `${String(hour).padStart(2, '0')}:${String(
+      minutes,
+    ).padStart(2, '0')}:${String(reestSeconds).padStart(2, '0')}`
+
+    return hourFormat
   }, [])
 
   return (
     <Container>
       <TimerLabel>Timer:</TimerLabel>
       <MainContainer>
-        {started ? (
-          <IconArea>
-            <Pause onClick={handleToggleStopWatch} />
-          </IconArea>
-        ) : (
-          <IconArea>
-            <Play onClick={handleToggleStopWatch} />
-          </IconArea>
-        )}
-        <TimerDescription id="timerDescription" $isStarted={started}>
-          <span>{formatTime(currentTime)}</span>
-        </TimerDescription>
+        <TimerArea>
+          <PlayPauseButton $isActive={sopWatchIsActive}>
+            {sopWatchIsActive ? (
+              <Stop weight="fill" onClick={handleStopStopWatch} />
+            ) : (
+              <Play type="button" onClick={handleStartStopWatch} />
+            )}
+          </PlayPauseButton>
+          <span>{formatSeconds(secondsPassed)}</span>
+        </TimerArea>
+        <CaretDown />
       </MainContainer>
     </Container>
   )

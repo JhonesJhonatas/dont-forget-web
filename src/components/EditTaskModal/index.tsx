@@ -35,7 +35,7 @@ import { useNotify } from '../../hooks/useNotify'
 import { api } from '../../lib/axios'
 import { Timer } from '../Timer'
 
-interface Task {
+export interface Task {
   id: string
   title: string
   description: string
@@ -242,7 +242,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
                   disabled={thisTaskIsConcluded}
                   required={true}
                 />
-                <Timer />
+                <Timer task={task} />
               </TaskIformations>
               <TaskOptions>
                 <TaskControllers>

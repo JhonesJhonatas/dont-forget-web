@@ -1,14 +1,14 @@
-import hexToRgba from 'hex-to-rgba'
 import styled, { css } from 'styled-components'
 
-interface TimerDescriptionProps {
-  $isStarted: boolean
+interface PlayPauseButtonProps {
+  $isActive: boolean
 }
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  min-width: 8rem;
 `
 
 export const TimerLabel = styled.span`
@@ -16,48 +16,55 @@ export const TimerLabel = styled.span`
 `
 
 export const MainContainer = styled.div`
-  background-color: ${(props) => hexToRgba(props.theme.cardBgPrimary, 0.5)};
-  padding: 0.25rem;
-  border-radius: 60px;
+  background-color: ${(props) => props.theme.cardBgPrimary};
+  padding: 0.35rem;
+  border-radius: 6px;
 
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.5rem;
-
-  &:hover {
-    #timerDescription {
-      display: flex;
-    }
-  }
 `
 
-export const IconArea = styled.div`
-  width: 2rem;
-  height: 2rem;
-  background-color: ${(props) => props.theme.enphasis};
-  border-radius: 60px;
+export const PlayPauseButton = styled.div<PlayPauseButtonProps>`
+  border: none;
+  outline: none;
+  border-radius: 9999px;
+  padding: 0.35rem;
   cursor: pointer;
 
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 
   transition: all 0.2s ease-in-out;
 
-  &:hover {
-    background-color: ${(props) => hexToRgba(props.theme.enphasis, 0.8)};
+  svg {
+    color: ${(props) => props.theme.textPrimary};
   }
-`
-
-export const TimerDescription = styled.div<TimerDescriptionProps>`
-  padding: 0.2rem 1rem 0.2rem 0.1rem;
 
   ${(props) =>
-    props.$isStarted
+    props.$isActive
       ? css`
-          display: flex;
+          background-color: ${(props) => props.theme.error};
+
+          &:hover {
+            background-color: ${(props) => props.theme.errorHover};
+          }
         `
       : css`
-          display: none;
+          background-color: ${(props) => props.theme.enphasis};
+
+          &:hover {
+            background-color: ${(props) => props.theme.enphasisHover};
+          }
         `}
+`
+
+export const TimerArea = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
 `
