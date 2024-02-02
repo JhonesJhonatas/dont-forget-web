@@ -33,8 +33,9 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { format, formatISO, parseISO } from 'date-fns'
 import { useNotify } from '../../hooks/useNotify'
 import { api } from '../../lib/axios'
+import { Timer } from '../Timer'
 
-interface Task {
+export interface Task {
   id: string
   title: string
   description: string
@@ -207,6 +208,13 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
     }
   })
 
+  const handleUpdateTaskStatus = useCallback(
+    (status: string) => {
+      methods.setValue('status', status)
+    },
+    [methods],
+  )
+
   return (
     <Dialog.Portal>
       <DialogOverlay />
@@ -240,6 +248,10 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
                   name="maturity"
                   disabled={thisTaskIsConcluded}
                   required={true}
+                />
+                <Timer
+                  task={task}
+                  handleUpdateTaskStatus={handleUpdateTaskStatus}
                 />
               </TaskIformations>
               <TaskOptions>
