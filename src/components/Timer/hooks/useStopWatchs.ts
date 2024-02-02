@@ -11,6 +11,9 @@ interface StopWatchSchema {
 
 const useStopWatchs = (idTask: string) => {
   const [stopWatchList, setStopWatchList] = useState<StopWatchSchema[]>([])
+  const [onlyCompleteStopWatches, setOnlyCompleteStopWatches] = useState<
+    StopWatchSchema[]
+  >([])
   const [activeStopWatch, setActiveStopWatch] = useState<StopWatchSchema>()
 
   const handleUpdateStopWatchList = useCallback(async () => {
@@ -41,10 +44,19 @@ const useStopWatchs = (idTask: string) => {
     setActiveStopWatch(activeStopWatch)
   }, [stopWatchList])
 
+  useEffect(() => {
+    const completeStopWatchesList = stopWatchList.filter(
+      (stopWatch) => stopWatch.isActive === false,
+    )
+
+    setOnlyCompleteStopWatches(completeStopWatchesList)
+  }, [stopWatchList])
+
   return {
     stopWatchList,
     activeStopWatch,
     handleUpdateStopWatchList,
+    onlyCompleteStopWatches,
   }
 }
 

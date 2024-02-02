@@ -1,27 +1,45 @@
-import { CaretDown, Play, Stop } from '@phosphor-icons/react'
+import {
+  Calendar,
+  CaretDown,
+  Clock,
+  Play,
+  Stop,
+  Trash,
+} from '@phosphor-icons/react'
 import {
   Container,
+  CycleArea,
+  DeleteStopWatchButton,
+  DropDownContent,
+  DropDownTrigger,
+  FlexArea,
   MainContainer,
   PlayPauseButton,
   TimerArea,
   TimerLabel,
 } from './styles'
 import { useCallback, useEffect, useState } from 'react'
-import { differenceInSeconds, parseISO } from 'date-fns'
+import { differenceInSeconds, format, parseISO } from 'date-fns'
 import { api } from '../../lib/axios'
 import { Task } from '../EditTaskModal'
 import { useStopWatchs } from './hooks/useStopWatchs'
 
 interface TimerProps {
   task: Task
+  handleUpdateTaskStatus: (status: string) => void
 }
 
-export function Timer({ task }: TimerProps) {
+export function Timer({ task, handleUpdateTaskStatus }: TimerProps) {
   const [sopWatchIsActive, setStopWatchIsActive] = useState(false)
   const [secondsPassed, setSecondsPassed] = useState(0)
+  const [dropDownIsOpen, setDropDownIsOpen] = useState(false)
 
-  const { activeStopWatch, stopWatchList, handleUpdateStopWatchList } =
-    useStopWatchs(task.id)
+  const {
+    activeStopWatch,
+    stopWatchList,
+    handleUpdateStopWatchList,
+    onlyCompleteStopWatches,
+  } = useStopWatchs(task.id)
 
   useEffect(() => {
     if (activeStopWatch) {
@@ -31,10 +49,6 @@ export function Timer({ task }: TimerProps) {
 
   useEffect(() => {
     if (!stopWatchList) return
-
-    const onlyCompleteStopWatches = stopWatchList.filter(
-      (stopWatch) => stopWatch.isActive === false,
-    )
 
     let totalSecondsSpent = 0
 
@@ -61,7 +75,7 @@ export function Timer({ task }: TimerProps) {
     }
 
     setSecondsPassed(totalSecondsSpent)
-  }, [stopWatchList])
+  }, [onlyCompleteStopWatches, stopWatchList])
 
   useEffect(() => {
     if (sopWatchIsActive) {
@@ -84,11 +98,21 @@ export function Timer({ task }: TimerProps) {
         isActive: true,
       })
 
+      if (task.status === 'toDo') {
+        console.log('Rodar')
+        await api.put('tasks/edit-task-by-id', {
+          ...task,
+          status: 'inProgress',
+        })
+
+        handleUpdateTaskStatus('inProgress')
+      }
+
       handleUpdateStopWatchList()
     } catch (err) {
       console.log(err)
     }
-  }, [handleUpdateStopWatchList, task.id])
+  }, [handleUpdateStopWatchList, handleUpdateTaskStatus, task])
 
   const handleStopStopWatch = useCallback(async () => {
     setStopWatchIsActive(false)
@@ -103,6 +127,8 @@ export function Timer({ task }: TimerProps) {
         endDate,
         isActive: false,
       })
+
+      handleUpdateStopWatchList()
     } catch (err) {
       console.log(err)
     }
@@ -110,6 +136,7 @@ export function Timer({ task }: TimerProps) {
     activeStopWatch?._id,
     activeStopWatch?.startDate,
     activeStopWatch?.taskId,
+    handleUpdateStopWatchList,
   ])
 
   const formatSeconds = useCallback((seconds: number) => {
@@ -123,6 +150,23 @@ export function Timer({ task }: TimerProps) {
 
     return hourFormat
   }, [])
+
+  const toggleDrowDown = useCallback(() => {
+    setDropDownIsOpen((prevValue) => !prevValue)
+  }, [])
+
+  const handleDeleteStopWatchCycle = useCallback(
+    async (id: string) => {
+      try {
+        await api.delete(`/tasks/delete-stopwatch/${id}`)
+
+        handleUpdateStopWatchList()
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    [handleUpdateStopWatchList],
+  )
 
   return (
     <Container>
@@ -138,8 +182,41 @@ export function Timer({ task }: TimerProps) {
           </PlayPauseButton>
           <span>{formatSeconds(secondsPassed)}</span>
         </TimerArea>
-        <CaretDown />
+        <DropDownTrigger onClick={toggleDrowDown}>
+          <CaretDown />
+        </DropDownTrigger>
       </MainContainer>
+      <DropDownContent $isOpen={dropDownIsOpen}>
+        {onlyCompleteStopWatches.length > 0 ? (
+          onlyCompleteStopWatches.map((stopWatch) => {
+            const spentTime = differenceInSeconds(
+              parseISO(stopWatch.endDate as string),
+              parseISO(stopWatch.startDate),
+            )
+            return (
+              <CycleArea key={stopWatch._id}>
+                <FlexArea>
+                  <Calendar />
+                  <strong>
+                    {format(parseISO(stopWatch.startDate), 'dd/MM/yyyy')}
+                  </strong>
+                </FlexArea>
+                <FlexArea>
+                  <Clock />
+                  <strong>{formatSeconds(spentTime)}</strong>
+                </FlexArea>
+                <DeleteStopWatchButton
+                  onClick={() => handleDeleteStopWatchCycle(stopWatch._id)}
+                >
+                  <Trash />
+                </DeleteStopWatchButton>
+              </CycleArea>
+            )
+          })
+        ) : (
+          <span>Sem Registros Anteriores</span>
+        )}
+      </DropDownContent>
     </Container>
   )
 }

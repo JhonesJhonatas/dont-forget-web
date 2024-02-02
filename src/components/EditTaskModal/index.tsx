@@ -208,6 +208,13 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
     }
   })
 
+  const handleUpdateTaskStatus = useCallback(
+    (status: string) => {
+      methods.setValue('status', status)
+    },
+    [methods],
+  )
+
   return (
     <Dialog.Portal>
       <DialogOverlay />
@@ -242,7 +249,10 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
                   disabled={thisTaskIsConcluded}
                   required={true}
                 />
-                <Timer task={task} />
+                <Timer
+                  task={task}
+                  handleUpdateTaskStatus={handleUpdateTaskStatus}
+                />
               </TaskIformations>
               <TaskOptions>
                 <TaskControllers>
