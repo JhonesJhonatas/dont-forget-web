@@ -23,6 +23,7 @@ import { differenceInSeconds, format, parseISO } from 'date-fns'
 import { api } from '../../lib/axios'
 import { Task } from '../EditTaskModal'
 import { useStopWatchs } from './hooks/useStopWatchs'
+import { useNotify } from '../../hooks/useNotify'
 
 interface TimerProps {
   task: Task
@@ -40,6 +41,8 @@ export function Timer({ task, handleUpdateTaskStatus }: TimerProps) {
     handleUpdateStopWatchList,
     onlyCompleteStopWatches,
   } = useStopWatchs(task.id)
+
+  const { notify } = useNotify()
 
   useEffect(() => {
     if (activeStopWatch) {
@@ -88,6 +91,15 @@ export function Timer({ task, handleUpdateTaskStatus }: TimerProps) {
   }, [secondsPassed, sopWatchIsActive])
 
   const handleStartStopWatch = useCallback(async () => {
+    if (task.status === 'concluded') {
+      notify({
+        type: 'error',
+        message:
+          'Não é possível iniciar um cronômetro em uma tarefa concluída.',
+      })
+      return
+    }
+
     const startedDate = new Date()
     setStopWatchIsActive(true)
 
@@ -112,7 +124,7 @@ export function Timer({ task, handleUpdateTaskStatus }: TimerProps) {
     } catch (err) {
       console.log(err)
     }
-  }, [handleUpdateStopWatchList, handleUpdateTaskStatus, task])
+  }, [handleUpdateStopWatchList, handleUpdateTaskStatus, notify, task])
 
   const handleStopStopWatch = useCallback(async () => {
     setStopWatchIsActive(false)
@@ -173,13 +185,23 @@ export function Timer({ task, handleUpdateTaskStatus }: TimerProps) {
       <TimerLabel>Timer:</TimerLabel>
       <MainContainer>
         <TimerArea>
-          <PlayPauseButton $isActive={sopWatchIsActive}>
-            {sopWatchIsActive ? (
-              <Stop weight="fill" onClick={handleStopStopWatch} />
-            ) : (
-              <Play type="button" onClick={handleStartStopWatch} />
-            )}
-          </PlayPauseButton>
+          {sopWatchIsActive ? (
+            <PlayPauseButton
+              $isActive={sopWatchIsActive}
+              $disabled={task.status === 'concluded'}
+              onClick={handleStopStopWatch}
+            >
+              <Stop weight="fill" />
+            </PlayPauseButton>
+          ) : (
+            <PlayPauseButton
+              $isActive={sopWatchIsActive}
+              $disabled={task.status === 'concluded'}
+              onClick={handleStartStopWatch}
+            >
+              <Play type="button" weight="fill" />
+            </PlayPauseButton>
+          )}
           <span>{formatSeconds(secondsPassed)}</span>
         </TimerArea>
         <DropDownTrigger onClick={toggleDrowDown}>
