@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components'
 
 interface PlayPauseButtonProps {
   $isActive: boolean
+  $disabled: boolean
 }
 
 interface DropDownContentProps {
@@ -65,6 +66,21 @@ export const PlayPauseButton = styled.div<PlayPauseButtonProps>`
             background-color: ${(props) => props.theme.enphasisHover};
           }
         `}
+
+  ${(props) =>
+    props.$disabled &&
+    css`
+      background-color: ${(props) => hexToRgba(props.theme.enphasis, 0.2)};
+      cursor: not-allowed;
+
+      svg {
+        color: ${(props) => hexToRgba(props.theme.textPrimary, 0.2)};
+      }
+
+      &:hover {
+        background-color: ${(props) => hexToRgba(props.theme.enphasis, 0.2)};
+      }
+    `}
 `
 
 export const TimerArea = styled.div`
