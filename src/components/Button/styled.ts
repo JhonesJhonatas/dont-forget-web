@@ -25,8 +25,13 @@ export const StyledButton = styled.button<StyledButtonProps>`
           background-color: transparent;
           color: ${(props) => props.theme.borderCard};
 
-          &:hover {
+          &:not(:disabled):hover {
             color: ${(props) => props.theme.textSecondary};
+          }
+
+          &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
           }
         `
       : null}
@@ -37,8 +42,30 @@ export const StyledButton = styled.button<StyledButtonProps>`
           background-color: ${(props) => props.theme.sucess};
           color: ${(props) => props.theme.textPrimary};
 
-          &:hover {
+          &:not(:disabled):hover {
             background-color: ${(props) => props.theme.sucessHover};
+          }
+
+          &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+          }
+        `
+      : null}
+
+${(props) =>
+    props.$typeColor === 'error'
+      ? css`
+          background-color: ${(props) => props.theme.error};
+          color: ${(props) => props.theme.textPrimary};
+
+          &:not(:disabled):hover {
+            background-color: ${(props) => props.theme.errorHover};
+          }
+
+          &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
           }
         `
       : null}

@@ -3,11 +3,16 @@ import {
   Avatar,
   ButtonsArea,
   Container,
+  ContentArea,
+  Description,
+  DialogContent,
+  DialogOverlay,
   FieldsArea,
   FlexArea,
   FormTitle,
   Header,
   StyledForm,
+  StyledInputText,
   UserInfo,
 } from './styles'
 import defaultProfilePic from '../../../assets/imgs/defaultProfilePic.svg'
@@ -17,7 +22,7 @@ import { DatePicker } from '../../../components/Inputs/DatePicker'
 import { Button } from '../../../components/Button'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback, useContext, useEffect } from 'react'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { format, formatISO, parseISO } from 'date-fns'
 import { pt } from 'date-fns/locale'
 import { api } from '../../../lib/axios'
@@ -25,6 +30,9 @@ import { TasksContext } from '../../../contexts/TaskContext'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { useNotify } from '../../../hooks/useNotify'
+import { useNavigate } from 'react-router-dom'
+import * as Dialog from '@radix-ui/react-dialog'
+import { AuthContext } from '../../../contexts/AuthContext'
 
 const accountFormSchema = z.object({
   name: z
@@ -40,17 +48,26 @@ const accountFormSchema = z.object({
     .min(3, { message: 'Mínimo de 3 caracteres' })
     .nonempty({ message: 'Campo obrigatório.' }),
   birthDate: z.string().nonempty({ message: 'Campo obrigatório.' }),
+  confirmDeleteText: z.string(),
 })
 
 type AccountFormSchema = z.infer<typeof accountFormSchema>
 
 export function ProfileSettings() {
+  const [confirmDeleteModalIsOpen, setConfirmDeleteModalIsOpen] =
+    useState(false)
+  const [confirmDeleteIsDisabled, setConfirmDeleteIsDisabled] = useState(true)
+
+  const { handleLogOut } = useContext(AuthContext)
+
   const { userData, handleUpdateUserData } = useContext(TasksContext)
   const { notify } = useNotify()
-
+  const navigate = useNavigate()
   const methods = useForm<AccountFormSchema>({
     resolver: zodResolver(accountFormSchema),
   })
+
+  const confirmDeleteTextValue = methods.watch('confirmDeleteText')
 
   const handleResetForm = useCallback(() => {
     methods.setValue('name', userData.name)
@@ -70,9 +87,32 @@ export function ProfileSettings() {
     userData.role,
   ])
 
+  const handleToggleConfirmDeleteUserModal = useCallback(() => {
+    setConfirmDeleteModalIsOpen((prevValue) => !prevValue)
+  }, [])
+
+  const handleDeleteUser = useCallback(async () => {
+    try {
+      await api.delete('users/delete-user')
+      handleLogOut()
+      navigate('/')
+      notify({ type: 'sucess', message: 'Usuário Excluído com sucesso!' })
+    } catch (err) {
+      notify({ type: 'error', message: 'Não foi possível excluir o usuário.' })
+    }
+  }, [handleLogOut, navigate, notify])
+
   useEffect(() => {
     handleResetForm()
   }, [handleResetForm])
+
+  useEffect(() => {
+    if (confirmDeleteTextValue === userData.name) {
+      setConfirmDeleteIsDisabled(false)
+      return
+    }
+    setConfirmDeleteIsDisabled(true)
+  }, [confirmDeleteTextValue, methods, userData.name])
 
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
@@ -153,6 +193,56 @@ export function ProfileSettings() {
           </StyledForm>
         </AccountSettings>
       </FormProvider>
+      <ContentArea>
+        <FormTitle>Excluir Conta:</FormTitle>
+        <Description>
+          Esta ação excluirá sua conta e todas as informações relacionadas a ela
+          e não pode ser desfeita.
+        </Description>
+        <Button
+          onClick={handleToggleConfirmDeleteUserModal}
+          typeColor="error"
+          type="button"
+        >
+          Excluir
+        </Button>
+        <Dialog.Root
+          open={confirmDeleteModalIsOpen}
+          onOpenChange={setConfirmDeleteModalIsOpen}
+        >
+          <Dialog.Portal>
+            <DialogOverlay />
+            <DialogContent>
+              <span>
+                Para confirmar a exclusão digite{' '}
+                <strong>{userData.name}</strong> no campo abaixo:
+              </span>
+              <StyledInputText
+                {...methods.register('confirmDeleteText')}
+                type="text"
+                placeholder={userData.name}
+              />
+              <ButtonsArea>
+                <Button
+                  typeColor="cancel"
+                  type="button"
+                  onClick={() => handleToggleConfirmDeleteUserModal()}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  typeColor="error"
+                  type="button"
+                  disabled={confirmDeleteIsDisabled}
+                  onClick={handleDeleteUser}
+                >
+                  Excluir
+                </Button>
+              </ButtonsArea>
+            </DialogContent>
+          </Dialog.Portal>
+        </Dialog.Root>
+      </ContentArea>
       <ToastContainer />
     </Container>
   )
