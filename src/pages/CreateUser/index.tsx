@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Footer } from './components/Footer'
 import { api } from '../../lib/axios'
 import { useNotify } from '../../hooks/useNotify'
-import { parseISO } from 'date-fns'
+import { isAfter, isBefore, parseISO } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -21,7 +21,28 @@ const createUserFormSchema = z.object({
   name: z.string().min(3, { message: 'Mínimo de 3 caracteres.' }),
   email: z.string().email({ message: 'Precisa ser um email válido.' }),
   role: z.string().min(3, { message: 'Mínimo de 3 caracteres.' }),
-  birthDate: z.string(),
+  birthDate: z
+    .string()
+    .refine(
+      (data) => {
+        const dateLimit = new Date('01/01/2008')
+        const date = new Date(data)
+        return isAfter(dateLimit, date)
+      },
+      {
+        message: 'O usuário deve possuir pelo menos 16 anos.',
+      },
+    )
+    .refine(
+      (data) => {
+        const dateLimit = new Date('01/01/1923')
+        const date = new Date(data)
+        return isBefore(dateLimit, date)
+      },
+      {
+        message: 'O usuário deve possuir menos de 101 anos.',
+      },
+    ),
   password: z.string().min(6, { message: 'Mínimo de 6 caracteres.' }),
   confirmPassword: z.string().min(6, { message: 'Mínimo de 6 caracteres.' }),
   projectName: z.string().min(3, { message: 'Mínimo de 3 caracteres.' }),
