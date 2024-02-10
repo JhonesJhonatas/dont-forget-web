@@ -1,4 +1,5 @@
 import {
+  Calendar,
   CaretRight,
   CheckSquare,
   Circle,
@@ -76,6 +77,15 @@ export function NavBar() {
               <div>
                 <SquaresFour size={18} />
                 <span>DashBoard</span>
+              </div>
+              <CaretRight />
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink to={'/my-week'}>
+              <div>
+                <Calendar size={18} />
+                <span>Minha Semana</span>
               </div>
               <CaretRight />
             </NavLink>

@@ -43,8 +43,12 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
     resolver: zodResolver(createTaskFormSchema),
   })
 
-  const { allProjects, handleUpdateOpenedTasks, handleUpdateCompletedTasks } =
-    useContext(TasksContext)
+  const {
+    allProjects,
+    handleUpdateOpenedTasks,
+    handleUpdateCompletedTasks,
+    handleUpdateTasksOfWeek,
+  } = useContext(TasksContext)
   const { notify } = useNotify()
 
   const projectOptios = allProjects.map((project) => {
@@ -109,6 +113,7 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
       handleCloseThisModal()
       handleUpdateOpenedTasks()
       handleUpdateCompletedTasks()
+      handleUpdateTasksOfWeek()
       notify({ type: 'sucess', message: 'Tarefa excluída com sucesso!' })
     } catch (err) {
       notify({ type: 'error', message: err as string })

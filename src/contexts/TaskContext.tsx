@@ -8,6 +8,7 @@ import {
 } from 'react'
 import { AuthContext } from './AuthContext'
 import { api } from '../lib/axios'
+import { addWeeks, endOfWeek, startOfWeek } from 'date-fns'
 
 interface DefaultUserDataSchema {
   name: string
@@ -56,6 +57,16 @@ export interface ConcludedTask {
   userId: string
 }
 
+interface TasksOfWeekSchema {
+  monday: OpenedTask[]
+  tuesday: OpenedTask[]
+  wednesday: OpenedTask[]
+  thursday: OpenedTask[]
+  friday: OpenedTask[]
+  saturday: OpenedTask[]
+  sunday: OpenedTask[]
+}
+
 interface TasksContextSchema {
   openedTasksIsLoading: boolean
   allOpenedTasks: OpenedTask[]
@@ -69,12 +80,17 @@ interface TasksContextSchema {
   userData: DefaultUserDataSchema
   userDataIsLoading: boolean
   handleUpdateUserData: () => void
+  tasksOfWeek: TasksOfWeekSchema
+  tasksIsLoading: boolean
+  handleUpdateTasksOfWeek: () => void
+  handleNextWeek: () => void
+  handlePreviousWeek: () => void
+  handleCurrentWeek: () => void
 }
 
 interface TaskProviderProps {
   children: ReactNode
 }
-
 const TasksContext = createContext({} as TasksContextSchema)
 
 function TasksProvider({ children }: TaskProviderProps) {
@@ -88,6 +104,22 @@ function TasksProvider({ children }: TaskProviderProps) {
   )
   const [openedTasksIsLoading, setOpenedTasksIsLoading] = useState(true)
   const [allOpenedTasks, setAllOpenedTasks] = useState<OpenedTask[]>([])
+  const [tasksOfWeek, setTasksOfWeek] = useState<TasksOfWeekSchema>({
+    monday: [],
+    thursday: [],
+    wednesday: [],
+    tuesday: [],
+    friday: [],
+    saturday: [],
+    sunday: [],
+  })
+  const [tasksIsLoading, setTasksIsLoading] = useState(false)
+  const [currentStartDate, setCurrentStartDate] = useState(
+    startOfWeek(new Date(), { weekStartsOn: 1 }),
+  )
+  const [currentEndDate, setCurrentEndDate] = useState(
+    endOfWeek(new Date(), { weekStartsOn: 1 }),
+  )
 
   const { authenticated } = useContext(AuthContext)
 
@@ -142,6 +174,39 @@ function TasksProvider({ children }: TaskProviderProps) {
     }
   }, [authenticated, handleUpdateCompletedTasks, handleUpdateOpenedTasks])
 
+  const handleUpdateTasksOfWeek = useCallback(() => {
+    setTasksIsLoading(true)
+
+    api
+      .get('/tasks/get-opened-tasks-by-week/', {
+        params: {
+          startDate: currentStartDate,
+          endDate: currentEndDate,
+        },
+      })
+      .then((response) => setTasksOfWeek(response.data))
+      .finally(() => setTasksIsLoading(false))
+  }, [currentEndDate, currentStartDate])
+
+  useEffect(() => {
+    handleUpdateTasksOfWeek()
+  }, [handleUpdateTasksOfWeek])
+
+  const handleNextWeek = useCallback(() => {
+    setCurrentStartDate((prevDate) => addWeeks(prevDate, 1))
+    setCurrentEndDate((prevDate) => addWeeks(prevDate, 1))
+  }, [])
+
+  const handlePreviousWeek = useCallback(() => {
+    setCurrentStartDate((prevDate) => addWeeks(prevDate, -1))
+    setCurrentEndDate((prevDate) => addWeeks(prevDate, -1))
+  }, [])
+
+  const handleCurrentWeek = useCallback(() => {
+    setCurrentStartDate(() => startOfWeek(new Date(), { weekStartsOn: 1 }))
+    setCurrentEndDate(() => endOfWeek(new Date(), { weekStartsOn: 1 }))
+  }, [])
+
   return (
     <TasksContext.Provider
       value={{
@@ -157,6 +222,12 @@ function TasksProvider({ children }: TaskProviderProps) {
         allConcludedTasks,
         concludedTasksIsLoading,
         handleUpdateCompletedTasks,
+        tasksOfWeek,
+        tasksIsLoading,
+        handleUpdateTasksOfWeek,
+        handleNextWeek,
+        handlePreviousWeek,
+        handleCurrentWeek,
       }}
     >
       {children}

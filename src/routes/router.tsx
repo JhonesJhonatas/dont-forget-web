@@ -9,6 +9,7 @@ import { ProjectViewer } from '../pages/ProjectViewer'
 import { ProjectSettings } from '../pages/ProjectSettings'
 import { Settings } from '../pages/Settings'
 import { PrivateRoute } from './PrivateRoute'
+import { MyWeek } from '../pages/MyWeek'
 
 export function Router() {
   return (
@@ -19,6 +20,7 @@ export function Router() {
       <Route element={<PrivateRoute />}>
         <Route path="/" element={<DefaulLayout />}>
           <Route path="/dashboard" element={<DashBoard />} />
+          <Route path="/my-week" element={<MyWeek />} />
           <Route path="/tasks">
             <Route path="all" element={<AllTasks />} />
             <Route path=":projectId" element={<TasksByProjects />} />

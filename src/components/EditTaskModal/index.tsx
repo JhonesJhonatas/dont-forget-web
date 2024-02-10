@@ -82,8 +82,12 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
   const methods = useForm<EditFormSchema>({
     values: defaultValues,
   })
-  const { allProjects, handleUpdateOpenedTasks, handleUpdateCompletedTasks } =
-    useContext(TasksContext)
+  const {
+    allProjects,
+    handleUpdateOpenedTasks,
+    handleUpdateCompletedTasks,
+    handleUpdateTasksOfWeek,
+  } = useContext(TasksContext)
   const { notify } = useNotify()
 
   const projectOptios = allProjects.map((project) => {
@@ -132,6 +136,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
         handleCloseModal()
         handleUpdateOpenedTasks()
         handleUpdateCompletedTasks()
+        handleUpdateTasksOfWeek()
         notify({ type: 'sucess', message: 'Tarefa atualizada com sucesso!' })
       } catch (err) {
         notify({ type: 'error', message: err as string })
@@ -163,6 +168,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
         handleCloseModal()
         handleUpdateOpenedTasks()
         handleUpdateCompletedTasks()
+        handleUpdateTasksOfWeek()
         notify({ type: 'sucess', message: 'Tarefa concluída com sucesso!' })
       } catch (err) {
         notify({ type: 'error', message: err as string })
@@ -179,6 +185,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
       handleCloseModal()
       handleUpdateOpenedTasks()
       handleUpdateCompletedTasks()
+      handleUpdateTasksOfWeek()
       notify({ type: 'sucess', message: 'Conclusão desfeita com sucesso!' })
     } catch (err) {
       notify({ type: 'error', message: err as string })
@@ -193,6 +200,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
         handleCloseModal()
         handleUpdateOpenedTasks()
         handleUpdateCompletedTasks()
+        handleUpdateTasksOfWeek()
         notify({ type: 'sucess', message: 'Tarefa excluída com sucesso!' })
 
         return
@@ -202,6 +210,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
       handleCloseModal()
       handleUpdateOpenedTasks()
       handleUpdateCompletedTasks()
+      handleUpdateTasksOfWeek()
       notify({ type: 'sucess', message: 'Tarefa excluída com sucesso!' })
     } catch (err) {
       notify({ type: 'error', message: err as string })
