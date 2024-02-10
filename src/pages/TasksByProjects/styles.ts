@@ -273,6 +273,8 @@ export const CardsArea = styled.div`
   padding-right: 0.5rem;
   width: fit-content;
   gap: 1rem;
+  width: 100%;
+  position: relative;
   overflow: auto;
 
   display: flex;

@@ -15,7 +15,7 @@ interface DropDownBoxProps {
 
 export const Container = styled.div`
   width: 100%;
-  min-height: 6.5rem;
+  min-height: fit-content;
   background-color: ${(props) => props.theme.cardBgSecondary};
   border: 1px solid ${(props) => props.theme.borderCard};
   border-radius: 6px;

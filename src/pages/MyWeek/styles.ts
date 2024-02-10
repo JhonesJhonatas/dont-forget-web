@@ -98,6 +98,7 @@ export const DayWeekTitle = styled.div`
 export const CardsArea = styled.div`
   display: flex;
   flex-direction: column;
+  height: 100%;
   gap: 0.5rem;
   max-height: calc(100vh - 13rem);
   padding-right: 0.25rem;
