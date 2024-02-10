@@ -189,8 +189,10 @@ function TasksProvider({ children }: TaskProviderProps) {
   }, [currentEndDate, currentStartDate])
 
   useEffect(() => {
-    handleUpdateTasksOfWeek()
-  }, [handleUpdateTasksOfWeek])
+    if (authenticated) {
+      handleUpdateTasksOfWeek()
+    }
+  }, [authenticated, handleUpdateTasksOfWeek])
 
   const handleNextWeek = useCallback(() => {
     setCurrentStartDate((prevDate) => addWeeks(prevDate, 1))
