@@ -15,13 +15,8 @@ import { useContext } from 'react'
 import { TasksContext } from '../../contexts/TaskContext'
 
 export function MyWeek() {
-  const {
-    handlePreviousWeek,
-    handleCurrentWeek,
-    handleNextWeek,
-    tasksOfWeek,
-    handleUpdateTasksOfWeek,
-  } = useContext(TasksContext)
+  const { handlePreviousWeek, handleCurrentWeek, handleNextWeek, tasksOfWeek } =
+    useContext(TasksContext)
 
   return (
     <WeekContainer>
@@ -45,13 +40,7 @@ export function MyWeek() {
           </DayWeekTitle>
           <CardsArea>
             {tasksOfWeek.monday.map((task) => {
-              return (
-                <TaskCard
-                  handleUpdateTasksOfWeek={handleUpdateTasksOfWeek}
-                  key={task.id}
-                  task={task}
-                />
-              )
+              return <TaskCard key={task.id} task={task} />
             })}
           </CardsArea>
         </DayColumn>
@@ -61,13 +50,7 @@ export function MyWeek() {
           </DayWeekTitle>
           <CardsArea>
             {tasksOfWeek.tuesday.map((task) => {
-              return (
-                <TaskCard
-                  handleUpdateTasksOfWeek={handleUpdateTasksOfWeek}
-                  key={task.id}
-                  task={task}
-                />
-              )
+              return <TaskCard key={task.id} task={task} />
             })}
           </CardsArea>
         </DayColumn>
@@ -77,13 +60,7 @@ export function MyWeek() {
           </DayWeekTitle>
           <CardsArea>
             {tasksOfWeek.wednesday.map((task) => {
-              return (
-                <TaskCard
-                  handleUpdateTasksOfWeek={handleUpdateTasksOfWeek}
-                  key={task.id}
-                  task={task}
-                />
-              )
+              return <TaskCard key={task.id} task={task} />
             })}
           </CardsArea>
         </DayColumn>
@@ -93,13 +70,7 @@ export function MyWeek() {
           </DayWeekTitle>
           <CardsArea>
             {tasksOfWeek.thursday.map((task) => {
-              return (
-                <TaskCard
-                  handleUpdateTasksOfWeek={handleUpdateTasksOfWeek}
-                  key={task.id}
-                  task={task}
-                />
-              )
+              return <TaskCard key={task.id} task={task} />
             })}
           </CardsArea>
         </DayColumn>
@@ -109,13 +80,7 @@ export function MyWeek() {
           </DayWeekTitle>
           <CardsArea>
             {tasksOfWeek.friday.map((task) => {
-              return (
-                <TaskCard
-                  handleUpdateTasksOfWeek={handleUpdateTasksOfWeek}
-                  key={task.id}
-                  task={task}
-                />
-              )
+              return <TaskCard key={task.id} task={task} />
             })}
           </CardsArea>
         </DayColumn>
@@ -125,13 +90,7 @@ export function MyWeek() {
           </DayWeekTitle>
           <CardsArea>
             {tasksOfWeek.saturday.map((task) => {
-              return (
-                <TaskCard
-                  handleUpdateTasksOfWeek={handleUpdateTasksOfWeek}
-                  key={task.id}
-                  task={task}
-                />
-              )
+              return <TaskCard key={task.id} task={task} />
             })}
           </CardsArea>
         </DayColumn>
@@ -141,13 +100,7 @@ export function MyWeek() {
           </DayWeekTitle>
           <CardsArea>
             {tasksOfWeek.sunday.map((task) => {
-              return (
-                <TaskCard
-                  handleUpdateTasksOfWeek={handleUpdateTasksOfWeek}
-                  key={task.id}
-                  task={task}
-                />
-              )
+              return <TaskCard key={task.id} task={task} />
             })}
           </CardsArea>
         </DayColumn>
