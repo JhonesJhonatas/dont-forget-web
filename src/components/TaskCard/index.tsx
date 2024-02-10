@@ -47,16 +47,19 @@ interface Task {
 
 interface TaskCardProps {
   task: Task
-  handleUpdateTasksOfWeek: () => void
 }
 
-export function TaskCard({ task, handleUpdateTasksOfWeek }: TaskCardProps) {
+export function TaskCard({ task }: TaskCardProps) {
   const [togleModalEdit, setTogleModalEdit] = useState(false)
   const [statusDropDownIsOpen, setStatusDropDownIsOpen] = useState(false)
   const [priorityDropDownIsOpen, setPriorityDropDownIsOpen] = useState(false)
 
-  const { allProjects, handleUpdateCompletedTasks, handleUpdateOpenedTasks } =
-    useContext(TasksContext)
+  const {
+    allProjects,
+    handleUpdateCompletedTasks,
+    handleUpdateOpenedTasks,
+    handleUpdateTasksOfWeek,
+  } = useContext(TasksContext)
 
   const statusDropDownRef = useRef<HTMLDivElement>(null)
   const toggleStatusRef = useRef<HTMLDivElement>(null)

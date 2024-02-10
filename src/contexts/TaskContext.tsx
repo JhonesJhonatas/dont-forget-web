@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { AuthContext } from './AuthContext'
 import { api } from '../lib/axios'
-import { addWeeks, endOfWeek, startOfWeek } from 'date-fns'
+import { addWeeks, endOfWeek, format, startOfWeek } from 'date-fns'
 
 interface DefaultUserDataSchema {
   name: string
@@ -180,8 +180,8 @@ function TasksProvider({ children }: TaskProviderProps) {
     api
       .get('/tasks/get-opened-tasks-by-week/', {
         params: {
-          startDate: currentStartDate,
-          endDate: currentEndDate,
+          startDate: new Date(format(currentStartDate, 'MM-dd-yyyy')),
+          endDate: new Date(format(currentEndDate, 'MM-dd-yyyy')),
         },
       })
       .then((response) => setTasksOfWeek(response.data))
