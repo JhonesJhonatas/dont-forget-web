@@ -271,8 +271,9 @@ export const StatusHeader = styled.th<StatusHeaderProps>`
 export const CardsArea = styled.div`
   height: calc(100vh - 16rem);
   padding-right: 0.5rem;
-  width: fit-content;
+  width: 100%;
   gap: 1rem;
+  position: relative;
   overflow: auto;
 
   display: flex;
