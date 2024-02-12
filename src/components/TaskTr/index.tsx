@@ -1,22 +1,40 @@
-import { Calendar, Flag, Folder } from '@phosphor-icons/react'
+import { Calendar, Circle, Flag, Folder } from '@phosphor-icons/react'
 import { format } from 'date-fns'
 import {
+  CustomDropDown,
   DescriptionContainer,
   MaturityContainer,
   PriorityContainer,
+  PriorityOption,
   StatusContainer,
+  StatusOption,
   TaskItem,
 } from './style'
-import { useCallback, useMemo, useState } from 'react'
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { EditTaskModal } from '../EditTaskModal'
+import { TasksContext } from '../../contexts/TaskContext'
+import { api } from '../../lib/axios'
 
 interface Task {
   id: string
   title: string
   description: string
   priority: string
-  status: string
+  status:
+    | 'toDo'
+    | 'standby'
+    | 'inProgress'
+    | 'approval'
+    | 'payment'
+    | 'concluded'
   maturity: string
   createdAt: string
   completedAt?: string
@@ -30,29 +48,32 @@ interface TaskTrProps {
 
 export function TaskTr({ task }: TaskTrProps) {
   const [togleModalEdit, setTogleModalEdit] = useState(false)
+  const [statusDropDownIsOpen, setStatusDropDownIsOpen] = useState(false)
+  const [priorityDropDownIsOpen, setPriorityDropDownIsOpen] = useState(false)
+
+  const {
+    handleUpdateCompletedTasks,
+    handleUpdateOpenedTasks,
+    handleUpdateTasksOfWeek,
+  } = useContext(TasksContext)
+
+  const statusDropDownRef = useRef<HTMLDivElement>(null)
+  const toggleStatusRef = useRef<HTMLDivElement>(null)
+  const priorityDropDownRef = useRef<HTMLDivElement | null>(null)
+  const togglePriorityRef = useRef<HTMLDivElement | null>(null)
 
   const formattedDate = format(new Date(task.maturity), 'dd/MM/yyyy')
 
   const formattedStatus = useMemo(() => {
-    if (task.status === 'toDo') {
-      return 'Em Aberto'
+    return {
+      toDo: 'Em Aberto',
+      standby: 'StandBy',
+      inProgress: 'Em Andamento',
+      approval: 'Aprovação',
+      payment: 'Pagamento',
+      concluded: 'Concluída',
     }
-    if (task.status === 'standby') {
-      return 'StandBy'
-    }
-    if (task.status === 'inProgress') {
-      return 'Em Andamento'
-    }
-    if (task.status === 'approval') {
-      return 'Aprovação'
-    }
-    if (task.status === 'payment') {
-      return 'Pagamento'
-    }
-    if (task.status === 'concluded') {
-      return 'Concluída'
-    }
-  }, [task.status])
+  }, [])
 
   const formattedPriority = useMemo(() => {
     if (task.priority === 'low') {
@@ -73,28 +94,196 @@ export function TaskTr({ task }: TaskTrProps) {
     setTogleModalEdit(false)
   }, [])
 
+  const statusDropDownOptions = useMemo(() => {
+    return [
+      { label: 'Em Aberto', value: 'toDo' },
+      { label: 'StandBy', value: 'standby' },
+      { label: 'Em Andamento', value: 'inProgress' },
+      { label: 'Aprovação', value: 'approval' },
+      { label: 'Pagamento', value: 'payment' },
+    ]
+  }, [])
+
+  const priorityDropDownOptions = useMemo(() => {
+    return [
+      { label: 'Baixa', value: 'low' },
+      { label: 'Normal', value: 'normal' },
+      { label: 'Alta', value: 'high' },
+      { label: 'Urgente', value: 'urgent' },
+    ]
+  }, [])
+
+  const handleToggleStatusDropDown = useCallback(() => {
+    setStatusDropDownIsOpen((prevValue) => !prevValue)
+  }, [])
+
+  const handleTogglePriorityDropDown = useCallback(() => {
+    setPriorityDropDownIsOpen((prevValue) => !prevValue)
+  }, [])
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleClickOutside = (event: any) => {
+      if (
+        statusDropDownRef.current &&
+        !statusDropDownRef.current.contains(event.target) &&
+        toggleStatusRef.current &&
+        !toggleStatusRef.current.contains(event.target)
+      ) {
+        setStatusDropDownIsOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [statusDropDownRef])
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleClickOutside = (event: any) => {
+      if (
+        priorityDropDownRef.current &&
+        !priorityDropDownRef.current.contains(event.target) &&
+        togglePriorityRef.current &&
+        !togglePriorityRef.current.contains(event.target)
+      ) {
+        setPriorityDropDownIsOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [statusDropDownRef])
+
+  const handleSetNewStatus = useCallback(
+    async (status: string) => {
+      try {
+        const body = {
+          ...task,
+          status,
+        }
+
+        await api.put('/tasks/edit-task-by-id', body)
+
+        handleUpdateOpenedTasks()
+        handleUpdateCompletedTasks()
+        handleUpdateTasksOfWeek()
+        setStatusDropDownIsOpen(false)
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    [
+      handleUpdateCompletedTasks,
+      handleUpdateOpenedTasks,
+      handleUpdateTasksOfWeek,
+      task,
+    ],
+  )
+
+  const handleSetNewPriority = useCallback(
+    async (priority: string) => {
+      try {
+        const body = {
+          ...task,
+          priority,
+        }
+
+        await api.put('/tasks/edit-task-by-id', body)
+
+        handleUpdateOpenedTasks()
+        handleUpdateCompletedTasks()
+        handleUpdateTasksOfWeek()
+        setPriorityDropDownIsOpen(false)
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    [
+      handleUpdateCompletedTasks,
+      handleUpdateOpenedTasks,
+      handleUpdateTasksOfWeek,
+      task,
+    ],
+  )
+
   return (
     <Dialog.Root open={togleModalEdit} onOpenChange={setTogleModalEdit}>
-      <Dialog.Trigger asChild>
-        <TaskItem key={task.id}>
+      <TaskItem key={task.id}>
+        <Dialog.Trigger asChild>
           <DescriptionContainer>
             <Folder />
             {task.title}
           </DescriptionContainer>
-          <StatusContainer $status={task.status}>
+        </Dialog.Trigger>
+        <div>
+          <StatusContainer
+            $status={task.status}
+            ref={toggleStatusRef}
+            onClick={handleToggleStatusDropDown}
+          >
             <div></div>
-            {formattedStatus}
+            {formattedStatus[task.status]}
           </StatusContainer>
-          <MaturityContainer>
-            <Calendar />
-            {formattedDate}
-          </MaturityContainer>
-          <PriorityContainer $priority={task.priority}>
+          <CustomDropDown
+            ref={statusDropDownRef}
+            $isOpen={statusDropDownIsOpen}
+          >
+            {statusDropDownOptions.map((item) => {
+              return (
+                <StatusOption
+                  key={item.label}
+                  $status={item.value}
+                  $isActive={task.status === item.value}
+                  onClick={() => handleSetNewStatus(item.value)}
+                >
+                  <Circle weight="fill" />
+                  {item.label}
+                </StatusOption>
+              )
+            })}
+          </CustomDropDown>
+        </div>
+        <div>
+          <PriorityContainer
+            ref={togglePriorityRef}
+            $priority={task.priority}
+            onClick={handleTogglePriorityDropDown}
+          >
             <Flag weight="fill" />
             {formattedPriority}
           </PriorityContainer>
-        </TaskItem>
-      </Dialog.Trigger>
+          <CustomDropDown
+            ref={priorityDropDownRef}
+            $isOpen={priorityDropDownIsOpen}
+          >
+            {priorityDropDownOptions.map((item) => {
+              return (
+                <PriorityOption
+                  key={item.label}
+                  $priority={item.value}
+                  $isActive={task.priority === item.value}
+                  onClick={() => handleSetNewPriority(item.value)}
+                >
+                  <Flag weight="fill" />
+                  {item.label}
+                </PriorityOption>
+              )
+            })}
+          </CustomDropDown>
+        </div>
+        <MaturityContainer>
+          <Calendar />
+          {formattedDate}
+        </MaturityContainer>
+      </TaskItem>
+
       <EditTaskModal
         task={task}
         handleCloseModal={handleTogleModal}
