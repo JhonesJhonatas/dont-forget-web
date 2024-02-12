@@ -49,7 +49,13 @@ export interface ConcludedTask {
   title: string
   description: string
   priority: string
-  status: string
+  status:
+    | 'toDo'
+    | 'standby'
+    | 'inProgress'
+    | 'approval'
+    | 'payment'
+    | 'concluded'
   maturity: string
   createdAt: string
   completedAt: string
