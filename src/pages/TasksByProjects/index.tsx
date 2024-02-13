@@ -1,15 +1,14 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import {
   CardsArea,
+  Column,
   Container,
   CurrentViewButton,
   Header,
   KanbanArea,
+  KanbanColumns,
   MainContent,
-  StatusHeader,
-  TableBody,
-  TableHeader,
-  TaskTable,
+  StatusTitle,
   TasksArea,
   TasksAreaTitle,
   TasksContainer,
@@ -26,7 +25,6 @@ import { TaskTr } from '../../components/TaskTr'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer } from 'react-toastify'
 import { TaskCard } from '../../components/TaskCard'
-import { CardViewLoading } from '../../components/CardViewLoading'
 import { useParams } from 'react-router-dom'
 
 type CurrentViewSchema = 'list' | 'kanban'
@@ -56,8 +54,7 @@ export function TasksByProjects() {
 
   const { projectId } = useParams<RouterParams>()
 
-  const { allOpenedTasks, allConcludedTasks, openedTasksIsLoading } =
-    useContext(TasksContext)
+  const { allOpenedTasks, allConcludedTasks } = useContext(TasksContext)
 
   const {
     toDoTasks,
@@ -195,89 +192,68 @@ export function TasksByProjects() {
       ),
       kanban: (
         <KanbanArea>
-          <TaskTable>
-            <TableHeader>
-              <tr>
-                <StatusHeader $status="toDo">Em Aberto</StatusHeader>
-                <StatusHeader $status="standby">StandBy</StatusHeader>
-                <StatusHeader $status="inProgress">Em Andamento</StatusHeader>
-                <StatusHeader $status="approval">Aprovação/Pr</StatusHeader>
-                <StatusHeader $status="payment">Pagamento</StatusHeader>
-                <StatusHeader $status="concluded">Concluído</StatusHeader>
-              </tr>
-            </TableHeader>
-
-            <TableBody>
-              <tr>
-                <td>
-                  {openedTasksIsLoading ? (
-                    <CardViewLoading />
-                  ) : (
-                    <CardsArea>
-                      {filteredToDoTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
-                  )}
-                </td>
-                <td>
-                  {openedTasksIsLoading ? (
-                    <CardViewLoading />
-                  ) : (
-                    <CardsArea>
-                      {filteredStandByTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
-                  )}
-                </td>
-                <td>
-                  {openedTasksIsLoading ? (
-                    <CardViewLoading />
-                  ) : (
-                    <CardsArea>
-                      {filteredInProgressTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
-                  )}
-                </td>
-                <td>
-                  {openedTasksIsLoading ? (
-                    <CardViewLoading />
-                  ) : (
-                    <CardsArea>
-                      {filteredApprovalTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
-                  )}
-                </td>
-                <td>
-                  {openedTasksIsLoading ? (
-                    <CardViewLoading />
-                  ) : (
-                    <CardsArea>
-                      {filteredPaymentTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
-                  )}
-                </td>
-                <td>
-                  {openedTasksIsLoading ? (
-                    <CardViewLoading />
-                  ) : (
-                    <CardsArea>
-                      {filteredConcludedTasks.map((task) => {
-                        return <TaskCard key={task.id} task={task} />
-                      })}
-                    </CardsArea>
-                  )}
-                </td>
-              </tr>
-            </TableBody>
-          </TaskTable>
+          <KanbanColumns>
+            <Column>
+              <StatusTitle $status="toDo">
+                <span>Em Aberto</span>
+              </StatusTitle>
+              <CardsArea>
+                {filteredToDoTasks.map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
+              </CardsArea>
+            </Column>
+            <Column>
+              <StatusTitle $status="standby">
+                <span>StandBy</span>
+              </StatusTitle>
+              <CardsArea>
+                {filteredStandByTasks.map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
+              </CardsArea>
+            </Column>
+            <Column>
+              <StatusTitle $status="inProgress">
+                <span>Em Andamento</span>
+              </StatusTitle>
+              <CardsArea>
+                {filteredInProgressTasks.map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
+              </CardsArea>
+            </Column>
+            <Column>
+              <StatusTitle $status="approval">
+                <span>Aprovação</span>
+              </StatusTitle>
+              <CardsArea>
+                {filteredApprovalTasks.map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
+              </CardsArea>
+            </Column>
+            <Column>
+              <StatusTitle $status="payment">
+                <span>Pagamento</span>
+              </StatusTitle>
+              <CardsArea>
+                {filteredPaymentTasks.map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
+              </CardsArea>
+            </Column>
+            <Column>
+              <StatusTitle $status="concluded">
+                <span>Concluído</span>
+              </StatusTitle>
+              <CardsArea>
+                {filteredConcludedTasks.map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
+              </CardsArea>
+            </Column>
+          </KanbanColumns>
         </KanbanArea>
       ),
     }
@@ -288,7 +264,6 @@ export function TasksByProjects() {
     filteredPaymentTasks,
     filteredStandByTasks,
     filteredToDoTasks,
-    openedTasksIsLoading,
   ])
 
   return (
