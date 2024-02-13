@@ -122,6 +122,7 @@ export const TasksArea = styled.div`
   border: 1px solid ${(props) => props.theme.cardBgPrimary};
   padding: 1rem;
   border-radius: 6px;
+  position: relative;
   overflow: auto;
 `
 

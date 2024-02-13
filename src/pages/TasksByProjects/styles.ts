@@ -21,10 +21,6 @@ interface TasksAreaProps {
   $status: StatusSchema
 }
 
-interface StatusHeaderProps {
-  $status: StatusSchema
-}
-
 export const Container = styled.div`
   width: 100%;
   height: calc(100vh - 64px);
@@ -213,23 +209,49 @@ export const TasksContent = styled.div`
 `
 
 export const KanbanArea = styled.section`
-  width: calc(100vw - 24rem);
-  height: fit-content;
-  overflow: auto;
+  width: 100%;
 `
 
-export const TaskTable = styled.table`
-  border-collapse: separate;
-  border-spacing: 1rem;
+export const KanbanColumns = styled.div`
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 0.5rem;
 `
 
-export const TableHeader = styled.thead`
-  background-color: ${(props) => props.theme.cardBgPrimary};
-`
-
-export const StatusHeader = styled.th<StatusHeaderProps>`
+export const Column = styled.div`
+  background-color: ${(props) => hexToRgba(props.theme.cardBgSecondary, 0.2)};
   padding: 0.5rem;
   border-radius: 6px;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`
+
+interface StatusTitleProps {
+  $status:
+    | 'toDo'
+    | 'standby'
+    | 'inProgress'
+    | 'approval'
+    | 'payment'
+    | 'concluded'
+}
+
+export const StatusTitle = styled.div<StatusTitleProps>`
+  background-color: ${(props) => props.theme.cardBgPrimary};
+  border: 1px solid ${(props) => props.theme.borderCard};
+  padding: 0.25rem;
+  text-align: center;
+  border-radius: 6px;
+
+  span {
+    font-weight: bold;
+    font-size: 0.85rem;
+  }
 
   ${(props) =>
     props.$status === 'toDo' &&
@@ -269,23 +291,11 @@ export const StatusHeader = styled.th<StatusHeaderProps>`
 `
 
 export const CardsArea = styled.div`
-  height: calc(100vh - 16rem);
-  padding-right: 0.5rem;
-  width: fit-content;
-  gap: 1rem;
-  width: 100%;
-  position: relative;
-  overflow: auto;
-
   display: flex;
   flex-direction: column;
-  justify-content: start;
-`
-
-export const TableBody = styled.tbody`
-  tr {
-    td {
-      min-width: 20rem;
-    }
-  }
+  gap: 0.5rem;
+  max-height: calc(100vh - 14rem);
+  padding-right: 0.25rem;
+  position: relative;
+  overflow: auto;
 `
