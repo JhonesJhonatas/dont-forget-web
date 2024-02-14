@@ -133,7 +133,6 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
 
         await api.put('/tasks/edit-task-by-id', body)
 
-        handleCloseModal()
         handleUpdateOpenedTasks()
         handleUpdateCompletedTasks()
         handleUpdateTasksOfWeek()

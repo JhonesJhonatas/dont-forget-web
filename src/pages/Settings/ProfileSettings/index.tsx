@@ -48,7 +48,6 @@ const accountFormSchema = z.object({
     .min(3, { message: 'Mínimo de 3 caracteres' })
     .nonempty({ message: 'Campo obrigatório.' }),
   birthDate: z.string().nonempty({ message: 'Campo obrigatório.' }),
-  confirmDeleteText: z.string(),
 })
 
 type AccountFormSchema = z.infer<typeof accountFormSchema>
@@ -57,6 +56,8 @@ export function ProfileSettings() {
   const [confirmDeleteModalIsOpen, setConfirmDeleteModalIsOpen] =
     useState(false)
   const [confirmDeleteIsDisabled, setConfirmDeleteIsDisabled] = useState(true)
+  const [emailConfirmationInformation, setEmailConfirmationInformation] =
+    useState(null)
 
   const { handleLogOut } = useContext(AuthContext)
 
@@ -66,8 +67,10 @@ export function ProfileSettings() {
   const methods = useForm<AccountFormSchema>({
     resolver: zodResolver(accountFormSchema),
   })
+  const { register, watch } = useForm()
 
-  const confirmDeleteTextValue = methods.watch('confirmDeleteText')
+  const confirmDeleteTextValue = watch('confirmDeleteText')
+  const emailConfirmationCode = watch('emailConfirmationCode')
 
   const handleResetForm = useCallback(() => {
     methods.setValue('name', userData.name)
@@ -129,6 +132,38 @@ export function ProfileSettings() {
       notify({ type: 'error', message: 'Alteração não realizada.' })
     }
   })
+
+  const handleGetEmailConfirmationInformation = useCallback(() => {
+    api
+      .get('/users/get-email-verification-information')
+      .then((response) => setEmailConfirmationInformation(response.data))
+  }, [])
+
+  useEffect(() => {
+    handleGetEmailConfirmationInformation()
+  }, [handleGetEmailConfirmationInformation])
+
+  const handleSentEmailVerification = useCallback(async () => {
+    try {
+      await api.post('/users/send-email-verification')
+
+      handleGetEmailConfirmationInformation()
+    } catch (err) {
+      console.log(err)
+    }
+  }, [handleGetEmailConfirmationInformation])
+
+  const handleSentEmailConfirmationCode = useCallback(async () => {
+    try {
+      await api.post('/users/send-email-verification-code', {
+        code: emailConfirmationCode,
+      })
+
+      handleUpdateUserData()
+    } catch (err) {
+      console.log(err)
+    }
+  }, [emailConfirmationCode, handleUpdateUserData])
 
   return (
     <Container>
@@ -193,6 +228,42 @@ export function ProfileSettings() {
           </StyledForm>
         </AccountSettings>
       </FormProvider>
+      {!userData.confirmedEmail && (
+        <ContentArea>
+          <FormTitle>Confirmar email:</FormTitle>
+          {emailConfirmationInformation ? (
+            <>
+              <StyledInputText
+                placeholder="000 000"
+                {...register('emailConfirmationCode')}
+              />
+              <FlexArea>
+                <Button
+                  typeColor="cancel"
+                  onClick={handleSentEmailConfirmationCode}
+                >
+                  Solicitar Reenvio
+                </Button>
+                <Button
+                  typeColor="sucess"
+                  onClick={handleSentEmailConfirmationCode}
+                >
+                  Confirmar Email
+                </Button>
+              </FlexArea>
+            </>
+          ) : (
+            <>
+              <Description>
+                Solicite o envio do email com o código de confirmação.
+              </Description>
+              <Button type="button" onClick={handleSentEmailVerification}>
+                Solcitar Email
+              </Button>
+            </>
+          )}
+        </ContentArea>
+      )}
       <ContentArea>
         <FormTitle>Excluir Conta:</FormTitle>
         <Description>
@@ -218,7 +289,7 @@ export function ProfileSettings() {
                 <strong>{userData.name}</strong> no campo abaixo:
               </span>
               <StyledInputText
-                {...methods.register('confirmDeleteText')}
+                {...register('confirmDeleteText')}
                 type="text"
                 placeholder={userData.name}
               />
