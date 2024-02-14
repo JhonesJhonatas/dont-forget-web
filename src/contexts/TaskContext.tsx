@@ -15,6 +15,7 @@ interface DefaultUserDataSchema {
   email: string
   role: string
   birthDate: string
+  confirmedEmail: boolean
 }
 
 export interface Project {
