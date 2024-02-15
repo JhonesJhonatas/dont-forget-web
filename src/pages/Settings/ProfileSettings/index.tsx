@@ -150,10 +150,11 @@ export function ProfileSettings() {
       await api.post('/users/send-email-verification')
 
       handleGetEmailConfirmationInformation()
+      notify({ type: 'sucess', message: 'Email de verificação enviada.' })
     } catch (err) {
       console.log(err)
     }
-  }, [handleGetEmailConfirmationInformation])
+  }, [handleGetEmailConfirmationInformation, notify])
 
   const handleSentEmailConfirmationCode = useCallback(async () => {
     try {
@@ -162,10 +163,11 @@ export function ProfileSettings() {
       })
 
       handleUpdateUserData()
+      notify({ type: 'sucess', message: 'Email Confirmado com sucesso!' })
     } catch (err) {
-      console.log(err)
+      notify({ type: 'error', message: 'Código inválido!' })
     }
-  }, [emailConfirmationCode, handleUpdateUserData])
+  }, [emailConfirmationCode, handleUpdateUserData, notify])
 
   return (
     <Container>
