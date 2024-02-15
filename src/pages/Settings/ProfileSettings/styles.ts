@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import * as Dialog from '@radix-ui/react-dialog'
+import hexToRgba from 'hex-to-rgba'
 
 export const Container = styled.div`
   padding: 2rem;
@@ -121,4 +122,16 @@ export const StyledInputText = styled.input`
   padding: 0.48rem;
   border-radius: 6px;
   color: ${(props) => props.theme.textPrimary};
+`
+
+export const ConfirmatedEmailArea = styled.div`
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+
+  background-color: ${(props) => hexToRgba(props.theme.sucess, 0.1)};
+  border: 1px solid ${(props) => props.theme.sucess};
 `

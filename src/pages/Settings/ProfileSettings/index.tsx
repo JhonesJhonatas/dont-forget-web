@@ -2,6 +2,7 @@ import {
   AccountSettings,
   Avatar,
   ButtonsArea,
+  ConfirmatedEmailArea,
   Container,
   ContentArea,
   Description,
@@ -33,6 +34,7 @@ import { useNotify } from '../../../hooks/useNotify'
 import { useNavigate } from 'react-router-dom'
 import * as Dialog from '@radix-ui/react-dialog'
 import { AuthContext } from '../../../contexts/AuthContext'
+import { CheckCircle } from '@phosphor-icons/react'
 
 const accountFormSchema = z.object({
   name: z
@@ -228,9 +230,17 @@ export function ProfileSettings() {
           </StyledForm>
         </AccountSettings>
       </FormProvider>
-      {!userData.confirmedEmail && (
+      {userData.confirmedEmail ? (
         <ContentArea>
-          <FormTitle>Confirmar email:</FormTitle>
+          <FormTitle>Confirmação de email:</FormTitle>
+          <ConfirmatedEmailArea>
+            <CheckCircle size={36} />
+            <span>Email Confirmado!</span>
+          </ConfirmatedEmailArea>
+        </ContentArea>
+      ) : (
+        <ContentArea>
+          <FormTitle>Confirmação de email:</FormTitle>
           {emailConfirmationInformation ? (
             <>
               <StyledInputText
