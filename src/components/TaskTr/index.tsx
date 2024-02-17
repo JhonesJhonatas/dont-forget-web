@@ -35,7 +35,7 @@ interface Task {
     | 'approval'
     | 'payment'
     | 'concluded'
-  maturity: string
+  maturity?: string
   createdAt: string
   completedAt?: string
   projectId: string
@@ -62,7 +62,9 @@ export function TaskTr({ task }: TaskTrProps) {
   const priorityDropDownRef = useRef<HTMLDivElement | null>(null)
   const togglePriorityRef = useRef<HTMLDivElement | null>(null)
 
-  const formattedDate = format(new Date(task.maturity), 'dd/MM/yyyy')
+  const formattedDate = task.maturity
+    ? format(new Date(task.maturity), 'dd/MM/yyyy')
+    : null
 
   const formattedStatus = useMemo(() => {
     return {
@@ -278,10 +280,12 @@ export function TaskTr({ task }: TaskTrProps) {
             })}
           </CustomDropDown>
         </div>
-        <MaturityContainer>
-          <Calendar />
-          {formattedDate}
-        </MaturityContainer>
+        {formattedDate ? (
+          <MaturityContainer>
+            <Calendar />
+            {formattedDate}
+          </MaturityContainer>
+        ) : null}
       </TaskItem>
 
       <EditTaskModal

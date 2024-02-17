@@ -38,7 +38,7 @@ interface Task {
   description: string
   priority: string
   status: string
-  maturity: string
+  maturity?: string
   createdAt: string
   completedAt?: string
   projectId: string
@@ -66,7 +66,9 @@ export function TaskCard({ task }: TaskCardProps) {
   const priorityDropDownRef = useRef<HTMLDivElement | null>(null)
   const togglePriorityRef = useRef<HTMLDivElement | null>(null)
 
-  const formattedMaturity = format(new Date(task.maturity), 'dd/MM/yyyy')
+  const formattedMaturity = task.maturity
+    ? format(new Date(task.maturity), 'dd/MM/yyyy')
+    : null
 
   const projectInformations = allProjects.find((project) => {
     return project.id === task.projectId
@@ -263,10 +265,12 @@ export function TaskCard({ task }: TaskCardProps) {
               )
             })}
           </CustomDropDown>
-          <Maturity>
-            <Calendar size={10} />
-            <span>{formattedMaturity}</span>
-          </Maturity>
+          {formattedMaturity ? (
+            <Maturity>
+              <Calendar size={10} />
+              <span>{formattedMaturity}</span>
+            </Maturity>
+          ) : null}
         </CardElements>
       </Container>
 

@@ -101,50 +101,62 @@ export function DashBoard() {
   }, [])
 
   useEffect(() => {
-    const todayTasks = allOpenedTasks.filter((task) =>
-      isToday(parseISO(task.maturity.toString())),
-    )
+    const todayTasks = allOpenedTasks.filter((task) => {
+      if (task.maturity) {
+        return isToday(parseISO(task.maturity.toString()))
+      }
+      return false
+    })
 
     setTasksForToday(todayTasks)
   }, [allOpenedTasks, todayDate])
 
   useEffect(() => {
-    const tomorrowTasks = allOpenedTasks.filter((task) =>
-      isTomorrow(parseISO(task.maturity.toString())),
-    )
+    const tomorrowTasks = allOpenedTasks.filter((task) => {
+      if (task.maturity) {
+        return isTomorrow(parseISO(task.maturity.toString()))
+      }
+      return false
+    })
 
     setTasksForTomorrow(tomorrowTasks)
   }, [allOpenedTasks])
 
   useEffect(() => {
-    const futureTasks = allOpenedTasks.filter((task) =>
-      isFuture(
-        new Date(
-          getYear(parseISO(task.maturity.toString())),
-          getMonth(parseISO(task.maturity.toString())),
-          getDate(parseISO(task.maturity.toString())) - 1,
-        ),
-      ),
-    )
+    const futureTasks = allOpenedTasks.filter((task) => {
+      if (task.maturity) {
+        return isFuture(
+          new Date(
+            getYear(parseISO(task.maturity.toString())),
+            getMonth(parseISO(task.maturity.toString())),
+            getDate(parseISO(task.maturity.toString())) - 1,
+          ),
+        )
+      }
+      return false
+    })
 
     setFutureTasks(futureTasks)
   }, [allOpenedTasks])
 
   useEffect(() => {
-    const lateTasks = allOpenedTasks.filter((task) =>
-      isBefore(
-        new Date(
-          getYear(new Date(task.maturity)),
-          getMonth(new Date(task.maturity)),
-          getDate(new Date(task.maturity)),
-        ),
-        new Date(
-          getYear(new Date()),
-          getMonth(new Date()),
-          getDate(new Date()),
-        ),
-      ),
-    )
+    const lateTasks = allOpenedTasks.filter((task) => {
+      if (task.maturity) {
+        return isBefore(
+          new Date(
+            getYear(new Date(task.maturity)),
+            getMonth(new Date(task.maturity)),
+            getDate(new Date(task.maturity)),
+          ),
+          new Date(
+            getYear(new Date()),
+            getMonth(new Date()),
+            getDate(new Date()),
+          ),
+        )
+      }
+      return false
+    })
     setLateTasks(lateTasks)
   }, [allOpenedTasks])
 

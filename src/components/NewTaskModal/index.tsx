@@ -31,7 +31,7 @@ const createTaskFormSchema = z.object({
   projectId: z.string(),
   title: z.string().nonempty({ message: 'O título é obrigatório' }),
   description: z.string(),
-  maturity: string().nonempty({ message: 'Campo obrigatório' }),
+  maturity: string(),
   priority: string(),
   status: string(),
 })
@@ -101,7 +101,7 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
     try {
       const body = {
         description: data.description,
-        maturity: formatISO(parseISO(data.maturity)),
+        maturity: data.maturity ? formatISO(parseISO(data.maturity)) : null,
         priority: data.priority,
         projectId: data.projectId,
         status: data.status,
@@ -141,11 +141,7 @@ export function NewTaskModal({ handleCloseModal }: NewTaskModalProps) {
                   name="priority"
                   required={true}
                 />
-                <DatePicker
-                  label="Vencimento:"
-                  name="maturity"
-                  required={true}
-                />
+                <DatePicker label="Vencimento:" name="maturity" />
               </TaskIformations>
               <DialogClose onClick={handleCloseThisModal}>
                 <X size={20} />
