@@ -30,7 +30,7 @@ import { string, z } from 'zod'
 import { Select } from '../Inputs/Select'
 import { DatePicker } from '../Inputs/DatePicker'
 import { FormProvider, useForm } from 'react-hook-form'
-import { format, formatISO, parseISO } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { useNotify } from '../../hooks/useNotify'
 import { api } from '../../lib/axios'
 import { Timer } from '../Timer'
@@ -133,10 +133,6 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
           title: data.title,
         }
 
-        console.log('---------- DEBUG ----------')
-        console.log(parseISO(data.maturity))
-        console.log('---------- DEBUG ----------')
-
         await api.put('/tasks/edit-task-by-id', body)
 
         handleUpdateOpenedTasks()
@@ -160,7 +156,7 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
         const body = {
           createdAt: task.createdAt,
           description: data.description,
-          maturity: formatISO(parseISO(data.maturity)),
+          maturity: data.maturity ? parseISO(data.maturity) : null,
           priority: data.priority,
           projectId: data.projectId,
           status: 'concluded',
