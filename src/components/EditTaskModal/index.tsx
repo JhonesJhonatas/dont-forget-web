@@ -41,7 +41,7 @@ export interface Task {
   description: string
   priority: string
   status: string
-  maturity: string
+  maturity?: string
   createdAt: string
   completedAt?: string
   projectId: string
@@ -58,7 +58,7 @@ const editFormSchema = z.object({
   projectId: z.string(),
   title: z.string().min(4).nonempty({ message: 'O título é obrigatório' }),
   description: z.string(),
-  maturity: string().min(4).nonempty({ message: 'Campo obrigatório' }),
+  maturity: string(),
   priority: string(),
   status: string(),
 })
@@ -74,7 +74,9 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
     title: task.title,
     projectId: task.projectId,
     description: task.description,
-    maturity: format(parseISO(task.maturity), 'yyyy-MM-dd'),
+    maturity: task.maturity
+      ? format(parseISO(task.maturity), 'yyyy-MM-dd')
+      : '',
     priority: task.priority,
     status: task.status,
   }
@@ -124,12 +126,16 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
         const body = {
           description: data.description,
           id: task.id,
-          maturity: formatISO(parseISO(data.maturity)),
+          maturity: data.maturity ? parseISO(data.maturity) : null,
           priority: data.priority,
           projectId: data.projectId,
           status: data.status,
           title: data.title,
         }
+
+        console.log('---------- DEBUG ----------')
+        console.log(parseISO(data.maturity))
+        console.log('---------- DEBUG ----------')
 
         await api.put('/tasks/edit-task-by-id', body)
 
@@ -255,7 +261,6 @@ export function EditTaskModal({ handleCloseModal, task }: NewTaskModalProps) {
                   label="Vencimento:"
                   name="maturity"
                   disabled={thisTaskIsConcluded}
-                  required={true}
                 />
                 <Timer
                   task={task}

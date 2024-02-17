@@ -39,7 +39,7 @@ export interface OpenedTask {
     | 'approval'
     | 'payment'
     | 'concluded'
-  maturity: string
+  maturity?: string
   createdAt: string
   projectId: string
   userId: string
@@ -57,7 +57,7 @@ export interface ConcludedTask {
     | 'approval'
     | 'payment'
     | 'concluded'
-  maturity: string
+  maturity?: string
   createdAt: string
   completedAt: string
   projectId: string
