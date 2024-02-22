@@ -14,6 +14,7 @@ import { useGetAllOpenedTasksByProject } from '../../hooks/tasks/useGetAllOpened
 import { useGetAllConcludedTasksByProjectId } from '../../hooks/tasks/useGetAllConcludedTasksByProjectId'
 import { useSeparateOpenedTasksByStatus } from '../../hooks/tasks/useSeparateOpenedTasksByStatus'
 import { useCallback } from 'react'
+import { ProjectProgressBar } from '../../components/ProjectProgressBar'
 
 type RouterParams = {
   projectId: string
@@ -75,6 +76,8 @@ export function ProjectViewer() {
           )}
         </ProjectDescription>
       </Header>
+
+      <ProjectProgressBar projectId={projectId as string} />
 
       <ProjectResumeArea>
         <ResumeCard amount={toDoTasks.length} status="opened" />
